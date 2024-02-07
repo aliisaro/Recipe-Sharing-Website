@@ -1,8 +1,3 @@
-Can you create user stories for a recipe sharing app?
-
-ChatGPT
-Certainly! User stories are a way to capture functional requirements from the perspective of an end user. For a recipe sharing app, here are some user stories that represent different features and functionalities:
-
 
 
 1.As a user, I want to create a new recipe entry:
