@@ -1,20 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import Select from "react-select";
 
 const Home = () => {
-  const [message, setMessage] = useState("");
-  const apiUrl = "http://localhost:5000/"; // Replace with your actual API URL
+  const SortByOptions = [
+    { value: "trending", label: "trending" },
+    { value: "date", label: "date" },
+    { value: "best reviews", label: "best reviews" },
+  ];
 
-  useEffect(() => {
-    fetch(apiUrl)
-      .then((res) => res.text())
-      .then((data) => setMessage(data))
-      .catch((err) => console.log(err));
-  }, [apiUrl]);
+  const TypeOptions = [
+    { value: "breakfeast", label: "breakfeast" },
+    { value: "lunch", label: "lunch" },
+    { value: "dinner", label: "dinner" },
+    { value: "snacks", label: "snacks" },
+  ];
+
+  const CuisineOptions = [
+    { value: "italian", label: "italian" },
+    { value: "japanese", label: "japanese" },
+    { value: "american", label: "american" },
+  ];
 
   return (
     <div className="home">
-      <h1>Homepage</h1>
-      <p>{message}</p>
+      <div className="item" style={{ flexGrow: 6 }}>
+        <h1>Explore recipes</h1>
+      </div>
+
+      <div className="item" style={{ flexGrow: 1 }}>
+        <ul>
+          <h3 style={{ textAlign: "center" }}>Filters</h3>
+          <li>
+            Sort by: <Select options={SortByOptions} />
+          </li>
+          <li>
+            Type: <Select options={TypeOptions} />
+          </li>
+          <li>
+            Cuisine: <Select options={CuisineOptions} />
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };

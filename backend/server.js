@@ -20,10 +20,6 @@ app.use(error);
 
 app.use("", require("./routers/userRoutes"));
 
-app.get("/", (req, res) => {
-  res.send("Hello from Express!");
-});
-
 // Body Parser Middleware
 app.use(express.json());
 
