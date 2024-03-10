@@ -1,7 +1,7 @@
-import React from "react";
 import Select from "react-select";
 
 const Home = () => {
+
   const SortByOptions = [
     { value: "trending", label: "trending" },
     { value: "date", label: "date" },
@@ -23,8 +23,9 @@ const Home = () => {
 
   return (
     <div className="home">
+      <h1>Explore recipes</h1>
+
       <div className="item" style={{ flexGrow: 6 }}>
-        <h1>Explore recipes</h1>
       </div>
 
       <div className="item" style={{ flexGrow: 1 }}>

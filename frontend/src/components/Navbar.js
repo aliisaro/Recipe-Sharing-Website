@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
 import img from "../images/Logo.png";
 import Searchbar from "../components/Searchbar";
-import React from "react";
 
-const Navbar = ({ loggedIn, handleSignOut }) => {
+const Navbar = ({ setIsAuthenticated, isAuthenticated }) => {
+
+  const handleClick = (e) => {
+    setIsAuthenticated(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+  };
+
   return (
     <nav className="navbar">
       <div className="item" style={{ flexGrow: 1 }}>
@@ -17,10 +23,16 @@ const Navbar = ({ loggedIn, handleSignOut }) => {
       </div>
 
       <div className="item" style={{ flexGrow: 1 }}>
-        {loggedIn ? (
-          <button onClick={handleSignOut}>Sign out</button>
-        ) : (
-          <button><Link to="/SignIn">Sign in</Link></button>
+        {isAuthenticated && (
+        <div>
+          <span>Welcome, {localStorage.getItem('username')}</span>
+          <button onClick={handleClick}>Log out</button>
+        </div>
+        )}
+        {!isAuthenticated && (<div>
+            <button><Link to="/SignIn">Login</Link></button>
+            <button><Link to="/SignUp">Signup</Link></button>
+          </div>
         )}
       </div>
     </nav>

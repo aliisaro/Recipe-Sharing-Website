@@ -1,30 +1,25 @@
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import "./app.css";
 
 import Navbar from "./components/Navbar";
-import Home from "./components/Home";
-import NoPage from "./components/NoPage";
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
+import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const handleSignOut = () => {
-    setLoggedIn(false);
-    alert("User signed out");
-    console.log("User signed out");
-  };
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    Boolean(localStorage.getItem("token")) || false
+  );
 
   return (
     <BrowserRouter>
-      <Navbar loggedIn={loggedIn} handleSignOut={handleSignOut} />
+      <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="SignIn" element={<SignIn setLoggedIn={setLoggedIn} loggedIn={loggedIn} />}/>
-        <Route path="SignUp" element={<SignUp />} />
-        <Route path="*" element={<NoPage />} />
+        <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/SignIn" />}/>
+        <Route path="SignIn" element={!isAuthenticated ? (<SignIn setIsAuthenticated={setIsAuthenticated} /> ) : (<Navigate to="/" />)}/>
+        <Route path="SignUp" element={!isAuthenticated ? (<SignUp setIsAuthenticated={setIsAuthenticated} /> ) : (<Navigate to="/" />)}/>
       </Routes>
     </BrowserRouter>
   );
