@@ -9,16 +9,25 @@ const Home = () => {
   ];
 
   const TypeOptions = [
+    { value: "none", label: "none" },
+    { value: "drinks", label: "drinks"},
     { value: "breakfeast", label: "breakfeast" },
     { value: "lunch", label: "lunch" },
     { value: "dinner", label: "dinner" },
+    { value: "dessert", label: "dessert" },
     { value: "snacks", label: "snacks" },
   ];
 
   const CuisineOptions = [
-    { value: "italian", label: "italian" },
-    { value: "japanese", label: "japanese" },
-    { value: "american", label: "american" },
+    { value: "none", label: "none" },
+    { value: "asian", label: "asian" },
+    { value: "african", label: "african" },
+    { value: "european", label: "european" },
+    { value: "oceanian", label: "oceanian" },
+    { value: "north american", label: "north american" },
+    { value: "south american", label: "south american" },
+    { value: "middle eastern", label: "middle eastern" },
+    { value: "mediterranean", label: "mediterranean" },
   ];
 
   return (

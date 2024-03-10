@@ -26,6 +26,9 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated }) => {
         {isAuthenticated && (
         <div>
           <span>Welcome, {localStorage.getItem('username')}</span>
+            <button><Link to="/CreateRecipe">Create a Recipe</Link></button>
+            <button><Link to="/Library">Library</Link></button>
+            <button><Link to="/Profile">Profile</Link></button>
           <button onClick={handleClick}>Log out</button>
         </div>
         )}

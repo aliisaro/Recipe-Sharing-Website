@@ -5,6 +5,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const customMiddleware = require("./middleware/customMiddleware");
 const userRoutes = require("./routers/userRoutes");
+const recipeRoutes = require("./routers/recipeRoutes");
 
 // express app
 const app = express();
@@ -20,6 +21,7 @@ app.use(customMiddleware.requestLogger);
 app.get("/", (req, res) => res.send("API Running!"));
 
 app.use("/api/users", userRoutes);
+app.use("/api/recipes", recipeRoutes);
 
 app.use(customMiddleware.unknownEndpoint);
 app.use(customMiddleware.errorHandler);
