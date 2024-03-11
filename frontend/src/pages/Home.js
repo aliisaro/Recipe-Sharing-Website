@@ -26,8 +26,6 @@ const Home = () => {
     { value: "oceanian", label: "oceanian" },
     { value: "north american", label: "north american" },
     { value: "south american", label: "south american" },
-    { value: "middle eastern", label: "middle eastern" },
-    { value: "mediterranean", label: "mediterranean" },
   ];
 
   return (

@@ -76,10 +76,57 @@ input {
   width: 30%;
 }
 
-
 /*----------Recipe Form---------*/
 .recipe-form {
+  display: flex;
+  flex-direction: column;
   padding: 10px;
   margin: 120px auto;
-  width: 30%;
+  width: 50%;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.bottom-row {
+  display: flex;
+}
+
+.form-column {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.recipe-form input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.recipe-form textarea {
+  width: 100%;
+  height: 115px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.recipe-form button {
+  width: 100%;
+  background-color: #749775;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }

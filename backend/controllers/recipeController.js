@@ -26,7 +26,6 @@ const addRecipe = async (req, res) => {
     type,
     cuisine,
     tags,
-    info,
     rating,
     user_id,
   } = req.body;
@@ -43,10 +42,11 @@ const addRecipe = async (req, res) => {
       type,
       cuisine,
       tags,
-      info,
       rating,
       user_id,
     });
+
+
     await newRecipe.save();
     res.status(201).json(newRecipe);
   } catch (error) {

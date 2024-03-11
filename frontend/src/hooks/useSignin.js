@@ -15,8 +15,8 @@ const useSignin = (setIsAuthenticated) => {
 
       if (response.ok) {
         const user = await response.json();
-        localStorage.setItem("username", JSON.stringify(user.username));
-        localStorage.setItem("token", JSON.stringify(user.token));
+        localStorage.setItem("username", user.username);
+        localStorage.setItem("token", user.token);
         console.log("User signed in successfully!");
         setIsAuthenticated(true);
         navigate("/");
