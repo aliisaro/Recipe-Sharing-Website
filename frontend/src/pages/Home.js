@@ -36,7 +36,7 @@ const Home = () => {
       </div>
 
       <div className="item" style={{ flexGrow: 1 }}>
-        <ul>
+        <ul id="filters">
           <h3 style={{ textAlign: "center" }}>Filters</h3>
           <li>
             Sort by: <Select options={SortByOptions} />

@@ -1,5 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer"); // import multer
+const { storage } = require("../middleware/uploadMiddleware"); // import storage middleware
+const upload = multer({ storage }); // initialize multer with storage middleware
 const {
   getRecipes,
   addRecipe,
@@ -7,24 +10,20 @@ const {
   updateRecipe,
   deleteRecipe,
 } = require("../controllers/recipeController");
+
 const requireAuth = require("../requireAuth");
 
-// require auth for all workout routes
 router.use(requireAuth);
 
-// get all Recipes
 router.get("/", getRecipes);
 
-// Add one Recipe
-router.post("/", addRecipe);
+// Add one Recipe with file upload
+router.post("/", upload.single("image"), addRecipe); // use upload middleware for file upload
 
-// Get Recipe by ID
 router.get("/:id", getRecipeById);
 
-// Update Recipe by ID PUT
 router.put("/:id", updateRecipe);
 
-// Delete Recipe by ID
 router.delete("/:id", deleteRecipe);
 
 module.exports = router;

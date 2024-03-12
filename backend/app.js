@@ -6,6 +6,7 @@ const connectDB = require("./config/db");
 const customMiddleware = require("./middleware/customMiddleware");
 const userRoutes = require("./routers/userRoutes");
 const recipeRoutes = require("./routers/recipeRoutes");
+const path = require('path');
 
 // express app
 const app = express();
@@ -17,6 +18,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use(customMiddleware.requestLogger);
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/", (req, res) => res.send("API Running!"));
 

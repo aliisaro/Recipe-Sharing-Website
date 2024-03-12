@@ -9,7 +9,7 @@ body {
   max-width: 100%;
   overflow-x: hidden;
   margin: 0;
-  padding: 0;
+  padding: 120px 0px;
 }
 
 h1 {
@@ -19,7 +19,7 @@ h1 {
 
 /*----------Navigation bar-------*/
 .navbar {
-  background-color: rgb(170, 220, 168);
+  background-color: rgb(197, 233, 211);
   position: fixed;
   display: flex;
   align-items: center;
@@ -46,19 +46,17 @@ input {
 
 /*----------Home page-------*/
 .home {
-  margin-top: 120px;
   display: flex;
   max-width: 100%;
   overflow: auto;
 }
 
-.home ul {
+.home #filters {
   list-style-type: none;
   margin: 0;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding: 0px 20px ;
   float: right;
-  background-color: #f1f1f1;
+  background-color: #ebebeb;
   position: fixed;
   height: 100%;
   overflow: auto;
@@ -72,31 +70,15 @@ input {
 /*----------Login/register page-------*/
 .login-register-section {
   padding: 10px;
-  margin: 120px auto;
+  margin: auto;
   width: 30%;
 }
 
 /*----------Recipe Form---------*/
 .recipe-form {
-  display: flex;
-  flex-direction: column;
   padding: 10px;
-  margin: 120px auto;
+  margin: auto;
   width: 50%;
-}
-
-.top-row {
-  display: flex;
-  justify-content: space-between;
-}
-
-.bottom-row {
-  display: flex;
-}
-
-.form-column {
-  flex: 1;
-  margin-right: 20px;
 }
 
 .recipe-form input {
@@ -129,4 +111,42 @@ input {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+/*----------Recipe Details---------*/
+.library h1 {
+  font-size: 30px;
+  padding-left: 25px;
+}
+
+.library {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; /* Add this line */
+  padding: 10px;
+  margin: auto;
+  width: 100%;
+  overflow: auto;
+}
+
+.recipe-card {
+  display: inline-block;
+  border: solid 3px #aeaeae;
+  border-radius: 10px;
+  margin: 20px 5px 20px 20px;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+}
+
+.recipe-card img {
+  width: 100%;
+  height: 85%;
+  object-fit: cover;
+}
+
+.recipe-card p {
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
 }

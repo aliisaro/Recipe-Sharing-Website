@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const fs = require("fs");
+const path = require("path");
 const Recipe = require("../models/Recipe");
 
 // get all Recipes
@@ -22,7 +24,6 @@ const addRecipe = async (req, res) => {
     steps,
     time,
     difficulty,
-    image,
     type,
     cuisine,
     tags,
@@ -32,20 +33,27 @@ const addRecipe = async (req, res) => {
 
   try {
     const user_id = req.user._id;
+
+    let imagePath = ""; // variable to store the image path
+
+    if (req.file) {
+      // Check if file is uploaded
+      imagePath = req.file.path; // Save the image path
+    }
+
     const newRecipe = new Recipe({
       title,
       ingredients,
       steps,
       time,
       difficulty,
-      image,
+      image: imagePath,
       type,
       cuisine,
       tags,
       rating,
       user_id,
     });
-
 
     await newRecipe.save();
     res.status(201).json(newRecipe);

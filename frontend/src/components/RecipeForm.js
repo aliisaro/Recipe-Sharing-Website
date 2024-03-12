@@ -2,39 +2,47 @@ import { useState } from "react";
 import Select from "react-select";
 
 const RecipeForm = () => {
-  const [title, setTitle] = useState("");
-  const [ingredients, setIngredients] = useState("");
-  const [steps, setSteps] = useState("");
-  const [time, setTime] = useState("");
-  const [difficulty, setDifficulty] = useState("");
-  const [image, setImage] = useState("");
-  const [type, setType] = useState("");
-  const [cuisine, setCuisine] = useState("");
-  const [tags, setTags] = useState([]);
+  const [formData, setFormData] = useState({
+    title: "",
+    ingredients: "",
+    steps: "",
+    time: "",
+    difficulty: "",
+    image: null,
+    type: "",
+    cuisine: "",
+    tags: [],
+  });
   const [error, setError] = useState(null);
   const token = localStorage.getItem("token");
 
-  //Submit form
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleImageChange = (e) => {
+    setFormData({
+      ...formData,
+      image: e.target.files[0],
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const recipe = {
-      title,
-      ingredients,
-      steps,
-      time,
-      difficulty,
-      image,
-      type,
-      cuisine,
-      tags,
-    };
+    const recipeData = new FormData();
+    for (const key in formData) {
+      recipeData.append(key, formData[key]);
+    }
 
     const response = await fetch("http://localhost:4000/api/recipes", {
       method: "POST",
-      body: JSON.stringify(recipe),
+      body: recipeData,
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
@@ -52,7 +60,6 @@ const RecipeForm = () => {
     }
   };
 
-  //OPTIONS
   const Difficulty = [
     { value: "easy", label: "easy" },
     { value: "medium", label: "medium" },
@@ -91,108 +98,81 @@ const RecipeForm = () => {
   ];
 
   return (
-    <form
-      className="recipe-form"
-      onSubmit={handleSubmit}
-      enctype="multipart/form-data"
-    >
+    <form className="recipe-form" onSubmit={handleSubmit} encType="multipart/form-data">
       <h3>Add a New Recipe</h3>
-      <div className="top-row">
-        <div className="form-column">
-          <label>Title:</label>
-          <input
-            type="text"
-            onChange={(e) => setTitle(e.target.value)}
-            value={title}
-            required
-          />
-        </div>
 
-        <div className="form-column">
-          <label>Time:</label>
-          <input
-            type="texta"
-            onChange={(e) => setTime(e.target.value)}
-            value={time}
-            required
-          />
-        </div>
-      </div>
-      <div className="bottom-row">
-        <div className="form-column">
-          <label>Ingredients:</label>
-          <br />
-          <textarea
-            type="text"
-            onChange={(e) => setIngredients(e.target.value)}
-            value={ingredients}
-            required
-            placeholder="Write the ingredients here:
-            -Ingredient 1
-            -Ingredient 2
-            -Ingredient 3"
-          />
-          <br />
-          <label>Steps:</label>
-          <br />
-          <textarea
-            type="text"
-            onChange={(e) => setSteps(e.target.value)}
-            value={steps}
-            required
-            placeholder="Write the steps here:
-            -Step 1
-            -Step 2
-            -Step 3"
-          />
-        </div>
+      <label>Title:</label>
+      <input
+        type="text"
+        name="title"
+        value={formData.title}
+        onChange={handleChange}
+        required
+      />
 
-        <div className="form-column">
-          <label>Difficulty:</label>
-          <Select
-            options={Difficulty}
-            onChange={(selectedOption) => setDifficulty(selectedOption.value)}
-            value={{ label: difficulty, value: difficulty }}
-            required
-          />
+      <label>Time:</label>
+      <input
+        type="text"
+        name="time"
+        value={formData.time}
+        onChange={handleChange}
+        required
+      />
 
-          <label>Type:</label>
-          <Select
-            options={Type}
-            onChange={(selectedOption) => setType(selectedOption.value)}
-            value={{ label: type, value: type }}
-            required
-          />
+      <label>Ingredients:</label>
+      <textarea
+        name="ingredients"
+        value={formData.ingredients}
+        onChange={handleChange}
+        required
+        placeholder="Write the ingredients here:"
+      />
 
-          <label>Cuisine:</label>
-          <Select
-            options={Cuisine}
-            onChange={(selectedOption) => setCuisine(selectedOption.value)}
-            value={{ label: cuisine, value: cuisine }}
-            required
-          />
+      <label>Steps:</label>
+      <textarea
+        name="steps"
+        value={formData.steps}
+        onChange={handleChange}
+        required
+        placeholder="Write the steps here:"
+      />
 
-          <label>Tags: </label>
-          <Select
-            isMulti
-            options={Tags}
-            onChange={(selectedOptions) =>
-              setTags(
-                selectedOptions
-                  ? selectedOptions.map((option) => option.value)
-                  : []
-              )
-            }
-            value={tags.map((tag) =>
-              Tags.find((option) => option.value === tag)
-            )}
-          />
-        </div>
-      </div>
+      <label>Difficulty:</label>
+      <Select
+        options={Difficulty}
+        onChange={(selectedOption) => setFormData({ ...formData, difficulty: selectedOption.value })}
+        value={{ label: formData.difficulty, value: formData.difficulty }}
+        required
+      />
+
+      <label>Type:</label>
+      <Select
+        options={Type}
+        onChange={(selectedOption) => setFormData({ ...formData, type: selectedOption.value })}
+        value={{ label: formData.type, value: formData.type }}
+        required
+      />
+
+      <label>Cuisine:</label>
+      <Select
+        options={Cuisine}
+        onChange={(selectedOption) => setFormData({ ...formData, cuisine: selectedOption.value })}
+        value={{ label: formData.cuisine, value: formData.cuisine }}
+        required
+      />
+
+      <label>Tags: </label>
+      <Select
+        isMulti
+        options={Tags}
+        onChange={(selectedOptions) => setFormData({ ...formData, tags: selectedOptions.map(option => option.value) })}
+        value={Tags.filter(tag => formData.tags.includes(tag.value))}
+      />
+
       <label>Upload Image:</label>
-      <input type="file" id="image" name="image" value="" required />{" "}
+      <input type="file" onChange={handleImageChange} accept="image/*" required />
       
-      <button>Add Recipe</button>
+      <button type="submit">Add Recipe</button>
     </form>
   );
 };
