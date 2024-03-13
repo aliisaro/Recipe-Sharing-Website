@@ -10,6 +10,8 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated }) => {
     localStorage.removeItem("username");
   };
 
+  const username = localStorage.getItem('username');
+
   return (
     <nav className="navbar">
       <div className="item" style={{ flexGrow: 1 }}>
@@ -27,7 +29,7 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated }) => {
         <div>
             <button><Link to="/CreateRecipe">Create</Link></button>
             <button><Link to="/Library">Library</Link></button>
-            <button><Link to="/Profile">Profile</Link></button>
+            <button><Link to={`/profile/${username}`}>Go to Profile</Link></button>
           <button onClick={handleClick}>Log out</button>
         </div>
         )}

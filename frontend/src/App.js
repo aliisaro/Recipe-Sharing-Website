@@ -42,7 +42,7 @@ function App() {
         <Route path="/:id" element={<RecipeDetails />} />
 
         <Route
-          path="/Profile"
+          path="/Profile/:name"
           element={isAuthenticated ? <Profile /> : <Navigate to="/SignIn" />}
         />
         <Route

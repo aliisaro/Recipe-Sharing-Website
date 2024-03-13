@@ -19,6 +19,34 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  bio: {
+    type: String,
+    default: "Default text"
+  },
+  image: {
+    type: String,
+    default: ""
+  },
+  followers: {
+    type: Number,
+    default: 0
+  },
+  following: {
+    type: Number,
+    default: 0
+  },
+  savedRecipes: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
+  createdRecipes: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
 });
 
 // static signup method

@@ -6,4 +6,6 @@ router.post("/signup", users.signupUser);
 
 router.post("/signin", users.signinUser);
 
+router.get("/profile/:username", users.getUserByUsername);
+
 module.exports = router;
