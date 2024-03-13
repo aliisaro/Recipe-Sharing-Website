@@ -4,12 +4,13 @@ import { Navigate } from "react-router-dom";
 import "./app.css";
 
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
+import RecipeDetails from "./components/RecipeDetails";
 import Profile from "./pages/Profile";
 import CreateRecipe from "./pages/CreateRecipe";
 import Library from "./pages/Library";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Home from "./pages/Home";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -37,6 +38,9 @@ function App() {
           path="/Library"
           element={isAuthenticated ? <Library /> : <Navigate to="/SignIn" />}
         />
+
+        <Route path="/:id" element={<RecipeDetails />} />
+
         <Route
           path="/Profile"
           element={isAuthenticated ? <Profile /> : <Navigate to="/SignIn" />}

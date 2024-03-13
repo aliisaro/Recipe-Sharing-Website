@@ -25,8 +25,7 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated }) => {
       <div className="item" style={{ flexGrow: 1 }}>
         {isAuthenticated && (
         <div>
-          <span>Welcome, {localStorage.getItem('username')}</span>
-            <button><Link to="/CreateRecipe">Create a Recipe</Link></button>
+            <button><Link to="/CreateRecipe">Create</Link></button>
             <button><Link to="/Library">Library</Link></button>
             <button><Link to="/Profile">Profile</Link></button>
           <button onClick={handleClick}>Log out</button>

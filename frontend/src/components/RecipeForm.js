@@ -87,6 +87,7 @@ const RecipeForm = () => {
   ];
 
   const Tags = [
+    { value: "none", label: "none"},
     { value: "vegan", label: "vegan" },
     { value: "vegetarian", label: "vegetarian" },
     { value: "pescatarian", label: "pescatarian" },
@@ -167,6 +168,7 @@ const RecipeForm = () => {
         options={Tags}
         onChange={(selectedOptions) => setFormData({ ...formData, tags: selectedOptions.map(option => option.value) })}
         value={Tags.filter(tag => formData.tags.includes(tag.value))}
+        required
       />
 
       <label>Upload Image:</label>
