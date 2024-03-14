@@ -3,6 +3,7 @@
 }
 
 body {
+  background-image: url(black-1072366_1920.jpg);
   font-family: "Rubik", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
@@ -15,17 +16,20 @@ body {
 h1 {
   font-size: 30px;
   padding-left: 25px;
+  color: rgb(214, 213, 203)
 }
 
 /*----------Navigation bar-------*/
 .navbar {
-  background-color: rgb(197, 233, 211);
+  background-color: rgb(241, 239, 218, 0.9);
+  box-shadow: 0px 0px 7px 0px #888888;
   position: fixed;
   display: flex;
   align-items: center;
   width: 100%;
   height: 120px;
   margin: 0;
+  margin-bottom: 0; 
   padding: 0;
   top: 0;
 }
@@ -52,42 +56,88 @@ input {
   margin: 0 2px;
 }
 
+.navbar .login-register-buttons {
+  float: right;
+}
 
 /*----------Home page-------*/
 .home {
   display: flex;
-  max-width: 100%;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding: 10px;
+  width: 100%;
   overflow: auto;
 }
 
-.home #filters {
-  list-style-type: none;
+.home .recipes {
   margin: 0;
-  padding: 0px 20px;
-  float: right;
-  background-color: #ebebeb;
-  position: fixed;
-  height: 100%;
-  overflow: auto;
-  font-size: 18px;
+  padding: 0;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-.home ul li {
-  width: 200px;
+.home img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
 }
+
+.home .filters {
+  position: fixed;
+  overflow: auto;
+  height: 100%;
+  overflow: auto; 
+  float: right;
+  right: 0;
+  top: 120px;
+  margin: 0;
+  font-size: 18px;
+  color: #555555;
+  list-style-type: none;
+  background-color: #ebebeb;
+}
+
+.home .filters ul {
+  width: 200px;
+  padding: 0;
+  list-style-type: none;
+}
+
+.home .filters ul li {
+  padding-bottom: 10px;
+}
+
+.home .filters h3 {
+  text-align: center;
+  color: #555555;
+}
+
 
 /*----------Login/register page-------*/
 .login-register-section {
-  padding: 10px;
-  margin: auto;
+  margin: 9% auto;
   width: 30%;
+  background-color: rgb(241, 239, 218, 0.8);
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px #888888;
+  padding: 20px 0px 40px 45px;
+}
+
+.login-register-section input {
+  display: block;
+  width: 90%;
+  padding: 5px;
 }
 
 /*----------Recipe Form---------*/
 .recipe-form {
-  padding: 10px;
-  margin: auto;
-  width: 50%;
+  background-color: #f2f2f2;
+  width: 40%;
+  padding: 10px 30px 10px 30px;
+  margin: 20px auto 20px auto;
+  border-radius: 10px;
+  color:#555555;
 }
 
 .recipe-form input {
@@ -113,27 +163,21 @@ input {
 
 .recipe-form button {
   width: 100%;
-  background-color: #b0d4b7;
+  background-color: #535554;
   color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
+  padding: 20px;
+  margin: 20px auto;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
 /*----------Library---------*/
-.library h1 {
-  font-size: 30px;
-  padding-left: 25px;
-}
-
 .library {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap; /* Add this line */
+  flex-direction: column;
+  flex-wrap: wrap;
   padding: 10px;
-  margin: auto;
   width: 100%;
   overflow: auto;
 }
@@ -141,7 +185,7 @@ input {
 .recipe-card {
   display: inline-block;
   border-radius: 10px;
-  box-shadow: 3px 3px 3px #888888;
+  box-shadow: 3px 3px 3px #282727;
   margin: 20px 5px 20px 20px;
   width: 200px;
   overflow: hidden;
@@ -154,6 +198,7 @@ input {
 
 .recipe-card img {
   width: 100%;
+  height: 200px;
   object-fit: cover;
 }
 
@@ -163,7 +208,7 @@ input {
   bottom: 0;
   left: 0;
   padding: 10px;
-  margin: 0; 
+  margin: 0;
   color: #fff;
   background: rgba(0, 0, 0, 0.3);
 }
@@ -179,7 +224,6 @@ input {
   padding: 20px;
   background-color: #f2f2f2;
   border-radius: 10px;
-  color: #555555;
 }
 
 .recipe-details img {
@@ -201,6 +245,7 @@ input {
 
 .recipe-details .row .column h1,
 h2 {
+  color: #555555;
   text-align: center;
 }
 

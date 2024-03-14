@@ -4,6 +4,7 @@ const multer = require("multer"); // import multer
 const { storage } = require("../middleware/uploadMiddleware"); // import storage middleware
 const upload = multer({ storage }); // initialize multer with storage middleware
 const {
+  getAllRecipes,
   getRecipes,
   addRecipe,
   getRecipeById,
@@ -15,10 +16,11 @@ const requireAuth = require("../requireAuth");
 
 router.use(requireAuth);
 
+router.get("/all", getAllRecipes);
+
 router.get("/", getRecipes);
 
-// Add one Recipe with file upload
-router.post("/", upload.single("image"), addRecipe); // use upload middleware for file upload
+router.post("/", upload.single("image"), addRecipe); 
 
 router.get("/:id", getRecipeById);
 

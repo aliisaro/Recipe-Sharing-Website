@@ -3,7 +3,18 @@ const fs = require("fs");
 const path = require("path");
 const Recipe = require("../models/Recipe");
 
-// get all Recipes
+// Get all recipes by all users
+const getAllRecipes = async (req, res) => {
+  try {
+    const Recipes = await Recipe.find().sort({ createdAt: -1 });
+    res.status(200).json(Recipes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server Error" });
+  }
+};
+
+// Get all Recipes by single user
 const getRecipes = async (req, res) => {
   const user_id = req.user._id;
 
@@ -72,7 +83,7 @@ const getRecipeById = async (req, res) => {
 
   try {
     const user_id = req.user._id;
-    const recipe = await Recipe.findById(id).where("user_id").equals(user_id);
+    const recipe = await Recipe.findById(id);
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
@@ -123,6 +134,7 @@ const deleteRecipe = async (req, res) => {
 };
 
 module.exports = {
+  getAllRecipes,
   getRecipes,
   addRecipe,
   getRecipeById,

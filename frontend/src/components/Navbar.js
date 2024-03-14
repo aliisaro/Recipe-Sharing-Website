@@ -20,9 +20,11 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated }) => {
         </Link>
       </div>
 
+      {isAuthenticated && (
       <div className="item" style={{ flexGrow: 8 }}>
         <Searchbar />
       </div>
+      )}
 
       <div className="item" style={{ flexGrow: 1 }}>
         {isAuthenticated && (
@@ -30,10 +32,11 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated }) => {
             <button><Link to="/CreateRecipe">Create</Link></button>
             <button><Link to="/Library">Library</Link></button>
             <button><Link to={`/profile/${username}`}>Go to Profile</Link></button>
-          <button onClick={handleClick}>Log out</button>
+            <button onClick={handleClick}>Log out</button>
         </div>
         )}
-        {!isAuthenticated && (<div>
+        {!isAuthenticated && (
+          <div className="login-register-buttons">
             <button><Link to="/SignIn">Login</Link></button>
             <button><Link to="/SignUp">Signup</Link></button>
           </div>

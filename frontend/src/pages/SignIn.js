@@ -21,8 +21,9 @@ const SignIn = ({ setIsAuthenticated }) => {
         <input {...username} />
         <label>Password:</label>
         <input {...password} />
+        <br/> 
         <label><Link to="/SignUp">Not registered? Sign up</Link></label>
-        <br></br>
+        <br/> <br/>
         <button type="submit">Sign in</button>
       </form>
     </>
