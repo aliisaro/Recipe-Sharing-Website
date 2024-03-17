@@ -31,12 +31,14 @@ const Library = () => {
   }, []);
 
   return (
-    <div className="Library">
+    <div className="library">
       <h1>Library</h1>
+
+      <div className="recipes">
         {error && <h2>{error}</h2>}
         {recipeArray.length === 0 && !error && <h2>No Recipes</h2>}
         {recipeArray.map((recipe) => (
-           <div key={recipe._id} className="recipe-card">
+          <div key={recipe._id} className="recipe-card">
             <Link to={`/${recipe._id}`}>
             <div className="image-container">
               <img
@@ -48,6 +50,8 @@ const Library = () => {
             </Link>
           </div>
         ))}
+      </div>
+
       </div>
   );
 };

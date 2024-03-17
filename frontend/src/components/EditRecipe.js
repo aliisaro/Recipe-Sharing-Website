@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 
-const RecipeForm = () => {
+const EditRecipe = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [error, setError] = useState(null);
+
+  //INITIAL FORM DATA
   const [formData, setFormData] = useState({
     title: "",
     ingredients: "",
@@ -13,9 +19,34 @@ const RecipeForm = () => {
     cuisine: "",
     tags: [],
   });
-  const [error, setError] = useState(null);
-  const token = localStorage.getItem("token");
 
+  //FETCH RECIPE
+  useEffect(() => {
+    const getRecipe = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/recipes/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch recipe");
+        }
+        const data = await response.json();
+        setFormData(data);
+      } catch (error) {
+        console.error("Error fetching recipe:", error);
+        setError("Failed to fetch recipe");
+      }
+    };
+
+    getRecipe();
+  }, [id]);
+
+  //HANDLE FORM CHANGE
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -24,6 +55,7 @@ const RecipeForm = () => {
     });
   };
 
+  //HANDLE IMAGE CHANGE
   const handleImageChange = (e) => {
     setFormData({
       ...formData,
@@ -31,35 +63,44 @@ const RecipeForm = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  //UPDATE RECIPE
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
     const recipeData = new FormData();
     for (const key in formData) {
-      recipeData.append(key, formData[key]);
+      if (key === "image") {
+        // If the key is 'image', append the file object to the FormData
+        recipeData.append(key, formData[key], formData[key].name);
+      } else {
+        recipeData.append(key, formData[key]);
+      }
     }
 
-    const response = await fetch("http://localhost:4000/api/recipes", {
-      method: "POST",
-      body: recipeData,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    console.log("Recipe Data: ", recipeData);
 
-    const json = await response.json();
-
-    if (!response.ok) {
-      setError(json.error);
-      console.log("Error: " + json.error);
-      alert("Failed to add recipe to database. Please try again.");
-    }
-    if (response.ok) {
-      console.log("Recipe added to database successfully");
-      alert("Recipe added to database successfully");
+    try {
+      const response = await fetch(`http://localhost:4000/api/recipes/${id}`, {
+        method: "PUT",
+        body: recipeData,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update recipe");
+      }
+      console.log("Recipe updated successfully");
+      alert("Recipe updated successfully");
+      navigate(`/${id}`);
+    } catch (error) {
+      console.error("Error updating recipe:", error);
+      alert("Failed to update recipe.");
+      setError("Failed to update recipe");
     }
   };
 
+  //OPTIONS FOR SELECTS
   const Difficulty = [
     { value: "easy", label: "easy" },
     { value: "medium", label: "medium" },
@@ -87,7 +128,7 @@ const RecipeForm = () => {
   ];
 
   const Tags = [
-    { value: "none", label: "none"},
+    { value: "none", label: "none" },
     { value: "vegan", label: "vegan" },
     { value: "vegetarian", label: "vegetarian" },
     { value: "pescatarian", label: "pescatarian" },
@@ -99,8 +140,12 @@ const RecipeForm = () => {
   ];
 
   return (
-    <form className="recipe-form" onSubmit={handleSubmit} encType="multipart/form-data">
-      <h3>Add a New Recipe</h3>
+    <form
+      className="recipe-form"
+      onSubmit={handleSubmit}
+      encType="multipart/form-data"
+    >
+      <h3>Edit Recipe</h3>
 
       <label>Title:</label>
       <input
@@ -108,7 +153,6 @@ const RecipeForm = () => {
         name="title"
         value={formData.title}
         onChange={handleChange}
-        required
       />
 
       <label>Time:</label>
@@ -117,7 +161,6 @@ const RecipeForm = () => {
         name="time"
         value={formData.time}
         onChange={handleChange}
-        required
       />
 
       <label>Ingredients:</label>
@@ -125,7 +168,6 @@ const RecipeForm = () => {
         name="ingredients"
         value={formData.ingredients}
         onChange={handleChange}
-        required
         placeholder="Write the ingredients here:"
       />
 
@@ -134,48 +176,55 @@ const RecipeForm = () => {
         name="steps"
         value={formData.steps}
         onChange={handleChange}
-        required
         placeholder="Write the steps here:"
       />
 
       <label>Difficulty:</label>
       <Select
         options={Difficulty}
-        onChange={(selectedOption) => setFormData({ ...formData, difficulty: selectedOption.value })}
+        onChange={(selectedOption) =>
+          setFormData({ ...formData, difficulty: selectedOption.value })
+        }
         value={{ label: formData.difficulty, value: formData.difficulty }}
-        required
       />
 
       <label>Type:</label>
       <Select
         options={Type}
-        onChange={(selectedOption) => setFormData({ ...formData, type: selectedOption.value })}
+        onChange={(selectedOption) =>
+          setFormData({ ...formData, type: selectedOption.value })
+        }
         value={{ label: formData.type, value: formData.type }}
-        required
       />
 
       <label>Cuisine:</label>
       <Select
         options={Cuisine}
-        onChange={(selectedOption) => setFormData({ ...formData, cuisine: selectedOption.value })}
+        onChange={(selectedOption) =>
+          setFormData({ ...formData, cuisine: selectedOption.value })
+        }
         value={{ label: formData.cuisine, value: formData.cuisine }}
-        required
       />
 
       <label>Tags: </label>
       <Select
         isMulti
         options={Tags}
-        onChange={(selectedOptions) => setFormData({ ...formData, tags: selectedOptions.map(option => option.value) })}
-        value={Tags.filter(tag => formData.tags.includes(tag.value))}
-        required
+        onChange={(selectedOptions) =>
+          setFormData({
+            ...formData,
+            tags: selectedOptions.map((option) => option.value),
+          })
+        }
+        value={Tags.filter((tag) => formData.tags.includes(tag.value))}
       />
 
       <label>Upload Image:</label>
-      <input type="file" onChange={handleImageChange} accept="image/*" required />
-      
-      <button type="submit">Add Recipe</button>
+      <input type="file" onChange={handleImageChange} accept="image/*" />
+
+      <button type="submit">Edit Recipe</button>
     </form>
   );
 };
-export default RecipeForm;
+
+export default EditRecipe;
