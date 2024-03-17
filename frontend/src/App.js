@@ -6,7 +6,8 @@ import "./app.css";
 import Navbar from "./components/Navbar";
 import RecipeDetails from "./components/RecipeDetails";
 import Profile from "./pages/Profile";
-import CreateRecipe from "./pages/CreateRecipe";
+import CreateRecipe from "./components/CreateRecipe";
+import EditRecipe from "./components/EditRecipe";
 import Library from "./pages/Library";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -34,12 +35,15 @@ function App() {
             isAuthenticated ? <CreateRecipe /> : <Navigate to="/SignIn" />
           }
         />
+
+        <Route path="/:id" element={<RecipeDetails />} />
+
+        <Route path="/EditRecipe/:id" element={<EditRecipe />} />
+
         <Route
           path="/Library"
           element={isAuthenticated ? <Library /> : <Navigate to="/SignIn" />}
         />
-
-        <Route path="/:id" element={<RecipeDetails />} />
 
         <Route
           path="/Profile/:name"

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 
 const RecipeDetails = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [error, setError] = useState(null);
@@ -38,6 +39,22 @@ const RecipeDetails = () => {
     return <div>Loading...</div>;
   }
 
+  const DeleteRecipe = async () => {
+    try {
+      await fetch(`http://localhost:4000/api/recipes/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      navigate("/");
+    } catch (error) {
+      setError("Failed to delete recipe");
+      console.error("Error deleting recipe:", error);
+      alert("Failed to delete recipe. Please try again.");
+    }
+  };
+
   return (
     <div className="recipe-details">
       <div className="row">
@@ -51,11 +68,11 @@ const RecipeDetails = () => {
         <div className="column">
           <h1>{recipe.title}</h1>
           <ul>
-          <li>Time: {recipe.time}</li>
-          <li>Difficulty: {recipe.difficulty}</li>
-          <li>Type: {recipe.type}</li>
-          <li>Cuisine: {recipe.cuisine}</li>
-          <li>Tags: {recipe.tags}</li>
+            <li>Time: {recipe.time}</li>
+            <li>Difficulty: {recipe.difficulty}</li>
+            <li>Type: {recipe.type}</li>
+            <li>Cuisine: {recipe.cuisine}</li>
+            <li>Tags: {recipe.tags}</li>
           </ul>
         </div>
       </div>
@@ -71,6 +88,15 @@ const RecipeDetails = () => {
           <p>{recipe.steps}</p>
         </div>
       </div>
+
+      {recipe.user_id === localStorage.getItem("user_id") && (
+        <div className="edit-delete-recipe-buttons">
+          <button>
+            <Link to={`/EditRecipe/${recipe._id}`}>Edit recipe</Link>
+          </button>
+          <button onClick={() => DeleteRecipe()}>Delete recipe</button>
+        </div>
+      )}
     </div>
   );
 };

@@ -15,6 +15,7 @@ const useSignup = (setIsAuthenticated) => {
 
       if (response.ok) {
         const user = await response.json();
+        localStorage.setItem("user_id", user._id);
         localStorage.setItem("username", user.username);
         localStorage.setItem("token", user.token);
         console.log("User signed up successfully!");
