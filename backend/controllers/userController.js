@@ -55,4 +55,31 @@ const getUserByUsername = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, signinUser, getUserByUsername };
+const patchUser = async (req, res) => {
+  try {
+      // Extract only the fields you want to update from req.body
+      const { bio, image } = req.body;
+
+      // Create an object to hold the fields you want to update
+      let updateFields = {};
+      if (bio) updateFields.bio = bio;
+      if (image) updateFields.image = image;
+
+      // Use findOneAndUpdate to update only the specified fields
+      const user = await User.findOneAndUpdate(
+          { username: req.params.username },
+          updateFields, // Update only the specified fields
+          { new: true } // Return the updated document
+      );
+
+      if (!user) {
+          return res.status(404).json({ msg: "User not found" });
+      }
+
+      res.json(user);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { signupUser, signinUser, getUserByUsername, patchUser };

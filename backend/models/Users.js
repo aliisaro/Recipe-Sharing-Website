@@ -21,7 +21,6 @@ const userSchema = new Schema({
   },
   bio: {
     type: String,
-    default: "Default text"
   },
   image: {
     type: String,

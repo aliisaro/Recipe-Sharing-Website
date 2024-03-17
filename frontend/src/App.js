@@ -11,6 +11,7 @@ import Library from "./pages/Library";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
+import EditProfile from "./pages/EditProfile"
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -44,6 +45,10 @@ function App() {
         <Route
           path="/Profile/:name"
           element={isAuthenticated ? <Profile /> : <Navigate to="/SignIn" />}
+        />
+        <Route
+          path="/EditProfile/:name"
+          element={isAuthenticated ? <EditProfile /> : <Navigate to="/SignIn" />}
         />
         <Route
           path="SignIn"
