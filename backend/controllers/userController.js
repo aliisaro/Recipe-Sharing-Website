@@ -21,6 +21,7 @@ const signinUser = async (req, res) => {
       .status(200)
       .json({ message: "Sign in successful", _id, username, token });
   } catch (error) {
+    console.error("Sign in error:", error.message);
     res.status(400).json({ error: error.message });
   }
 };
@@ -28,6 +29,8 @@ const signinUser = async (req, res) => {
 // signup a user
 const signupUser = async (req, res) => {
   const { username, email, hashedPassword } = req.body;
+
+  console.log("Signup request body:", req.body); // <-- Add this line
 
   try {
     const user = await User.signup(username, email, hashedPassword);
@@ -40,6 +43,7 @@ const signupUser = async (req, res) => {
       .status(200)
       .json({ message: "Sign up successful", _id, username, email, token });
   } catch (error) {
+    console.error("Signup error:", error.message);
     res.status(400).json({ error: error.message });
   }
 };
