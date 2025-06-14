@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
 const Recipe = require("../models/Recipe");
+const User = require("../models/Users");
 
 // Get all recipes by all users
 const getAllRecipes = async (req, res) => {
@@ -15,15 +16,15 @@ const getAllRecipes = async (req, res) => {
 };
 
 // Get all Recipes by single user
-const getRecipes = async (req, res) => {
-  const user_id = req.user._id;
-
+const getRecipesByUser = async (req, res) => {
   try {
-    const Recipes = await Recipe.find({ user_id }).sort({ createdAt: -1 });
-    res.status(200).json(Recipes);
+    const userId = req.user._id;
+    // Find recipes where user_id equals the logged-in user's ID
+    const recipes = await Recipe.find({ user_id: userId }).sort({ createdAt: -1 });
+    res.status(200).json(recipes);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server Error" });
+    res.status(500).json({ error: "Failed to get user's recipes" });
   }
 };
 
@@ -88,6 +89,12 @@ const addRecipe = async (req, res) => {
     });
 
     await newRecipe.save();
+
+    // add to user's createdRecipes array
+    const user = await User.findById(user_id);
+    user.createdRecipes.push(newRecipe._id);
+    await user.save();
+
     res.status(201).json(newRecipe);
   } catch (error) {
     console.error(error);
@@ -165,11 +172,66 @@ const deleteRecipe = async (req, res) => {
   }
 };
 
+// save recipe to library
+const saveRecipe = async (req, res) => {
+  const recipeId = req.params.id;
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+
+  if (!user.savedRecipes.some(id => id.toString() === recipeId)) {
+    user.savedRecipes.push(recipeId);
+    await user.save();
+  }
+
+    res.status(200).json({ message: "Recipe saved successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to save recipe" });
+  }
+};
+
+// unsave recipe from library
+const unsaveRecipe = async (req, res) => {
+  const recipeId = req.params.id;
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+
+    user.savedRecipes = user.savedRecipes.filter(id => id.toString() !== recipeId);
+    await user.save();
+
+    res.status(200).json({ message: "Recipe unsaved successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to unsave recipe" });
+  }
+};
+
+// Get all saved recipes by current user
+const getSavedRecipes = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    const savedRecipes = await Recipe.find({ _id: { $in: user.savedRecipes } }).sort({ createdAt: -1 });
+    res.status(200).json(savedRecipes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get saved recipes" });
+  }
+};
+
+
 module.exports = {
   getAllRecipes,
-  getRecipes,
+  getRecipesByUser,
   addRecipe,
   getRecipeById,
   deleteRecipe,
   updateRecipe,
+  saveRecipe,
+  unsaveRecipe,
+  getSavedRecipes,
 };

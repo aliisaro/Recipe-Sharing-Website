@@ -30,7 +30,7 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated }) => {
         {isAuthenticated && (
           <div>
             <button>
-              <Link to="/CreateRecipe">Create</Link>
+              <Link to="/CreateRecipe">Create </Link>
             </button>
             <button>
               <Link to="/Library">Library</Link>

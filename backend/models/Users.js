@@ -36,14 +36,14 @@ const userSchema = new Schema({
   },
   savedRecipes: [
     {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Recipe',
     },
   ],
   createdRecipes: [
     {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Recipe',
     },
   ],
 });
