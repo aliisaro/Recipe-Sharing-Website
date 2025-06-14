@@ -222,7 +222,11 @@ const EditRecipe = () => {
       <label>Upload Image:</label>
       <input type="file" onChange={handleImageChange} accept="image/*" />
 
-      <button type="submit">Edit Recipe</button>
+      <div className="edit-cancel-buttons">
+        <button type="submit">Edit Recipe</button>
+        <button type="button" onClick={() => navigate(`/${id}`)}>Cancel</button>
+      </div>
+
     </form>
   );
 };
