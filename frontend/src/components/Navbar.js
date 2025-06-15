@@ -41,16 +41,6 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated }) => {
             <button onClick={handleClick}>Log out</button>
           </div>
         )}
-        {!isAuthenticated && (
-          <div className="login-register-buttons">
-            <button>
-              <Link to="/SignIn">Login</Link>
-            </button>
-            <button>
-              <Link to="/SignUp">Signup</Link>
-            </button>
-          </div>
-        )}
       </div>
     </nav>
   );

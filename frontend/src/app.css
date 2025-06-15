@@ -3,14 +3,18 @@
 }
 
 body {
-  background-image: url(black-1072366_1920.jpg);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
   font-family: "Rubik", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
-  max-width: 100%;
-  overflow-x: hidden;
-  margin: 0;
-  padding: 120px 0px;
+  background-image: url(background-1745468760.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 h1 {
@@ -22,7 +26,7 @@ h1 {
 /*----------Navigation bar-------*/
 .navbar {
   background-color: #E3F6EC;
-  box-shadow: 0px 0px 50px 0px #444444;
+  box-shadow: 0px 0px 50px 0px #000000;
   position: fixed;
   display: flex;
   align-items: center;
@@ -62,8 +66,54 @@ input {
   text-decoration: none;
 }
 
-.navbar .login-register-buttons {
-  float: right;
+/*----------Login/register page-------*/
+.login-register-section {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 20px 50px 50px 50px;
+}
+
+.login-register-section h3 {
+  color: #E3F6EC;
+  font-size: 40px;
+  text-align: center;
+}
+
+form.login-register-section .login-register-link {
+  display: block;
+  color: #ffffff;
+  text-decoration: underline;
+  text-align: center;
+  margin: 10px auto 10px auto;
+  padding: 0;
+  width: 100%;
+}
+
+.login-register-section input {
+  display: block;
+  margin: auto;
+  width: 85%;
+  margin: 5px auto 30px auto;
+  background-color: #E3F6EC;
+  font-size: 20px;
+}
+
+.login-register-section button {
+  display: block;
+  margin: 20px auto 0 auto;
+  width: 70%;
+  padding: 10px;
+  background-color: #474C59;
+  color: #E3F6EC;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 23px;
 }
 
 /*----------Home page-------*/
@@ -119,21 +169,6 @@ input {
   color: #555555;
 }
 
-/*----------Login/register page-------*/
-.login-register-section {
-  margin: 9% auto;
-  width: 30%;
-  background-color: rgb(241, 239, 218, 0.8);
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px 0px #888888;
-  padding: 20px 0px 40px 45px;
-}
-
-.login-register-section input {
-  display: block;
-  width: 90%;
-  padding: 5px;
-}
 
 /*----------Recipe Form---------*/
 .recipe-form {

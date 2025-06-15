@@ -25,16 +25,11 @@ const SignUp = ({ setIsAuthenticated }) => {
     <>
       <form className="login-register-section" onSubmit={handler}>
         <h3>Sign Up</h3>
-        <label>Username:</label>
-        <input {...username} />
-        <label>Email address:</label>
-        <input {...email} />
-        <label>Password:</label>
-        <input {...password} />
-        <label>Write password again:</label>
-        <input {...password2} />
-        <label><Link to="/SignIn">Already registered? Sign in</Link></label>
-        <br></br>
+        <input {...username} placeholder="Username"/>
+        <input {...email} placeholder="Email"/>
+        <input {...password} placeholder="Password"/>
+        <input {...password2} placeholder="Write password again..."/>
+        <Link to="/SignIn" className="login-register-link">Already registered? Sign in</Link>
         <button type="submit">Sign up</button>
 
       </form>
