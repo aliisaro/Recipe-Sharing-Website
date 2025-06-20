@@ -110,7 +110,7 @@ const CreateRecipe = () => {
 
   return (
     <form
-      className="recipe-form"
+      className="page-container recipe-form"
       onSubmit={handleSubmit}
       encType="multipart/form-data"
     >

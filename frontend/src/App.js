@@ -12,7 +12,7 @@ import Library from "./pages/Library";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
-import EditProfile from "./pages/EditProfile"
+import EditProfile from "./components/EditProfile"
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
