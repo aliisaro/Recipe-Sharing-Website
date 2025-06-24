@@ -5,15 +5,37 @@ const Recipe = require("../models/Recipe");
 const User = require("../models/Users");
 
 // Get all recipes by all users
+// Get all recipes by all users, with optional filters
 const getAllRecipes = async (req, res) => {
   try {
-    const Recipes = await Recipe.find().sort({ createdAt: -1 });
-    res.status(200).json(Recipes);
+    const { type, cuisine, tags } = req.query;
+
+    // Build the filter object dynamically based on query params
+    const filter = {};
+
+    if (type && type !== 'none') {
+      filter.type = type;
+    }
+    if (cuisine && cuisine !== 'none') {
+      filter.cuisine = cuisine;
+    }
+
+    if (tags && tags !== 'none') {
+      // Assume tags query param is a comma separated string, e.g. "vegan,gluten free"
+      const tagsArray = tags.split(',').map(tag => tag.trim());
+
+      // Filter recipes that have any of the tags in their tags array
+      filter.tags = { $in: tagsArray };
+    }
+
+    const recipes = await Recipe.find(filter).sort({ createdAt: -1 });
+    res.status(200).json(recipes);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server Error" });
   }
 };
+
 
 // Get all Recipes by single user
 const getRecipesByUser = async (req, res) => {

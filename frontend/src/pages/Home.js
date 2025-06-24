@@ -1,16 +1,44 @@
-import Select from "react-select";
+import Filters from "../components/Filters";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Home = () => {
+  // State to hold the recipe array
   const [recipeArray, setRecipeArray] = useState([]);
+
+  // State to handle filters
+  const [filters, setFilters] = useState({
+  type: null,
+  cuisine: null,
+  tags: null,
+  });
+
+  // State to handle errors
   const [error, setError] = useState(null);
 
+  // Fetch recipes when the component mounts or filters change
+  const handleFilterChange = (filterName, selectedOption) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterName]:
+        filterName === "tags"
+          ? selectedOption?.map((opt) => opt.value) || []
+          : selectedOption
+          ? selectedOption.value
+          : null,
+    }));
+  };
+
   useEffect(() => {
-    const getRecipe = async () => {
+    const getRecipes = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/recipes/all", {
-          method: "GET",
+        const query = new URLSearchParams();
+
+        if (filters.type && filters.type !== "none") query.append("type", filters.type);
+        if (filters.cuisine && filters.cuisine !== "none") query.append("cuisine", filters.cuisine);
+        if (filters.tags && filters.tags.length > 0) query.append("tags", filters.tags.join(","));
+
+        const response = await fetch(`http://localhost:4000/api/recipes/all?${query.toString()}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -20,20 +48,22 @@ const Home = () => {
         if (!response.ok) {
           const data = await response.json();
           setError(data.error);
-          console.error(data.error); // Log the error
           setRecipeArray([]);
           return;
         }
+
         const data = await response.json();
         setRecipeArray(data);
       } catch (error) {
-        setError("Error fetching recipes");
         console.error(error);
+        setError("Error fetching recipes");
       }
     };
-    getRecipe();
-  }, []);
 
+    getRecipes();
+  }, [filters]);
+
+  // Define filter options
   const SortByOptions = [
     { value: "trending", label: "trending" },
     { value: "date", label: "date" },
@@ -68,6 +98,7 @@ const Home = () => {
     { value: "dairy free", label: "dairy free" },
     { value: "nut free", label: "nut free" },
     { value: "egg free", label: "egg free" },
+    { value: "pescatarian", label: "pescatarian" },
     { value: "seafood free", label: "seafood free" },
   ];
 
@@ -95,23 +126,13 @@ const Home = () => {
         ))}
       </div>
 
-      <div className="filters">
-        <ul>
-          <h3>Filters</h3>
-          <li>
-            Sort by: <Select options={SortByOptions} />
-          </li>
-          <li>
-            Type: <Select options={TypeOptions} />
-          </li>
-          <li>
-            Cuisine: <Select options={CuisineOptions} />
-          </li>
-          <li>
-            Tags: <Select options={TagOptions} />
-          </li>
-        </ul>
-      </div>
+      <Filters
+        SortByOptions={SortByOptions}
+        TypeOptions={TypeOptions}
+        CuisineOptions={CuisineOptions}
+        TagOptions={TagOptions}
+        onFilterChange={handleFilterChange}
+      />
     </div>
   );
 };
