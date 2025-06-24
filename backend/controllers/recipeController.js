@@ -8,7 +8,7 @@ const User = require("../models/Users");
 // Get all recipes by all users, with optional filters
 const getAllRecipes = async (req, res) => {
   try {
-    const { type, cuisine, tags } = req.query;
+    const { type, cuisine, tags, search} = req.query;
 
     // Build the filter object dynamically based on query params
     const filter = {};
@@ -26,6 +26,16 @@ const getAllRecipes = async (req, res) => {
 
       // Filter recipes that have any of the tags in their tags array
       filter.tags = { $in: tagsArray };
+    }
+
+    
+    if (search) {
+      // Perform case-insensitive partial match on title or ingredients or steps, etc.
+      filter.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { ingredients: { $regex: search, $options: "i" } },
+        { steps: { $regex: search, $options: "i" } },
+      ];
     }
 
     const recipes = await Recipe.find(filter).sort({ createdAt: -1 });

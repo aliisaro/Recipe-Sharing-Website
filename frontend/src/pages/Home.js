@@ -2,7 +2,7 @@ import Filters from "../components/Filters";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const Home = () => {
+const Home = ({ searchTerm }) => {
   // State to hold the recipe array
   const [recipeArray, setRecipeArray] = useState([]);
 
@@ -37,6 +37,9 @@ const Home = () => {
         if (filters.type && filters.type !== "none") query.append("type", filters.type);
         if (filters.cuisine && filters.cuisine !== "none") query.append("cuisine", filters.cuisine);
         if (filters.tags && filters.tags.length > 0) query.append("tags", filters.tags.join(","));
+        
+        // Add search term query param
+        if (searchTerm) query.append("search", searchTerm);
 
         const response = await fetch(`http://localhost:4000/api/recipes/all?${query.toString()}`, {
           headers: {
@@ -61,7 +64,7 @@ const Home = () => {
     };
 
     getRecipes();
-  }, [filters]);
+  }, [filters, searchTerm]);
 
   // Define filter options
   const SortByOptions = [
@@ -106,6 +109,7 @@ const Home = () => {
     <div className="home">
       <h1>Explore recipes</h1>
 
+      {/* Recipes */}
       <div className="Recipes">
         {error && <h2>{error}</h2>}
         {recipeArray.length === 0 && !error && <h1>No Recipes</h1>}
@@ -126,6 +130,7 @@ const Home = () => {
         ))}
       </div>
 
+      {/* Filters */}
       <Filters
         SortByOptions={SortByOptions}
         TypeOptions={TypeOptions}

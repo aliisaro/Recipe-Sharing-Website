@@ -19,16 +19,22 @@ function App() {
     Boolean(localStorage.getItem("token")) || false
   );
 
+  // Search term state
+  const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <BrowserRouter>
       <Navbar
         isAuthenticated={isAuthenticated}
         setIsAuthenticated={setIsAuthenticated}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
       />
+
       <Routes>
         <Route
           path="/"
-          element={isAuthenticated ? <Home /> : <Navigate to="/SignIn" />}
+          element={isAuthenticated ? <Home searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> : <Navigate to="/SignIn" />}
         />
         <Route
           path="/CreateRecipe"
