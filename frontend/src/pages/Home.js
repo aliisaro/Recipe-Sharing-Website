@@ -1,8 +1,9 @@
 import Filters from "../components/Filters";
+import Searchbar from "../components/Searchbar";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const Home = ({ searchTerm }) => {
+const Home = ({ searchTerm, setSearchTerm }) => {
   // State to hold the recipe array
   const [recipeArray, setRecipeArray] = useState([]);
 
@@ -27,6 +28,11 @@ const Home = ({ searchTerm }) => {
           ? selectedOption.value
           : null,
     }));
+  };
+
+  // Handle search term
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   useEffect(() => {
@@ -107,12 +113,17 @@ const Home = ({ searchTerm }) => {
 
   return (
     <div className="home">
-      <h1>Explore recipes</h1>
+
+      {/* Searchbar */}
+      <div className="searchbar-title-container">
+        <h1>Explore recipes</h1>
+        <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      </div>
 
       {/* Recipes */}
       <div className="Recipes">
         {error && <h2>{error}</h2>}
-        {recipeArray.length === 0 && !error && <h1>No Recipes</h1>}
+        {recipeArray.length === 0 && !error && <h2>No recipes found...</h2>}
         {recipeArray.map((recipe) => (
           <div key={recipe._id} className="recipe-card">
             <Link to={`/${recipe._id}`}>

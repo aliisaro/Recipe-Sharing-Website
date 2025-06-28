@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import img from "../images/Logo.png";
-import Searchbar from "../components/Searchbar";
 
-const Navbar = ({ setIsAuthenticated, isAuthenticated, searchTerm, setSearchTerm }) => {
+const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
   const handleClick = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("user_id");
@@ -19,12 +18,6 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated, searchTerm, setSearchTerm
           <img src={img} className="logo" alt="logo" />
         </Link>
       </div>
-
-      {isAuthenticated && (
-        <div className="item" style={{ flexGrow: 8 }}>
-          <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        </div>
-      )}
 
       <div className="item" style={{ flexGrow: 1 }}>
         {isAuthenticated && (

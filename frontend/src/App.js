@@ -25,13 +25,11 @@ function App() {
       <Navbar
         isAuthenticated={isAuthenticated}
         setIsAuthenticated={setIsAuthenticated}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
       />
       <Routes>
         <Route
           path="/"
-          element={isAuthenticated ? <Home searchTerm={searchTerm} /> : <Navigate to="/SignIn" />}
+          element={isAuthenticated ? <Home searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> : <Navigate to="/SignIn" />}
         />
         <Route
           path="/CreateRecipe"
