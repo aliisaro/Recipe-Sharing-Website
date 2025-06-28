@@ -21,6 +21,7 @@ body {
 h1, h2, h3 {
   padding: 0 0 0 25px;
   margin: 0;
+  color: #E3F6EC;
 }
 
 button {
@@ -75,7 +76,6 @@ button {
 }
 
 .login-register-section h3 {
-  color: #E3F6EC;
   font-size: 40px;
   text-align: center;
 }
@@ -123,12 +123,10 @@ form.login-register-section .login-register-link {
 }
 
 .home h1 {
-  color: #E3F6EC;
   font-size: 40px;
 }
 
 .home h2 {
-  color: #E3F6EC;
   font-size: 30px;
 }
 
@@ -255,6 +253,8 @@ form.login-register-section .login-register-link {
   padding: 10px;
   width: 100%;
   overflow: auto;
+  top: 150px;
+  position: relative;
 }
 
 .library h2 {
@@ -316,6 +316,11 @@ form.login-register-section .login-register-link {
   margin-bottom: 20px;
   color: #333;
   flex-shrink: 0;
+}
+
+.recipe-details h2 {
+  margin-bottom: 10px;
+  color: #555;
 }
 
 /* Top section: image left, description right */
