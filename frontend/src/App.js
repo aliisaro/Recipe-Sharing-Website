@@ -1,25 +1,23 @@
 import React, { useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import "./app.css";
 
 import Navbar from "./components/Navbar";
-import RecipeDetails from "./components/RecipeDetails";
+import Home from "./pages/Home";
 import Profile from "./pages/Profile";
-import CreateRecipe from "./components/CreateRecipe";
-import EditRecipe from "./components/EditRecipe";
+import CreateRecipe from "./pages/CreateRecipe";
+import EditRecipe from "./pages/EditRecipe";
+import RecipeDetails from "./pages/RecipeDetails";
+import EditProfile from "./pages/EditProfile";
 import Library from "./pages/Library";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import Home from "./pages/Home";
-import EditProfile from "./components/EditProfile"
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     Boolean(localStorage.getItem("token")) || false
   );
 
-  // Search term state
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
@@ -30,28 +28,21 @@ function App() {
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
       />
-
       <Routes>
         <Route
           path="/"
-          element={isAuthenticated ? <Home searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> : <Navigate to="/SignIn" />}
+          element={isAuthenticated ? <Home searchTerm={searchTerm} /> : <Navigate to="/SignIn" />}
         />
         <Route
           path="/CreateRecipe"
-          element={
-            isAuthenticated ? <CreateRecipe /> : <Navigate to="/SignIn" />
-          }
+          element={isAuthenticated ? <CreateRecipe /> : <Navigate to="/SignIn" />}
         />
-
         <Route path="/:id" element={<RecipeDetails />} />
-
         <Route path="/EditRecipe/:id" element={<EditRecipe />} />
-
         <Route
           path="/Library"
           element={isAuthenticated ? <Library /> : <Navigate to="/SignIn" />}
         />
-
         <Route
           path="/Profile/:name"
           element={isAuthenticated ? <Profile /> : <Navigate to="/SignIn" />}
@@ -61,24 +52,12 @@ function App() {
           element={isAuthenticated ? <EditProfile /> : <Navigate to="/SignIn" />}
         />
         <Route
-          path="SignIn"
-          element={
-            !isAuthenticated ? (
-              <SignIn setIsAuthenticated={setIsAuthenticated} />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
+          path="/SignIn"
+          element={!isAuthenticated ? <SignIn setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/" />}
         />
         <Route
-          path="SignUp"
-          element={
-            !isAuthenticated ? (
-              <SignUp setIsAuthenticated={setIsAuthenticated} />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
+          path="/SignUp"
+          element={!isAuthenticated ? <SignUp setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/" />}
         />
       </Routes>
     </BrowserRouter>
