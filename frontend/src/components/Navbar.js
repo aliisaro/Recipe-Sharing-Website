@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import img from "../images/Logo.png";
 
+
 const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
   const handleClick = () => {
     setIsAuthenticated(false);
@@ -13,13 +14,13 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
 
   return (
     <nav className="navbar">
-      <div className="item" style={{ flexGrow: 1 }}>
+      <div className="item" style={{ flexGrow: 10 }}>  
         <Link to="/">
           <img src={img} className="logo" alt="logo" />
         </Link>
       </div>
 
-      <div className="item" style={{ flexGrow: 1 }}>
+      <div className="item" style={{ flexGrow: 1}}>
         {isAuthenticated && (
           <div>
             <button>

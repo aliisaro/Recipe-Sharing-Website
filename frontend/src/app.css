@@ -18,10 +18,14 @@ body {
   background-position: center;
 }
 
-h1 {
-  font-size: 50px;
+h1, h2, h3 {
   padding: 0 0 0 25px;
-  color: #E3F6EC;
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+  font-family: "Rubik", sans-serif;
 }
 
 /*----------Navigation bar-------*/
@@ -29,50 +33,33 @@ h1 {
   background-color: #E3F6EC;
   box-shadow: 0px 0px 50px 0px #000000;
   position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
   width: 100%;
-  height: auto;
-  min-height: 80px;
-  padding: 20px 40px;
-  top: 0;
-  z-index: 1000;
-  gap: 20px;
+  height: 120px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.navbar .item {
-  flex: 1 1 auto;
-  min-width: 200px;
-}
-
-.logo {
-  height: 60px;
-  flex-shrink: 0;
-}
-
-.navbar button {
-  height: 45px;
-  min-width: 130px;
-  font-size: 18px;
-  background-color: #6c757d;
-  padding: 0 12px;
-  margin: 10px;
-  color: #fff;
-  border-radius: 10px;
+.navbar button{
+  width: 150px;
+  height: 120px;
+  font-size: 22px;
+  background-color: #E3F6EC;
+  margin: 0 10px;
+  padding: 10px 20px;
+  color: #5a6268;
   border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
 .navbar button:hover {
-  background-color: #5a6268;
+  background-color: hsl(145, 28%, 82%);
 }
 
 .navbar a {
   text-decoration: none;
-  color: #fff;
+  color: #5a6268;
 }
 
 /*----------Login/register page-------*/
@@ -138,13 +125,11 @@ form.login-register-section .login-register-link {
 .home h1 {
   color: #E3F6EC;
   font-size: 40px;
-  margin: 0;
 }
 
 .home h2 {
   color: #E3F6EC;
   font-size: 30px;
-  margin-left: 25px;
 }
 
 
@@ -186,6 +171,7 @@ form.login-register-section .login-register-link {
   overflow: auto;
   float: right;
   right: 0;
+  padding-top: 20px;
   top: 120px;
   font-size: 18px;
   list-style-type: none;
