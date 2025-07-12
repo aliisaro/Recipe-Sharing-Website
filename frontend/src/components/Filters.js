@@ -8,32 +8,33 @@ const Filters = ({
   onFilterChange,
 }) => {
   return (
-    <div className="filters">
-      <ul>
-        <h3>Filters</h3>
-        <li>
-          <Select
-            options={TypeOptions}
-            placeholder="Choose type:"
-            onChange={(selected) => onFilterChange?.("type", selected)}
-          />
-        </li>
-        <li>
-          <Select
-            options={CuisineOptions}
-            placeholder="Choose cuisine:"
-            onChange={(selected) => onFilterChange?.("cuisine", selected)}
-          />
-        </li>
-        <li>
-          <Select
-            options={TagOptions}
-            placeholder="Select tags:"
-            isMulti
-            onChange={(selected) => onFilterChange?.("tags", selected)}
-            />
-        </li>
-      </ul>
+     <div className="filters">
+
+      <div className="select">
+        <Select
+          options={TypeOptions}
+          placeholder="Choose type:"
+          onChange={(selected) => onFilterChange?.("type", selected)}
+        />
+      </div>
+
+      <div className="select">
+        <Select
+          options={CuisineOptions}
+          placeholder="Choose cuisine:"
+          onChange={(selected) => onFilterChange?.("cuisine", selected)}
+        />
+        </div>
+
+      <div className="select">
+        <Select
+          options={TagOptions}
+          placeholder="Select tags:"
+          isMulti
+          onChange={(selected) => onFilterChange?.("tags", selected)}
+        />
+
+      </div>
     </div>
   );
 };

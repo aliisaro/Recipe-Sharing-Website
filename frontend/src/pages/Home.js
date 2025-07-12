@@ -112,43 +112,40 @@ const Home = ({ searchTerm, setSearchTerm }) => {
   ];
 
   return (
-    <div className="home">
+    <div className="home-container">
 
-      {/* Searchbar */}
-      <div className="searchbar-title-container">
-        <h1>Explore recipes</h1>
+      {/* Searchbar & filters */}
+      <div className="searchbar-filters-container">        
         <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
+        <Filters
+          SortByOptions={SortByOptions}
+          TypeOptions={TypeOptions}
+          CuisineOptions={CuisineOptions}
+          TagOptions={TagOptions}
+          onFilterChange={handleFilterChange}
+        />
       </div>
 
-      {/* Recipes */}
-      <div className="Recipes">
-        {error && <h2>{error}</h2>}
-        {recipeArray.length === 0 && !error && <h2>No recipes found...</h2>}
-        {recipeArray.map((recipe) => (
-          <div key={recipe._id} className="recipe-card">
-            <Link to={`/${recipe._id}`}>
-              <div className="image-container">
-                <img
-                  src={`http://localhost:4000/${recipe.image}`}
-                  alt={recipe.title}
-                />
-                <p>
-                  {recipe.title} ({recipe.time})
-                </p>
-              </div>
-            </Link>
-          </div>
-        ))}
+      <div className="home-content">
+        <div className="recipes">
+          {error && <h2>{error}</h2>}
+          {recipeArray.length === 0 && !error && <h2>No recipes found...</h2>}
+          {recipeArray.map((recipe) => (
+            <div key={recipe._id} className="recipe-card">
+              <Link to={`/${recipe._id}`}>
+                <div className="image-container">
+                  <img
+                    src={`http://localhost:4000/${recipe.image}`}
+                    alt={recipe.title}
+                  />
+                  <p>{recipe.title} ({recipe.time})</p>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
-
-      {/* Filters */}
-      <Filters
-        SortByOptions={SortByOptions}
-        TypeOptions={TypeOptions}
-        CuisineOptions={CuisineOptions}
-        TagOptions={TagOptions}
-        onFilterChange={handleFilterChange}
-      />
     </div>
   );
 };
