@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { API_URL } from '../config';
 
 const ProfilePage = () => {
   //const { username } = useParams();
@@ -10,7 +11,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/users/profile/${username}`);
+        const response = await fetch(`${API_URL}api/users/profile/${username}`);
         if (!response.ok) {
           throw new Error('Failed to fetch profile');
         }
@@ -32,7 +33,7 @@ const ProfilePage = () => {
   return (
     <div className="profile">
       <h1>{profile.username}</h1>
-      <img src={`http://localhost:4000/${profile.image}`} alt={profile.username} />
+      <img src={`${API_URL}/${profile.image}`} alt={profile.username} />
       <p>Bio: {profile.bio}</p>
       <p>Followers: {profile.followers}</p>
       <p>Following: {profile.following}</p>

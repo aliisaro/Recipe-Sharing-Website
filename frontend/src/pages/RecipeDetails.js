@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import { API_URL } from '../config';
 
 const RecipeDetails = () => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const RecipeDetails = () => {
   useEffect(() => {
     const getRecipe = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/recipes/${id}`, {
+        const response = await fetch(`${API_URL}/api/recipes/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -25,7 +26,7 @@ const RecipeDetails = () => {
         setRecipe(data);
 
         // Check if recipe is saved
-        const savedResponse = await fetch(`http://localhost:4000/api/recipes/saved`, {
+        const savedResponse = await fetch(`${API_URL}/api/recipes/saved`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -59,7 +60,7 @@ const RecipeDetails = () => {
   // Function to delete the recipe
   const DeleteRecipe = async () => {
     try {
-      await fetch(`http://localhost:4000/api/recipes/${id}`, {
+      await fetch(`${API_URL}/api/recipes/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -77,7 +78,7 @@ const RecipeDetails = () => {
   // Function to save the recipe to the user's library
   const SaveRecipe = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/recipes/save/${recipe._id}`, {
+      const response = await fetch(`${API_URL}/api/recipes/save/${recipe._id}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -98,7 +99,7 @@ const RecipeDetails = () => {
   // Function to unsave the recipe from the user's library
   const UnsaveRecipe = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/recipes/unsave/${recipe._id}`, {
+      const response = await fetch(`${API_URL}/api/recipes/unsave/${recipe._id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -123,7 +124,7 @@ const RecipeDetails = () => {
       <div className="top-section">
         <div className="section">
           <img
-            src={`http://localhost:4000/${recipe.image}`}
+            src={`${API_URL}/${recipe.image}`}
             alt="Not found..."
           />
         </div>

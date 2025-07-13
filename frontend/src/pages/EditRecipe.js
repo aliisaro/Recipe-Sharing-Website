@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
+import { API_URL } from '../config';
 
 const EditRecipe = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const EditRecipe = () => {
     const getRecipe = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/recipes/${id}`,
+          `${API_URL}/api/recipes/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -80,7 +81,7 @@ const EditRecipe = () => {
     console.log("Recipe Data: ", recipeData);
 
     try {
-      const response = await fetch(`http://localhost:4000/api/recipes/${id}`, {
+      const response = await fetch(`${API_URL}/api/recipes/${id}`, {
         method: "PUT",
         body: recipeData,
         headers: {

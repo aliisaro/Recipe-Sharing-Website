@@ -2,6 +2,7 @@ import Filters from "../components/Filters";
 import Searchbar from "../components/Searchbar";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { API_URL } from '../config';
 
 const Home = ({ searchTerm, setSearchTerm }) => {
   // State to hold the recipe array
@@ -47,7 +48,7 @@ const Home = ({ searchTerm, setSearchTerm }) => {
         // Add search term query param
         if (searchTerm) query.append("search", searchTerm);
 
-        const response = await fetch(`http://localhost:4000/api/recipes/all?${query.toString()}`, {
+        const response = await fetch(`${API_URL}/api/recipes/all?${query.toString()}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -136,7 +137,7 @@ const Home = ({ searchTerm, setSearchTerm }) => {
               <Link to={`/${recipe._id}`}>
                 <div className="image-container">
                   <img
-                    src={`http://localhost:4000/${recipe.image}`}
+                    src={`${API_URL}/${recipe.image}`}
                     alt={recipe.title}
                   />
                   <p>{recipe.title} ({recipe.time})</p>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
+import { API_URL } from '../config';
 
 const CreateRecipe = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const CreateRecipe = () => {
 
     console.log("Recipe Data: ", recipeData);
 
-    const response = await fetch("http://localhost:4000/api/recipes", {
+    const response = await fetch(`${API_URL}/api/recipes`, {
       method: "POST",
       body: recipeData,
       headers: {

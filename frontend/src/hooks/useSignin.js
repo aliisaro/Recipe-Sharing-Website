@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { API_URL } from '../config';
 
 const useSignin = (setIsAuthenticated) => {
   const navigate = useNavigate();
 
   const handleSignin = async (username, hashedPassword) => {
     try {
-      const response = await fetch("http://localhost:4000/api/users/signin", {
+      const response = await fetch(`${API_URL}/api/users/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

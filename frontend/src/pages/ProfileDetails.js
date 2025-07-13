@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { API_URL } from '../config';
 
 const ProfileDetails = () => {
   const { id } = useParams();
@@ -10,7 +11,7 @@ const ProfileDetails = () => {
     const getProfile = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/profiles/${id}`,
+          `${API_URL}/api/profiles/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -43,7 +44,7 @@ const ProfileDetails = () => {
       <div className="row">
         <div className="column">
           <img
-            src={`http://localhost:4000/${profile.image}`}
+            src={`${API_URL}/${profile.image}`}
             alt="Not found..."
           />
         </div>

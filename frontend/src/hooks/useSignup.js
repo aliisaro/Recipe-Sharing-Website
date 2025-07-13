@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { API_URL } from '../config';
 
 const useSignup = (setIsAuthenticated) => {
   const navigate = useNavigate();
 
   const handleSignup = async (username, email, hashedPassword) => {
     try {
-      const response = await fetch("http://localhost:4000/api/users/signup", {
+      const response = await fetch(`${API_URL}/api/users/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

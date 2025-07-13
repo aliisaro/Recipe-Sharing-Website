@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { API_URL } from '../config';
 
 const Library = () => {
   const [createdRecipes, setCreatedRecipes] = useState([]);
@@ -13,11 +14,11 @@ const Library = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const savedRes = await fetch("http://localhost:4000/api/recipes/saved", {
+      const savedRes = await fetch(`${API_URL}/api/recipes/saved`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const createdRes = await fetch("http://localhost:4000/api/recipes/user", {
+      const createdRes = await fetch(`${API_URL}/api/recipes/user`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -61,7 +62,7 @@ const Library = () => {
                 <Link to={`/${recipe._id}`}>
                   <div className="image-container">
                     <img
-                      src={`http://localhost:4000/${recipe.image}`}
+                      src={`${API_URL}/${recipe.image}`}
                       alt={recipe.title}
                     />
                     <p>{recipe.title} ({recipe.time})</p>
@@ -84,7 +85,7 @@ const Library = () => {
                 <Link to={`/${recipe._id}`}>
                   <div className="image-container">
                     <img
-                      src={`http://localhost:4000/${recipe.image}`}
+                      src={`${API_URL}/${recipe.image}`}
                       alt={recipe.title}
                     />
                     <p>{recipe.title} ({recipe.time})</p>
