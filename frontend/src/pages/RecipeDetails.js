@@ -118,53 +118,55 @@ const RecipeDetails = () => {
   };
 
   return (
-    <div className="recipe-details">
-      <h1>{recipe.title}</h1>
+    <div className="recipe-details-page-container">
+      <div className="recipe-details">
+        <h1>{recipe.title}</h1>
 
-      <div className="top-section">
-        <div className="section">
-          <img
-            src={`${API_URL}/${recipe.image}`}
-            alt="Not found..."
-          />
+        <div className="top-section">
+          <div className="section">
+            <img
+              src={`${API_URL}/${recipe.image}`}
+              alt="Not found..."
+            />
+          </div>
+
+          <div className="section">
+            <ul>
+              <li><strong>Time:</strong> {recipe.time}</li>
+              <li><strong>Difficulty:</strong> {recipe.difficulty}</li>
+              <li><strong>Type:</strong> {recipe.type}</li>
+              <li><strong>Cuisine:</strong> {recipe.cuisine}</li>
+              <li><strong>Tags:</strong> {recipe.tags}</li>
+            </ul>
+          </div>
         </div>
 
-        <div className="section">
-          <ul>
-            <li><strong>Time:</strong> {recipe.time}</li>
-            <li><strong>Difficulty:</strong> {recipe.difficulty}</li>
-            <li><strong>Type:</strong> {recipe.type}</li>
-            <li><strong>Cuisine:</strong> {recipe.cuisine}</li>
-            <li><strong>Tags:</strong> {recipe.tags}</li>
-          </ul>
-        </div>
-      </div>
+        <div className="bottom-section">
+          <div className="section">
+            <h2>Ingredients</h2>
+            <p>{recipe.ingredients}</p>
+          </div>
 
-      <div className="bottom-section">
-        <div className="section">
-          <h2>Ingredients</h2>
-          <p>{recipe.ingredients}</p>
+          <div className="section">
+            <h2>Steps</h2>
+            <p>{recipe.steps}</p>
+          </div>
         </div>
 
-        <div className="section">
-          <h2>Steps</h2>
-          <p>{recipe.steps}</p>
-        </div>
-      </div>
-
-      <div className="button-group">
-        {recipe.user_id === localStorage.getItem("user_id") ? (
-          <>
-            <Link to={`/EditRecipe/${recipe._id}`} className="button-link">Edit recipe</Link>
-            <button className="btn" onClick={DeleteRecipe}>Delete recipe</button>
-          </>
-        ) : (
-          isSaved ? (
-            <button className="btn" onClick={UnsaveRecipe}>Unsave recipe</button>
+        <div className="button-group">
+          {recipe.user_id === localStorage.getItem("user_id") ? (
+            <>
+              <Link to={`/EditRecipe/${recipe._id}`} className="button-link">Edit recipe</Link>
+              <button className="btn" onClick={DeleteRecipe}>Delete recipe</button>
+            </>
           ) : (
-            <button className="btn" onClick={SaveRecipe}>Save recipe</button>
-          )
-        )}
+            isSaved ? (
+              <button className="btn" onClick={UnsaveRecipe}>Unsave recipe</button>
+            ) : (
+              <button className="btn" onClick={SaveRecipe}>Save recipe</button>
+            )
+          )}
+        </div>
       </div>
     </div>
   );

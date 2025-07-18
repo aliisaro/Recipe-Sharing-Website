@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL } from '../config';
+import RecipeCard from "../components/RecipeCard";
 
 const Library = () => {
   const [createdRecipes, setCreatedRecipes] = useState([]);
   const [savedRecipes, setSavedRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const token = localStorage.getItem("token");
@@ -39,6 +41,8 @@ const Library = () => {
     } catch (error) {
       setError("Error fetching library");
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,55 +51,41 @@ const Library = () => {
 
   return (
     <div className="library">
-      <h1>Library</h1>
 
-      {error && <h2>{error}</h2>}
-
-      <div className="CreatedRecipes">
-        <h2>Your Recipes</h2>
-        {createdRecipes.length === 0 ? (
-          <p>No created recipes yet</p>
-        ) : (
-          <div className="recipes">
-            {createdRecipes.map((recipe) => (
-              <div key={recipe._id} className="recipe-card">
-                <Link to={`/${recipe._id}`}>
-                  <div className="image-container">
-                    <img
-                      src={`${API_URL}/${recipe.image}`}
-                      alt={recipe.title}
-                    />
-                    <p>{recipe.title} ({recipe.time})</p>
-                  </div>
-                </Link>
+      {loading ? (
+        <p>Loading recipes...</p>
+      ) : error ? (
+        <h2>{error}</h2>
+      ) : (
+        <>
+          {/* Your Recipes & Saved Recipes */}
+          <div className="CreatedRecipes">
+            <h2>Your Recipes</h2>
+            {createdRecipes.length === 0 ? (
+              <p>No created recipes yet</p>
+            ) : (
+              <div className="recipes">
+                {createdRecipes.map((recipe) => (
+                  <RecipeCard key={recipe._id} recipe={recipe} />
+                ))}
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+            )}
 
-      <div className="SavedRecipes">
-        <h2>Saved Recipes</h2>
-        {savedRecipes.length === 0 ? (
-          <p>No saved recipes</p>
-        ) : (
-          <div className="recipes">
-            {savedRecipes.map((recipe) => (
-              <div key={recipe._id} className="recipe-card">
-                <Link to={`/${recipe._id}`}>
-                  <div className="image-container">
-                    <img
-                      src={`${API_URL}/${recipe.image}`}
-                      alt={recipe.title}
-                    />
-                    <p>{recipe.title} ({recipe.time})</p>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+            <div className="SavedRecipes">
+              <h2>Saved Recipes</h2>
+              {savedRecipes.length === 0 ? (
+                <p>No saved recipes yet. <Link to="/home">Browse recipes</Link> and save your favorites!</p>
+              ) : (
+                <div className="recipes">
+                  {savedRecipes.map((recipe) => (
+                    <RecipeCard key={recipe._id} recipe={recipe} />
+                  ))}
+                </div>
+              )}
+            </div>
+        </div>
+        </>
+      )}
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import Filters from "../components/Filters";
 import Searchbar from "../components/Searchbar";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { API_URL } from '../config';
+import RecipeCard from "../components/RecipeCard";
 
 const Home = ({ searchTerm, setSearchTerm }) => {
   // State to hold the recipe array
@@ -134,15 +134,7 @@ const Home = ({ searchTerm, setSearchTerm }) => {
           {recipeArray.length === 0 && !error && <h2>No recipes found...</h2>}
           {recipeArray.map((recipe) => (
             <div key={recipe._id} className="recipe-card">
-              <Link to={`/${recipe._id}`}>
-                <div className="image-container">
-                  <img
-                    src={`${API_URL}/${recipe.image}`}
-                    alt={recipe.title}
-                  />
-                  <p>{recipe.title} ({recipe.time})</p>
-                </div>
-              </Link>
+              <RecipeCard key={recipe._id} recipe={recipe} />
             </div>
           ))}
         </div>
