@@ -144,12 +144,20 @@ const RecipeDetails = () => {
         <div className="bottom-section">
           <div className="section">
             <h2>Ingredients</h2>
-            <p>{recipe.ingredients}</p>
+            <ul>
+              {recipe.ingredients.split('\n').map((line, index) => (
+                <li key={index}>{line}</li>
+              ))}
+            </ul>
           </div>
 
           <div className="section">
             <h2>Steps</h2>
-            <p>{recipe.steps}</p>
+            <ol>
+              {recipe.steps.split('\n').map((step, index) => (
+                <li key={index}>{step}</li>
+              ))}
+            </ol>
           </div>
         </div>
 

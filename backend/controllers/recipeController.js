@@ -137,39 +137,41 @@ const addRecipe = async (req, res) => {
 // Update Recipe by ID
 const updateRecipe = async (req, res) => {
   const id = req.params.id;
-  try {
-    const user_id = req.user._id;
+  const user_id = req.user._id;
 
-    const recipe = await Recipe.findOne({ _id: id, user_id: user_id });
+  try {
+    const recipe = await Recipe.findOne({ _id: id, user_id });
 
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
     if (req.file) {
-      // Delete the old image file
+      // Delete old image
       if (recipe.image) {
-        fs.unlink(path.join(__dirname, "..", recipe.image), (err) => {
-          if (err) {
-            console.error(err);
-          }
-        });
+        try {
+          await fs.unlink(path.join(__dirname, "..", recipe.image));
+        } catch (err) {
+          console.error("Error deleting old image:", err);
+        }
       }
 
-      // Update the image path
-      recipe.image = req.file.path;
+      // Set new image path
+      recipe.image = path.join("uploads", req.file.filename);
     }
 
-    // Update other fields in the recipe
-    for (let prop in req.body) {
-      recipe[prop] = req.body[prop];
-    }
+    // Update only allowed fields
+    const allowedFields = ["title", "ingredients", "instructions", "category", "description"];
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        recipe[field] = req.body[field];
+      }
+    });
 
     await recipe.save();
-
     res.status(200).json(recipe);
   } catch (error) {
-    console.error(error);
+    console.error("Update error:", error);
     res.status(500).json({ error: "Server Error" });
   }
 };
