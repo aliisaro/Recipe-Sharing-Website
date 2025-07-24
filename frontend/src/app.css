@@ -36,6 +36,7 @@ button {
 }
 
 /*----------Login/register page-------*/
+/* General container for login & register */
 .page-container-login-register {
   display: flex;
   justify-content: center;
@@ -44,134 +45,139 @@ button {
   padding-top: 100px;
 }
 
-.login-register-section {
-  position: fixed;
+/* Form container */
+.login-register-form {
   width: 100%;
-  width: 500px;
-  height: auto;
+  max-width: 500px;
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   overflow-y: auto;
-  overflow: auto;
 }
 
+/* Logo + Title */
 .logo-title-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #E3F6EC;
   width: 100%;
   height: 100px;
+  background-color: #E3F6EC;
   border-radius: 12px 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 20px;
   padding: 10px;
 }
 
-.login-register-section .logo {
+.login-register-form .logo {
   height: 40px;
 }
 
-.login-register-section h3 {
+.login-register-form h3 {
   font-size: 30px;
   color: #494E5A;
+  margin-top: 5px;
 }
 
-.login-register-section input {
+/* Inputs */
+.login-register-form input {
   width: 85%;
   font-size: 16px;
   padding: 10px;
-  background: transparent;
   border: 3px solid #E3F6EC;
-  color: #E3F6EC;
   border-radius: 12px;
-  margin: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  background: transparent;
+  color: #E3F6EC;
+  margin: 12px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  outline: none;
+  border: 2px solid #ccc;
 }
 
-.login-register-section input:hover {
-  border: 3px solid #50C37E;
+.login-register-form input:hover,
+.login-register-form input:focus {
+  border: 2px solid #50C37E;
 }
 
-.login-register-section .link {
-  text-decoration: none;
+/* Links */
+.login-register-form .link {
   font-size: 14px;
   color: #E3F6EC;
-  margin: 10px;
+  margin: 10px 0;
+  text-decoration: none;
 }
 
-.login-register-section .link:hover {
+.login-register-form .link:hover {
   color: #50C37E;
 }
 
-.login-register-section button {
+/* Submit Button */
+.login-register-form button {
   width: 85%;
   padding: 10px;
-  background-color: #50C37E; 
+  font-size: 18px;
+  background-color: #50C37E;
   color: #E3F6EC;
   border: none;
   border-radius: 10px;
+  margin: 20px 0 40px;
   cursor: pointer;
-  font-size: 18px;
-  margin: 20px 0px 40px 0px;
+  transition: background-color 0.3s ease;
 }
 
-.login-register-section button:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+.login-register-form button:hover {
   background-color: hsl(145, 51%, 42%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-/*Responsive styles*/
-@media screen and (max-width: 768px) {
-  .login-register-section {
-    width: 90%;
-    
-  }
-
-  .login-register-section h3 {
-    font-size: 25px;
-  }
-
-  .login-register-section input {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .login-register-section button {
-    font-size: 16px;
-    padding: 10px;
-  }
- 
+/* Password Strength Indicator */
+.password-strength-container {
+  width: 85%;
+  font-size: 14px;
+  color: #e3f6ec;
 }
 
-@media screen and (max-width: 480px) {
-  .login-register-section {
-    width: 95%;
-    padding: 10px 0;
-  }
+.password-strength {
+  font-weight: bold;
+}
 
-  .login-register-section h3 {
-    font-size: 22px;
-  }
+.password-strength.weak {
+  color: #ff4d4f;
+  border-color: #ff4d4f;
+}
 
-  .login-register-section input {
-    font-size: 14px;
-    padding: 8px;
-    margin: 15px;
-  }
+.password-strength.medium {
+  color: #ffa940;
+  border-color: #ffa940;
+}
 
-  .login-register-section button {
-    font-size: 16px;
-    padding: 10px;
-  }
+.password-strength.strong {
+  color: #50c37e;
+  border-color: #50c37e;
+}
 
-  .logo-title-container {
-    height: auto;
-    padding: 10px;
-  }
+.password-requirements {
+  padding-left: 16px;
+  margin: 0;
+  list-style: none;
+}
+
+.password-requirements li {
+  margin: 4px 0;
+  color: #e3f6ecaa;
+  display: flex;
+  align-items: center;
+}
+
+.password-requirements li.passed {
+  color: #50c37e;
+}
+
+.password-requirements li.failed {
+  color: #ff4d4f;
 }
 
 /*----------Navigation bar-------*/
@@ -220,54 +226,6 @@ button {
   border-radius: 12px;
 }
 
-/* Mobile styles */
-@media (max-width: 768px) {
-  .navbar {
-    padding: 0 20px;
-    height: 80px;
-  }
-
-  .nav-left .logo {
-    height: 20px;
-  }
-
-  .hamburger {
-    display: block;
-    font-size: 20px;
-  }
-
-  .nav-right {
-    position: absolute;
-    display: none;
-    top: 80px;
-    right: 0;
-    padding: 20px;
-    background-color: #E3F6EC;
-    align-items: center;
-  }
-
-  .nav-right.open {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    border-radius: 0 0 12px 12px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    top: 80px;
-    z-index: 99999;
-  }
-
-  .nav-right a,
-  .nav-right button.logout {
-    text-align: center;
-    padding: 10px;
-    border-radius: 12px;
-    width: 100%;
-    box-sizing: border-box;
-    display: block;
-    font-size: 16px;
-  }
-}
 
 /*----------Home page-------*/
 /* Container */
@@ -331,77 +289,40 @@ button {
 }
 
 .recipe-card {
+  display: inline-block;
+  border-radius: 10px;
+  box-shadow: 3px 3px 3px #282727;
+  margin: 20px 5px 20px 20px;
   max-width: 170px;
   max-height: 170px;
-  border-radius: 12px;
-  transition: transform 0.2s;
-  position: relative;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
-  background-color: #fff;
 }
+
 
 .recipe-card:hover {
   transform: translateY(-4px);
 }
 
-/* Image takes top half */
+.recipe-card .image-container {
+  position: relative;
+  height: 200px;
+}
+
 .recipe-card img {
   width: 100%;
-  height: 100%;
+  height: 170px;
   object-fit: cover;
 }
 
-/* Text takes the rest */
 .recipe-card p {
-  font-size: 14px;
-  padding: 5px;
-  height: 70px;
-  overflow: hidden;
-  white-space: nowrap;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;   /* Show max 2 lines */
-  -webkit-box-orient: vertical;
-}
-
-@media (max-width: 768px) {
-  .home-container {
-    padding-top: 80px;
-  }
-
-  /* Stack searchbar and filters */
-  .searchbar-filters-container {
-    flex-direction: column;
-  }
-
-  .searchbar-wrapper, .filters {
-    width: 100%;
-  }
-
-  .searchbar-wrapper input, .filters {
-    font-size: 12px;
-  }
-
-  .filters {
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .home-content {
-    padding: 145px 0px;
-  }
-
-  .recipe-card {
-    max-width: 120px;
-    max-height: 120px;
-  }
-
-  .recipe-card p {
-    font-size: 12px;
-    height: 55%;
-  }
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  margin: 0;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.3);
 }
 
 /*----------Recipe Form---------*/
@@ -513,39 +434,6 @@ button {
 
 .recipe-form button:hover {
   background-color: #219150;
-}
-
-@media (max-width: 768px) {
-  .recipe-form {
-    width: 90%;
-    padding: 20px;
-    max-height: calc(100vh - 110px);
-  }
-
-  .recipe-form h1 {
-    font-size: 16px;
-  }
-
-  .recipe-form label {
-    font-size: 12px;
-  }
-
-  .recipe-form input[type="text"],
-  .recipe-form textarea,
-  .recipe-form input[type="file"] {
-    font-size: 10px;
-    padding: 10px;
-  }
-
-  .recipe-form button {
-    font-size: 14px;
-    padding: 12px;
-  }
-
-  .recipe-form .section {
-    flex-direction: column; 
-  }
-
 }
 
 /*----------Library---------*/

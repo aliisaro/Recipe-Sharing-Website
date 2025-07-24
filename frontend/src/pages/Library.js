@@ -53,7 +53,7 @@ const Library = () => {
     <div className="library">
 
       {loading ? (
-        <p>Loading recipes...</p>
+        <h2>Loading recipes...</h2>
       ) : error ? (
         <h2>{error}</h2>
       ) : (

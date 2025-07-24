@@ -16,7 +16,7 @@ const SignIn = ({ setIsAuthenticated }) => {
 
   return (
     <div className="page-container-login-register">
-      <form className="login-register-section" onSubmit={handler}>
+      <form className="login-register-form" onSubmit={handler}>
         <div className="logo-title-container">
           <img src={img} className="logo" alt="logo" />
           <h3>Sign in</h3>
