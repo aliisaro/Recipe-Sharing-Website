@@ -147,6 +147,33 @@ button {
  
 }
 
+@media screen and (max-width: 480px) {
+  .login-register-section {
+    width: 95%;
+    padding: 10px 0;
+  }
+
+  .login-register-section h3 {
+    font-size: 22px;
+  }
+
+  .login-register-section input {
+    font-size: 14px;
+    padding: 8px;
+    margin: 15px;
+  }
+
+  .login-register-section button {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .logo-title-container {
+    height: auto;
+    padding: 10px;
+  }
+}
+
 /*----------Navigation bar-------*/
 .navbar {
   background-color: #E3F6EC;

@@ -15,7 +15,7 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
-  hashedPassword: {
+  password: {
     type: String,
     required: true,
   },
@@ -49,49 +49,57 @@ const userSchema = new Schema({
 });
 
 // static signup method
-userSchema.statics.signup = async function (username, email, hashedPassword) {
+userSchema.statics.signup = async function (username, email, password) {
   // validation
-  if (!username || !email || !hashedPassword) {
+  if (!username || !email || !password) {
     throw Error("All fields must be filled");
   }
   if (!validator.isEmail(email)) {
-    throw Error("Email not valid");
+    throw Error("Please enter a valid email address.");
   }  
-  if (!validator.isStrongPassword(hashedPassword)) {
-    throw Error("Password not strong enough");
+  if (!validator.isStrongPassword(password, {
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 0,
+    minNumbers: 1,
+    minSymbols: 0
+  })) {
+    throw Error("Password must be at least 8 characters and contain at least one number.");
   }
 
-  const exists = await this.findOne({ email });
-
-  if (exists) {
+  const emailExists = await this.findOne({ email });
+  if (emailExists) {
     throw Error("Email already in use");
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(hashedPassword, salt);
+    const usernameExists = await this.findOne({ username });
+  if (usernameExists) {
+    throw Error("Username is already taken.");
+  }
 
-  const user = await this.create({ username, email, hashedPassword: hash });
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+
+  const user = await this.create({ username, email, password: hash });
 
   return user;
 };
 
 // static signin method
-userSchema.statics.signin = async function (username, hashedPassword) {
-  if (!username || !hashedPassword) {
+userSchema.statics.signin = async function (username, password) {
+  if (!username || !password) {
     throw Error("All fields must be filled");
   }
-
   const user = await this.findOne({ username });
   if (!user) {
-    throw Error("Incorrect username");
+    throw Error("User not found");
   }
-
-  const match = await bcrypt.compare(hashedPassword, user.hashedPassword);
+  const match = await bcrypt.compare(password, user.password);
   if (!match) {
     throw Error("Incorrect password");
   }
-
   return user;
 };
+
 
 module.exports = mongoose.model("User", userSchema);
