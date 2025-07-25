@@ -133,9 +133,7 @@ const Home = ({ searchTerm, setSearchTerm }) => {
           {error && <h2>{error}</h2>}
           {recipeArray.length === 0 && !error && <h2>No recipes found...</h2>}
           {recipeArray.map((recipe) => (
-            <div key={recipe._id} className="recipe-card">
               <RecipeCard key={recipe._id} recipe={recipe} />
-            </div>
           ))}
         </div>
       </div>

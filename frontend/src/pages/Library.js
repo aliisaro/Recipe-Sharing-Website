@@ -50,7 +50,7 @@ const Library = () => {
   }, []);
 
   return (
-    <div className="library">
+    <div className="library-page-container">
 
       {loading ? (
         <h2>Loading recipes...</h2>
