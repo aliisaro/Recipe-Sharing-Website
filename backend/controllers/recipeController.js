@@ -161,10 +161,31 @@ const updateRecipe = async (req, res) => {
     }
 
     // Update only allowed fields
-    const allowedFields = ["title", "ingredients", "instructions", "category", "description"];
-    allowedFields.forEach((field) => {
+    const allowedFields = [
+      "title",
+      "ingredients",
+      "steps",
+      "time",
+      "difficulty",
+      "type",
+      "cuisine",
+      "tags"
+    ];
+
+    const parseJSONIfNeeded = (field) => {
+      if (typeof req.body[field] === "string") {
+        try {
+          return JSON.parse(req.body[field]);
+        } catch (e) {
+          return req.body[field];
+        }
+      }
+      return req.body[field];
+    };
+
+    allowedFields.forEach(field => {
       if (req.body[field] !== undefined) {
-        recipe[field] = req.body[field];
+        recipe[field] = parseJSONIfNeeded(field);
       }
     });
 
@@ -172,7 +193,7 @@ const updateRecipe = async (req, res) => {
     res.status(200).json(recipe);
   } catch (error) {
     console.error("Update error:", error);
-    res.status(500).json({ error: "Server Error" });
+    res.status(500).json({ error: error.message || "Server Error" });
   }
 };
 

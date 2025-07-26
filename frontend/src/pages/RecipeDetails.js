@@ -67,6 +67,8 @@ const RecipeDetails = () => {
         },
       });
       navigate("/");
+      console.log("Recipe deleted successfully");
+      alert("Recipe deleted successfully");
     } catch (error) {
       setError("Failed to delete recipe");
       console.error("Error deleting recipe:", error);
@@ -137,6 +139,7 @@ const RecipeDetails = () => {
               <li><strong>Type:</strong> {recipe.type}</li>
               <li><strong>Cuisine:</strong> {recipe.cuisine}</li>
               <li><strong>Tags:</strong> {recipe.tags}</li>
+              <li><strong>Created by:</strong> {recipe.user_id}</li>
             </ul>
           </div>
         </div>
