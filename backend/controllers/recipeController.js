@@ -4,7 +4,6 @@ const path = require("path");
 const Recipe = require("../models/Recipe");
 const User = require("../models/Users");
 
-// Get all recipes by all users
 // Get all recipes by all users, with optional filters
 const getAllRecipes = async (req, res) => {
   try {
@@ -69,11 +68,11 @@ const getRecipeById = async (req, res) => {
 
   try {
     const user_id = req.user._id;
-
-    const recipe = await Recipe.findById(id);
+    const recipe = await Recipe.findById(id).populate('user_id');
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
+    console.log(recipe.user_id.username);
     res.status(200).json(recipe);
   } catch (error) {
     console.error(error);
@@ -117,7 +116,7 @@ const addRecipe = async (req, res) => {
       cuisine,
       tags,
       rating,
-      user_id,
+      user_id: mongoose.Types.ObjectId(req.user._id),
     });
 
     await newRecipe.save();
@@ -161,10 +160,31 @@ const updateRecipe = async (req, res) => {
     }
 
     // Update only allowed fields
-    const allowedFields = ["title", "ingredients", "instructions", "category", "description"];
-    allowedFields.forEach((field) => {
+    const allowedFields = [
+      "title",
+      "ingredients",
+      "steps",
+      "time",
+      "difficulty",
+      "type",
+      "cuisine",
+      "tags"
+    ];
+
+    const parseJSONIfNeeded = (field) => {
+      if (typeof req.body[field] === "string") {
+        try {
+          return JSON.parse(req.body[field]);
+        } catch (e) {
+          return req.body[field];
+        }
+      }
+      return req.body[field];
+    };
+
+    allowedFields.forEach(field => {
       if (req.body[field] !== undefined) {
-        recipe[field] = req.body[field];
+        recipe[field] = parseJSONIfNeeded(field);
       }
     });
 
@@ -172,7 +192,7 @@ const updateRecipe = async (req, res) => {
     res.status(200).json(recipe);
   } catch (error) {
     console.error("Update error:", error);
-    res.status(500).json({ error: "Server Error" });
+    res.status(500).json({ error: error.message || "Server Error" });
   }
 };
 

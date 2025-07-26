@@ -3,6 +3,7 @@ import Searchbar from "../components/Searchbar";
 import React, { useState, useEffect } from "react";
 import { API_URL } from '../config';
 import RecipeCard from "../components/RecipeCard";
+import {Type, Cuisine, Tags, SortByOptions} from '../data/recipeOptions';
 
 const Home = ({ searchTerm, setSearchTerm }) => {
   // State to hold the recipe array
@@ -73,45 +74,6 @@ const Home = ({ searchTerm, setSearchTerm }) => {
     getRecipes();
   }, [filters, searchTerm]);
 
-  // Define filter options
-  const SortByOptions = [
-    { value: "trending", label: "trending" },
-    { value: "date", label: "date" },
-    { value: "best reviews", label: "best reviews" },
-  ];
-
-  const TypeOptions = [
-    { value: "none", label: "none" },
-    { value: "drinks", label: "drinks" },
-    { value: "breakfeast", label: "breakfeast" },
-    { value: "lunch", label: "lunch" },
-    { value: "dinner", label: "dinner" },
-    { value: "dessert", label: "dessert" },
-    { value: "snacks", label: "snacks" },
-  ];
-
-  const CuisineOptions = [
-    { value: "none", label: "none" },
-    { value: "asian", label: "asian" },
-    { value: "african", label: "african" },
-    { value: "european", label: "european" },
-    { value: "oceanian", label: "oceanian" },
-    { value: "north american", label: "north american" },
-    { value: "south american", label: "south american" },
-  ];
-
-  const TagOptions = [
-    { value: "none", label: "none" },
-    { value: "vegan", label: "vegan" },
-    { value: "vegetarian", label: "vegetarian" },
-    { value: "gluten free", label: "gluten free" },
-    { value: "dairy free", label: "dairy free" },
-    { value: "nut free", label: "nut free" },
-    { value: "egg free", label: "egg free" },
-    { value: "pescatarian", label: "pescatarian" },
-    { value: "seafood free", label: "seafood free" },
-  ];
-
   return (
     <div className="home-container">
 
@@ -121,9 +83,9 @@ const Home = ({ searchTerm, setSearchTerm }) => {
 
         <Filters
           SortByOptions={SortByOptions}
-          TypeOptions={TypeOptions}
-          CuisineOptions={CuisineOptions}
-          TagOptions={TagOptions}
+          TypeOptions={Type}
+          CuisineOptions={Cuisine}
+          TagOptions={Tags}
           onFilterChange={handleFilterChange}
         />
       </div>

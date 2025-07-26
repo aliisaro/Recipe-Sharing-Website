@@ -24,6 +24,7 @@ const RecipeDetails = () => {
 
         const data = await response.json();
         setRecipe(data);
+        console.log("Fetched recipe:", data); 
 
         // Check if recipe is saved
         const savedResponse = await fetch(`${API_URL}/api/recipes/saved`, {
@@ -67,6 +68,8 @@ const RecipeDetails = () => {
         },
       });
       navigate("/");
+      console.log("Recipe deleted successfully");
+      alert("Recipe deleted successfully");
     } catch (error) {
       setError("Failed to delete recipe");
       console.error("Error deleting recipe:", error);
@@ -122,27 +125,25 @@ const RecipeDetails = () => {
       <div className="recipe-details">
         <h1>{recipe.title}</h1>
 
-        <div className="top-section">
-          <div className="section">
-            <img
-              src={`${API_URL}/${recipe.image}`}
-              alt="Not found..."
-            />
-          </div>
+        <div className="recipe-image-description">
+          <img
+            src={`${API_URL}/${recipe.image}`}
+            alt="Not found..."
+          />
 
-          <div className="section">
-            <ul>
-              <li><strong>Time:</strong> {recipe.time}</li>
-              <li><strong>Difficulty:</strong> {recipe.difficulty}</li>
-              <li><strong>Type:</strong> {recipe.type}</li>
-              <li><strong>Cuisine:</strong> {recipe.cuisine}</li>
-              <li><strong>Tags:</strong> {recipe.tags}</li>
-            </ul>
-          </div>
+          <ul>
+            <li><strong>Time:</strong> {recipe.time}</li>
+            <li><strong>Difficulty:</strong> {recipe.difficulty}</li>
+            <li><strong>Type:</strong> {recipe.type}</li>
+            <li><strong>Cuisine:</strong> {recipe.cuisine}</li>
+            <li><strong>Tags:</strong> {recipe.tags}</li>
+            <li><strong>Created by:</strong> {recipe.user_id?.username || 'Unknown'}</li>
+            <li><strong>Created at:</strong> {new Date(recipe.createdAt).toLocaleDateString()}</li>
+          </ul>
         </div>
-
-        <div className="bottom-section">
-          <div className="section">
+   
+        <div className="recipe-ingredients-steps">
+          <div className ="row">
             <h2>Ingredients</h2>
             <ul>
               {recipe.ingredients.split('\n').map((line, index) => (
@@ -151,7 +152,7 @@ const RecipeDetails = () => {
             </ul>
           </div>
 
-          <div className="section">
+          <div className="row">
             <h2>Steps</h2>
             <ol>
               {recipe.steps.split('\n').map((step, index) => (
@@ -160,6 +161,7 @@ const RecipeDetails = () => {
             </ol>
           </div>
         </div>
+
 
         <div className="button-group">
           {recipe.user_id === localStorage.getItem("user_id") ? (

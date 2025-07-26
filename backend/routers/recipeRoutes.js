@@ -19,8 +19,6 @@ const requireAuth = require("../requireAuth");
 
 router.use(requireAuth);
 
-router.use(requireAuth);
-
 router.get("/all", getAllRecipes);
 router.get("/user", getRecipesByUser);
 router.get("/saved", getSavedRecipes);

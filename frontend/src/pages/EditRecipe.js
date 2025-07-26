@@ -2,80 +2,90 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import { API_URL } from '../config';
+import { Difficulty, Type, Cuisine, Tags } from '../data/recipeOptions'; // Removed TimeOptions import
 
 const EditRecipe = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [error, setError] = useState(null);
 
-  //INITIAL FORM DATA
   const [formData, setFormData] = useState({
     title: "",
     ingredients: "",
     steps: "",
     time: "",
-    difficulty: "",
+    difficulty: null,
     image: null,
-    type: "",
-    cuisine: "",
+    type: null,
+    cuisine: null,
     tags: [],
   });
 
-  //FETCH RECIPE
+  // Fetch recipe by ID
   useEffect(() => {
     const getRecipe = async () => {
       try {
-        const response = await fetch(
-          `${API_URL}/api/recipes/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch recipe");
-        }
+        const response = await fetch(`${API_URL}/api/recipes/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch recipe");
+
         const data = await response.json();
-        setFormData(data);
+
+        setFormData({
+          ...data,
+          time: data.time || "", // keep as string
+          difficulty: Difficulty.find(opt => opt.value === data.difficulty) || null,
+          type: Type.find(opt => opt.value === data.type) || null,
+          cuisine: Cuisine.find(opt => opt.value === data.cuisine) || null,
+          tags: (data.tags || []).map(tag =>
+            Tags.find(t => t.value === tag) || { value: tag, label: tag }
+          ),
+          image: data.image || null,
+        });
       } catch (error) {
         console.error("Error fetching recipe:", error);
-        setError("Failed to fetch recipe");
       }
     };
 
     getRecipe();
   }, [id]);
 
-  //HANDLE FORM CHANGE
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  //HANDLE IMAGE CHANGE
   const handleImageChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       image: e.target.files[0],
-    });
+    }));
   };
 
-  //UPDATE RECIPE
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const formattedData = {
+      ...formData,
+      difficulty: formData.difficulty ? formData.difficulty.value : null,
+      type: formData.type ? formData.type.value : null,
+      cuisine: formData.cuisine ? formData.cuisine.value : null,
+      tags: Array.isArray(formData.tags)
+        ? formData.tags.map(tag => (typeof tag === "string" ? tag : tag.value))
+        : [],
+    };
+
     const recipeData = new FormData();
 
-    for (const key in formData) {
-      const value = formData[key];
+    for (const key in formattedData) {
+      const value = formattedData[key];
 
       if (key === "image") {
         if (value instanceof File) {
-          recipeData.append(key, value, value.name);
+          recipeData.append("image", value, value.name);
         }
       } else if (Array.isArray(value)) {
         recipeData.append(key, JSON.stringify(value));
@@ -93,65 +103,27 @@ const EditRecipe = () => {
         },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to update recipe");
-      }
+      if (!response.ok) throw new Error("Failed to update recipe");
 
-      alert("Recipe updated successfully");
+      const updatedRecipe = await response.json();
+
+      alert("Recipe updated successfully!");
+      console.log("Updated recipe:", updatedRecipe);
       navigate(`/${id}`);
     } catch (error) {
       console.error("Error updating recipe:", error);
-      setError("Failed to update recipe");
       alert("Failed to update recipe.");
     }
   };
 
-  //OPTIONS FOR SELECTS
-  const Difficulty = [
-    { value: "easy", label: "easy" },
-    { value: "medium", label: "medium" },
-    { value: "hard", label: "hard" },
-  ];
-
-  const Type = [
-    { value: "none", label: "none" },
-    { value: "drinks", label: "drinks" },
-    { value: "breakfeast", label: "breakfeast" },
-    { value: "lunch", label: "lunch" },
-    { value: "dinner", label: "dinner" },
-    { value: "dessert", label: "dessert" },
-    { value: "snacks", label: "snacks" },
-  ];
-
-  const Cuisine = [
-    { value: "none", label: "none" },
-    { value: "asian", label: "asian" },
-    { value: "african", label: "african" },
-    { value: "european", label: "european" },
-    { value: "oceanian", label: "oceanian" },
-    { value: "north american", label: "north american" },
-    { value: "south american", label: "south american" },
-  ];
-
-  const Tags = [
-    { value: "none", label: "none" },
-    { value: "vegan", label: "vegan" },
-    { value: "vegetarian", label: "vegetarian" },
-    { value: "pescatarian", label: "pescatarian" },
-    { value: "gluten free", label: "gluten free" },
-    { value: "dairy free", label: "dairy free" },
-    { value: "low carb", label: "low carb" },
-    { value: "low fat", label: "low fat" },
-    { value: "low sugar", label: "low sugar" },
-  ];
-
   return (
     <div className="edit-recipe-page-container">
       <form
-        className="recipe-form"
+        className="edit-recipe-form"
         onSubmit={handleSubmit}
         encType="multipart/form-data"
       >
+        <h1>Edit Recipe</h1>
 
         <label>Title:</label>
         <input
@@ -159,6 +131,8 @@ const EditRecipe = () => {
           name="title"
           value={formData.title}
           onChange={handleChange}
+          placeholder="Enter title"
+          required
         />
 
         <label>Time:</label>
@@ -167,6 +141,8 @@ const EditRecipe = () => {
           name="time"
           value={formData.time}
           onChange={handleChange}
+          placeholder="Enter cooking time"
+          required
         />
 
         <label>Ingredients:</label>
@@ -175,6 +151,7 @@ const EditRecipe = () => {
           value={formData.ingredients}
           onChange={handleChange}
           placeholder="Write the ingredients here:"
+          required
         />
 
         <label>Steps:</label>
@@ -183,54 +160,80 @@ const EditRecipe = () => {
           value={formData.steps}
           onChange={handleChange}
           placeholder="Write the steps here:"
+          required
         />
 
-        <label>Difficulty:</label>
-        <Select
-          options={Difficulty}
-          onChange={(selectedOption) =>
-            setFormData({ ...formData, difficulty: selectedOption.value })
-          }
-          value={{ label: formData.difficulty, value: formData.difficulty }}
-        />
+        <div className="section">
+          <div className="row">
+            <label>Difficulty:</label>
+            <Select
+              options={Difficulty}
+              value={formData.difficulty}
+              onChange={selected => setFormData(prev => ({ ...prev, difficulty: selected }))}
+            />
 
-        <label>Type:</label>
-        <Select
-          options={Type}
-          onChange={(selectedOption) =>
-            setFormData({ ...formData, type: selectedOption.value })
-          }
-          value={{ label: formData.type, value: formData.type }}
-        />
+            <label>Type:</label>
+            <Select
+              options={Type}
+              value={formData.type}
+              onChange={selected => setFormData(prev => ({ ...prev, type: selected }))}
+            />
+          </div>
 
-        <label>Cuisine:</label>
-        <Select
-          options={Cuisine}
-          onChange={(selectedOption) =>
-            setFormData({ ...formData, cuisine: selectedOption.value })
-          }
-          value={{ label: formData.cuisine, value: formData.cuisine }}
-        />
+          <div className="row">
+            <label>Cuisine:</label>
+            <Select
+              options={Cuisine}
+              value={formData.cuisine}
+              onChange={selected => setFormData(prev => ({ ...prev, cuisine: selected }))}
+            />
 
-        <label>Tags: </label>
-        <Select
-          isMulti
-          options={Tags}
-          onChange={(selectedOptions) =>
-            setFormData({
-              ...formData,
-              tags: selectedOptions.map((option) => option.value),
-            })
-          }
-          value={Tags.filter((tag) => formData.tags.includes(tag.value))}
-        />
+            <label>Tags:</label>
+            <Select
+              isMulti
+              options={Tags}
+              onChange={selectedOptions => setFormData(prev => ({ ...prev, tags: selectedOptions }))}
+              value={formData.tags}
+            />
+          </div>
+        </div>
 
-        <label>Upload Image:</label>
-        <input type="file" onChange={handleImageChange} accept="image/*" />
+        {formData.image && (
+          <div className="mock-recipe-card">
+            <div className="image-preview">
+              <img
+                src={
+                  typeof formData.image === "object"
+                    ? URL.createObjectURL(formData.image)
+                    : `${API_URL}/${formData.image}`
+                }
+                alt="Preview"
+              />
+              <p>
+                {formData.title || "Recipe Title"} ({formData.time || "Time"})
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Show upload or change image input depending on whether image is set */}
+        {formData.image == null ? (
+          <>
+            <label>Upload Image:</label>
+            <input type="file" onChange={handleImageChange} accept="image/*" />
+          </>
+        ) : (
+          <>
+            <label>Change Image:</label>
+            <input type="file" onChange={handleImageChange} accept="image/*" />
+          </>
+        )}
 
         <div className="edit-cancel-buttons">
           <button type="submit">Done</button>
-          <button type="button" onClick={() => navigate(`/${id}`)}>Cancel</button>
+          <button type="button" onClick={() => navigate(`/${id}`)}>
+            Cancel
+          </button>
         </div>
       </form>
     </div>

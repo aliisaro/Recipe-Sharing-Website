@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { API_URL } from '../config';
+import { Difficulty, Type, Cuisine, Tags} from '../data/recipeOptions';
 
 const CreateRecipe = () => {
   const navigate = useNavigate();
@@ -31,10 +32,12 @@ const CreateRecipe = () => {
 
   //HANDLE IMAGE CHANGE
   const handleImageChange = (e) => {
-    setFormData({
-      ...formData,
-      image: e.target.files[0],
-    });
+  const file = e.target.files[0];
+  if (file && file.size > 5 * 1024 * 1024) {
+    alert("Image must be less than 5MB.");
+    return;
+  }
+  setFormData({ ...formData, image: file });
   };
 
   //CREATE RECIPE
@@ -70,47 +73,8 @@ const CreateRecipe = () => {
     }
   };
 
-  //SELECT OPTIONS
-  const Difficulty = [
-    { value: "easy", label: "easy" },
-    { value: "medium", label: "medium" },
-    { value: "hard", label: "hard" },
-  ];
-
-  const Type = [
-    { value: "none", label: "none" },
-    { value: "drinks", label: "drinks" },
-    { value: "breakfeast", label: "breakfeast" },
-    { value: "lunch", label: "lunch" },
-    { value: "dinner", label: "dinner" },
-    { value: "dessert", label: "dessert" },
-    { value: "snacks", label: "snacks" },
-  ];
-
-  const Cuisine = [
-    { value: "none", label: "none" },
-    { value: "asian", label: "asian" },
-    { value: "african", label: "african" },
-    { value: "european", label: "european" },
-    { value: "oceanian", label: "oceanian" },
-    { value: "north american", label: "north american" },
-    { value: "south american", label: "south american" },
-  ];
-
-  const Tags = [
-    { value: "none", label: "none" },
-    { value: "vegan", label: "vegan" },
-    { value: "vegetarian", label: "vegetarian" },
-    { value: "pescatarian", label: "pescatarian" },
-    { value: "gluten free", label: "gluten free" },
-    { value: "dairy free", label: "dairy free" },
-    { value: "low carb", label: "low carb" },
-    { value: "low fat", label: "low fat" },
-    { value: "low sugar", label: "low sugar" },
-  ];
-
   return (
-    <div className="page-container-recipe-form">
+    <div className="recipe-form-page-container">
       <form
         className="recipe-form"
         onSubmit={handleSubmit}
@@ -124,6 +88,7 @@ const CreateRecipe = () => {
           name="title"
           value={formData.title}
           onChange={handleChange}
+          placeholder="Enter recipe title"
           required
         />
 
@@ -133,6 +98,7 @@ const CreateRecipe = () => {
           name="time"
           value={formData.time}
           onChange={handleChange}
+          placeholder="Enter cooking time"
           required
         />
 
@@ -208,13 +174,28 @@ const CreateRecipe = () => {
           </div>
         </div>
 
-        <label>Upload Image</label>
-        <input
-          type="file"
-          onChange={handleImageChange}
-          accept="image/*"
-          required
-        />
+        {formData.image && (
+          <div className="mock-recipe-card">
+            <div className="image-preview">
+              <img src={URL.createObjectURL(formData.image)} alt="Preview" />
+              <p>{formData.title || "Recipe Title"} ({formData.time || "Time"})</p>
+            </div>
+          </div>
+        )}
+
+
+        {/* Show upload or change image input depending on whether image is set */}
+        {formData.image == null ? (
+          <>
+            <label>Upload Image:</label>
+            <input type="file" onChange={handleImageChange} accept="image/*" />
+          </>
+        ) : (
+          <>
+            <label>Change Image:</label>
+            <input type="file" onChange={handleImageChange} accept="image/*" />
+          </>
+        )}
 
         <button type="submit">Submit Recipe</button>
       </form>

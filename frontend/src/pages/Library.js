@@ -74,7 +74,7 @@ const Library = () => {
             <div className="SavedRecipes">
               <h2>Saved Recipes</h2>
               {savedRecipes.length === 0 ? (
-                <p>No saved recipes yet. <Link to="/home">Browse recipes</Link> and save your favorites!</p>
+                <p>No saved recipes yet. <Link to="/">Browse recipes</Link> and save your favorites!</p>
               ) : (
                 <div className="recipes">
                   {savedRecipes.map((recipe) => (
