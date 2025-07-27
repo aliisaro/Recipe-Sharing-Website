@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { API_URL } from '../config';
+import { Difficulty, Type, Cuisine, Tags } from '../data/recipeOptions';
 
 const CreateRecipe = () => {
   const navigate = useNavigate();
