@@ -182,16 +182,6 @@ const CreateRecipe = () => {
           </div>
         )}
 
-        {formData.image && (
-          <div className="mock-recipe-card">
-            <div className="image-preview">
-              <img src={URL.createObjectURL(formData.image)} alt="Preview" />
-              <p>{formData.title || "Recipe Title"} ({formData.time || "Time"})</p>
-            </div>
-          </div>
-        )}
-
-
         {/* Show upload or change image input depending on whether image is set */}
         {formData.image == null ? (
           <>
