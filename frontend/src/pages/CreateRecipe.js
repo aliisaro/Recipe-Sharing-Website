@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { API_URL } from '../config';
-import { Difficulty, Type, Cuisine, Tags} from '../data/recipeOptions';
 
 const CreateRecipe = () => {
   const navigate = useNavigate();
@@ -98,7 +97,6 @@ const CreateRecipe = () => {
           name="time"
           value={formData.time}
           onChange={handleChange}
-          placeholder="Enter cooking time"
           required
         />
 
@@ -173,6 +171,15 @@ const CreateRecipe = () => {
             />
           </div>
         </div>
+
+        {formData.image && (
+          <div className="mock-recipe-card">
+            <div className="image-preview">
+              <img src={URL.createObjectURL(formData.image)} alt="Preview" />
+              <p>{formData.title || "Recipe Title"} ({formData.time || "Time"})</p>
+            </div>
+          </div>
+        )}
 
         {formData.image && (
           <div className="mock-recipe-card">

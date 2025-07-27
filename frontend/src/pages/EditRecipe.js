@@ -188,46 +188,21 @@ const EditRecipe = () => {
               onChange={selected => setFormData(prev => ({ ...prev, cuisine: selected }))}
             />
 
-            <label>Tags:</label>
-            <Select
-              isMulti
-              options={Tags}
-              onChange={selectedOptions => setFormData(prev => ({ ...prev, tags: selectedOptions }))}
-              value={formData.tags}
-            />
-          </div>
-        </div>
+        <label>Tags: </label>
+        <Select
+          isMulti
+          options={Tags}
+          onChange={(selectedOptions) =>
+            setFormData({
+              ...formData,
+              tags: selectedOptions.map((option) => option.value),
+            })
+          }
+          value={Tags.filter((tag) => formData.tags.includes(tag.value))}
+        />
 
-        {formData.image && (
-          <div className="mock-recipe-card">
-            <div className="image-preview">
-              <img
-                src={
-                  typeof formData.image === "object"
-                    ? URL.createObjectURL(formData.image)
-                    : `${API_URL}/${formData.image}`
-                }
-                alt="Preview"
-              />
-              <p>
-                {formData.title || "Recipe Title"} ({formData.time || "Time"})
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Show upload or change image input depending on whether image is set */}
-        {formData.image == null ? (
-          <>
-            <label>Upload Image:</label>
-            <input type="file" onChange={handleImageChange} accept="image/*" />
-          </>
-        ) : (
-          <>
-            <label>Change Image:</label>
-            <input type="file" onChange={handleImageChange} accept="image/*" />
-          </>
-        )}
+        <label>Upload Image:</label>
+        <input type="file" onChange={handleImageChange} accept="image/*" />
 
         <div className="edit-cancel-buttons">
           <button type="submit">Done</button>
