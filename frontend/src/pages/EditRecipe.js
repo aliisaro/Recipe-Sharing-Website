@@ -201,17 +201,8 @@ const EditRecipe = () => {
         {formData.image && (
           <div className="mock-recipe-card">
             <div className="image-preview">
-              <img
-                src={
-                  typeof formData.image === "object"
-                    ? URL.createObjectURL(formData.image)
-                    : `${API_URL}/${formData.image}`
-                }
-                alt="Preview"
-              />
-              <p>
-                {formData.title || "Recipe Title"} ({formData.time || "Time"})
-              </p>
+              <img src={URL.createObjectURL(formData.image)} alt="Preview" />
+              <p>{formData.title || "Recipe Title"}</p>
             </div>
           </div>
         )}

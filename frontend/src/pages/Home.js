@@ -6,20 +6,15 @@ import RecipeCard from "../components/RecipeCard";
 import {Type, Cuisine, Tags, SortByOptions} from '../data/recipeOptions';
 
 const Home = ({ searchTerm, setSearchTerm }) => {
-  // State to hold the recipe array
   const [recipeArray, setRecipeArray] = useState([]);
-
-  // State to handle filters
   const [filters, setFilters] = useState({
-  type: null,
-  cuisine: null,
-  tags: null,
+    type: null,
+    cuisine: null,
+    tags: null,
   });
-
-  // State to handle errors
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch recipes when the component mounts or filters change
   const handleFilterChange = (filterName, selectedOption) => {
     setFilters((prev) => ({
       ...prev,
@@ -32,21 +27,20 @@ const Home = ({ searchTerm, setSearchTerm }) => {
     }));
   };
 
-  // Handle search term
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
   useEffect(() => {
     const getRecipes = async () => {
+      setLoading(true);
+      setError(null);
       try {
         const query = new URLSearchParams();
 
         if (filters.type && filters.type !== "none") query.append("type", filters.type);
         if (filters.cuisine && filters.cuisine !== "none") query.append("cuisine", filters.cuisine);
         if (filters.tags && filters.tags.length > 0) query.append("tags", filters.tags.join(","));
-        
-        // Add search term query param
         if (searchTerm) query.append("search", searchTerm);
 
         const response = await fetch(`${API_URL}/api/recipes/all?${query.toString()}`, {
@@ -60,14 +54,18 @@ const Home = ({ searchTerm, setSearchTerm }) => {
           const data = await response.json();
           setError(data.error);
           setRecipeArray([]);
+          setLoading(false);
           return;
         }
 
         const data = await response.json();
         setRecipeArray(data);
+        setLoading(false);
       } catch (error) {
         console.error(error);
         setError("Error fetching recipes");
+        setRecipeArray([]);
+        setLoading(false);
       }
     };
 
@@ -76,11 +74,8 @@ const Home = ({ searchTerm, setSearchTerm }) => {
 
   return (
     <div className="home-container">
-
-      {/* Searchbar & filters */}
-      <div className="searchbar-filters-container">        
+      <div className="searchbar-filters-container">
         <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-
         <Filters
           SortByOptions={SortByOptions}
           TypeOptions={Type}
@@ -91,13 +86,21 @@ const Home = ({ searchTerm, setSearchTerm }) => {
       </div>
 
       <div className="home-content">
-        <div className="recipes">
-          {error && <h2>{error}</h2>}
-          {recipeArray.length === 0 && !error && <h2>No recipes found...</h2>}
-          {recipeArray.map((recipe) => (
+        {loading ? (
+          <>
+            <h2>Loading recipes...</h2>
+            <div className="loader"></div>
+          </>
+        ) : error ? (
+          <h2>No recipes found...</h2>
+        ) : (
+          <div className="recipes">
+            {recipeArray.length === 0 && <h2>No recipes found...</h2>}
+            {recipeArray.map((recipe) => (
               <RecipeCard key={recipe._id} recipe={recipe} />
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

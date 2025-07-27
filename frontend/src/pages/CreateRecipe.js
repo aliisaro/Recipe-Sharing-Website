@@ -177,7 +177,7 @@ const CreateRecipe = () => {
           <div className="mock-recipe-card">
             <div className="image-preview">
               <img src={URL.createObjectURL(formData.image)} alt="Preview" />
-              <p>{formData.title || "Recipe Title"} ({formData.time || "Time"})</p>
+              <p>{formData.title || "Recipe Title"}</p>
             </div>
           </div>
         )}

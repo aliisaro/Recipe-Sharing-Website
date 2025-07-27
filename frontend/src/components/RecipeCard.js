@@ -6,7 +6,7 @@ const RecipeCard = ({ recipe }) => (
     <Link to={`/${recipe._id}`}>
       <div className="image-container">
         <img src={`${API_URL}/${recipe.image}`} alt={recipe.title} />
-        <p>{recipe.title} ({recipe.time})</p>
+        <p>{recipe.title}</p>
       </div>
     </Link>
   </div>

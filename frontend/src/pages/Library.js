@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL } from '../config';
 import RecipeCard from "../components/RecipeCard";
+import Filters from "../components/Filters";
+import Searchbar from "../components/Searchbar";
 
 const Library = () => {
   const [createdRecipes, setCreatedRecipes] = useState([]);
   const [savedRecipes, setSavedRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const token = localStorage.getItem("token");
+  const [activeTab, setActiveTab] = useState("created");
 
   useEffect(() => {
   const fetchLibrary = async () => {
@@ -51,41 +52,68 @@ const Library = () => {
 
   return (
     <div className="library-page-container">
+      <div className="library-content">
+        <div className="library-nav">
 
-      {loading ? (
-        <h2>Loading recipes...</h2>
-      ) : error ? (
-        <h2>{error}</h2>
-      ) : (
-        <>
-          {/* Your Recipes & Saved Recipes */}
-          <div className="CreatedRecipes">
-            <h2>Your Recipes</h2>
-            {createdRecipes.length === 0 ? (
-              <p>No created recipes yet</p>
-            ) : (
-              <div className="recipes">
-                {createdRecipes.map((recipe) => (
-                  <RecipeCard key={recipe._id} recipe={recipe} />
-                ))}
+          <ul>
+            <li>
+              <button
+                className={activeTab === "created" ? "active" : ""}
+                onClick={() => setActiveTab("created")}
+              >
+                Your Recipes
+              </button>
+            </li>
+            <li>
+              <button
+                className={activeTab === "saved" ? "active" : ""}
+                onClick={() => setActiveTab("saved")}
+              >
+                Saved Recipes
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        {loading ? (
+          <><div className="loader"></div></>
+
+        ) : error ? (
+          <h2>{error}</h2>
+        ) : (
+          <>
+            {activeTab === "created" && (
+              <div className="CreatedRecipes">
+                {createdRecipes.length === 0 ? (
+                  <p>No created recipes yet</p>
+                ) : (
+                  <div className="recipes">
+                    {createdRecipes.map((recipe) => (
+                      <RecipeCard key={recipe._id} recipe={recipe} />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
-            <div className="SavedRecipes">
-              <h2>Saved Recipes</h2>
-              {savedRecipes.length === 0 ? (
-                <p>No saved recipes yet. <Link to="/">Browse recipes</Link> and save your favorites!</p>
-              ) : (
-                <div className="recipes">
-                  {savedRecipes.map((recipe) => (
-                    <RecipeCard key={recipe._id} recipe={recipe} />
-                  ))}
-                </div>
-              )}
-            </div>
-        </div>
-        </>
-      )}
+            {activeTab === "saved" && (
+              <div className="SavedRecipes">
+                {savedRecipes.length === 0 ? (
+                  <p>
+                    No saved recipes yet. <Link to="/">Browse recipes</Link> and save your favorites!
+                  </p>
+                ) : (
+                  <div className="recipes">
+                    {savedRecipes.map((recipe) => (
+                      <RecipeCard key={recipe._id} recipe={recipe} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
