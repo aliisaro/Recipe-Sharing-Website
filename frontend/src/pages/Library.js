@@ -115,12 +115,11 @@ const Library = () => {
         {loading ? (
         <><div className="loader"></div></>
         ) : error ? (
-          <h2>No recipes found...</h2>
+          <p>No recipes found...</p>
         ) : (
           <>
             {activeTab === "created" && (
               <div className="CreatedRecipes">
-                {createdRecipes.length === 0 && <h2>No recipes found...</h2>}
                 {createdRecipes.length === 0 ? (
                   <p>No created recipes yet</p>
                 ) : (
@@ -135,9 +134,8 @@ const Library = () => {
 
             {activeTab === "saved" && (
               <div className="SavedRecipes">
-                {savedRecipes.length === 0 && <h2>No recipes found...</h2>}
                 {savedRecipes.length === 0 ? (
-                  <p>No saved recipes yet.</p>
+                  <p>No recipes found..</p>
                 ) : (
                   <div className="recipes">
                     {savedRecipes.map((recipe) => (

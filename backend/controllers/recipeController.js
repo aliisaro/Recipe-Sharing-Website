@@ -79,11 +79,55 @@ const getRecipesByUser = async (req, res) => {
     }
 
     // Find recipes created by the user with the specified filters
-    const recipes = await Recipe.find({ ...filter, user_id: userId }).sort({ createdAt: -1 });
-    res.status(200).json(recipes);
+    const user = await User.findById(userId);
+    filter._id = { $in: user.ownRecipes };
+
+    const ownRecipes = await Recipe.find(filter).sort({ createdAt: -1 });
+    res.status(200).json(ownRecipes);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to get user's recipes" });
+  }
+};
+
+// Get all saved recipes by current user with filters and search
+const getSavedRecipes = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { type, cuisine, tags, search } = req.query;
+
+    // Build the filter object dynamically based on query params
+    const filter = {};
+
+    if (type && type !== 'none') {
+      filter.type = type;
+    }
+    if (cuisine && cuisine !== 'none') {
+      filter.cuisine = cuisine;
+    }
+
+    if (tags && tags !== 'none') {
+      // Assume tags query param is a comma separated string, e.g. "vegan,gluten free"
+      const tagsArray = tags.split(',').map(tag => tag.trim());
+      filter.tags = { $in: tagsArray };
+    }
+
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { ingredients: { $regex: search, $options: "i" } },
+        { steps: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const user = await User.findById(userId);
+    filter._id = { $in: user.savedRecipes };
+
+    const savedRecipes = await Recipe.find(filter).sort({ createdAt: -1 });
+    res.status(200).json(savedRecipes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get saved recipes" });
   }
 };
 
@@ -293,19 +337,6 @@ const unsaveRecipe = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to unsave recipe" });
-  }
-};
-
-// Get all saved recipes by current user
-const getSavedRecipes = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    const user = await User.findById(userId);
-    const savedRecipes = await Recipe.find({ _id: { $in: user.savedRecipes } }).sort({ createdAt: -1 });
-    res.status(200).json(savedRecipes);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to get saved recipes" });
   }
 };
 
