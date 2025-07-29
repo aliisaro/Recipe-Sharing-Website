@@ -223,13 +223,10 @@ const RecipeDetails = () => {
             </>
           ) : (
             isSaved ? (
-              <button className="btn" onClick={UnsaveRecipe}>Unsave recipe</button>
+              <button className="btn" onClick={UnsaveRecipe} style={{ backgroundColor: 'red'}}>Unsave recipe</button>
             ) : (
               <button className="btn" onClick={SaveRecipe}>Save recipe</button>
             )
-
-
-            
           )}
         </div>
       </div>

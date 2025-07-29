@@ -747,6 +747,12 @@ button {
   font-size: 14px;
 }
 
+.SavedRecipes p, .CreatedRecipes p {
+  font-size: 16px;
+  margin-left: 20px;
+  color: white;
+}
+
 .recipe-card {
   display: inline-block;
   border-radius: 10px;

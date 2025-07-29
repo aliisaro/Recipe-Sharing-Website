@@ -23,7 +23,7 @@ const ProfilePage = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(profile),
+        body: JSON.stringify(formData),
       });
       if (!response.ok) {
         throw new Error('Failed to update profile');
@@ -31,7 +31,6 @@ const ProfilePage = () => {
       const data = await response.json();
       setProfile(data);
     } catch (error) {
-      console.error(error);
       setError('Error updating profile');
     }
   };
@@ -47,7 +46,6 @@ const ProfilePage = () => {
         const data = await response.json();
         setProfile(data);
       } catch (error) {
-        console.error(error);
         setError('Error fetching profile data');
       } finally {
         setLoading(false);

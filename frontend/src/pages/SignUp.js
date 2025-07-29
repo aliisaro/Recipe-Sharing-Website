@@ -38,9 +38,9 @@ const SignUp = ({ setIsAuthenticated }) => {
           <img src={img} className="logo" alt="logo" />
           <h3>Sign Up</h3>
         </div>
-        <input {...username} placeholder="Username" required/>
-        <input {...email} placeholder="Email" required/>
-        <input {...password} placeholder="Password" required />
+        <input {...username} placeholder="Username"/>
+        <input {...email} placeholder="Email"/>
+        <input {...password} placeholder="Password"/>
 
         {password.value && (
           <div className="password-strength-container">
@@ -58,7 +58,7 @@ const SignUp = ({ setIsAuthenticated }) => {
           </div>
         )}
 
-        <input {...password2} placeholder="Write password again..." required/>
+        <input {...password2} placeholder="Write password again..."/>
         <Link to="/SignIn" className="link">Already registered? Sign in</Link>
 
         {error && <div className="error-message">{error}</div>}

@@ -138,7 +138,7 @@ const Library = () => {
             {activeTab === "saved" && (
               <div className="SavedRecipes">
                 {savedRecipes.length === 0 ? (
-                  <p style= {{ fontSize: "16px", marginLeft: "20px", color: "white" }}>No saved recipes yet.</p>
+                  <p>No saved recipes yet.</p>
                 ) : (
                   <div className="recipes">
                     {savedRecipes.map((recipe) => (

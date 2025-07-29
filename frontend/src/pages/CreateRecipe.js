@@ -99,7 +99,6 @@ const CreateRecipe = () => {
           value={formData.title}
           onChange={handleChange}
           placeholder="Enter recipe title"
-          required
         />
 
         <label>Time</label>
@@ -109,7 +108,6 @@ const CreateRecipe = () => {
           value={formData.time}
           onChange={handleChange}
           placeholder="Enter cooking time"
-          required
         />
 
         <label>Ingredients</label>
@@ -117,7 +115,6 @@ const CreateRecipe = () => {
           name="ingredients"
           value={formData.ingredients}
           onChange={handleChange}
-          required
           placeholder="Write the ingredients here:"
         />
 
@@ -131,7 +128,6 @@ const CreateRecipe = () => {
         />
 
         <div className="section">
-
           <div className="row">
             <label>Difficulty</label>
             <Select
@@ -202,7 +198,6 @@ const CreateRecipe = () => {
             <input type="file" onChange={handleImageChange} accept="image/*" />
           </>
         )}
-
 
         {error && <div className="error-message">{error}</div>}
 

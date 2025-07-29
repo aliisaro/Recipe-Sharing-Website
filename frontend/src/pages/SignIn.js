@@ -23,8 +23,8 @@ const SignIn = ({ setIsAuthenticated }) => {
           <img src={img} className="logo" alt="logo" />
           <h3>Sign in</h3>
         </div>
-        <input {...username} placeholder="Username" required />
-        <input {...password} placeholder="Password" required />
+        <input {...username} placeholder="Username" />
+        <input {...password} placeholder="Password" />
         <Link to="/SignUp" className="link">Not registered? Sign up </Link>
         {error && <div className="error-message">{error}</div>}
         <button type="submit">Sign in</button>
