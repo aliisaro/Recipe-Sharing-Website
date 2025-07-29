@@ -57,6 +57,7 @@ const CreateRecipe = () => {
     }
 
     const recipeData = new FormData();
+    
     for (const key in formData) {
       recipeData.append(key, formData[key]);
     }
