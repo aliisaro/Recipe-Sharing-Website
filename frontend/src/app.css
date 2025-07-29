@@ -775,7 +775,7 @@ button {
 .recipe-card {
   display: inline-block;
   border-radius: 10px;
-  box-shadow: 3px 3px 3px #282727;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   margin: 20px 5px 20px 20px;
   width: 200px;
   overflow: hidden;

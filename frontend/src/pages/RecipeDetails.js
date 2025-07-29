@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { API_URL } from '../config';
+import { toast } from 'react-toastify';
 
 const RecipeDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState("");
   const [hoveredStar, setHoveredStar] = useState(null);
 
   useEffect(() => {
@@ -26,7 +25,6 @@ const RecipeDetails = () => {
 
         const data = await response.json();
         setRecipe(data);
-        console.log("Fetched recipe:", data); 
 
         // Check if recipe is saved
         const savedResponse = await fetch(`${API_URL}/api/recipes/saved`, {
@@ -44,7 +42,7 @@ const RecipeDetails = () => {
         setIsSaved(saved);
 
       } catch (error) {
-        setError(error.message);
+        toast.error("Failed to load recipe details.");
       }
     };
 
@@ -66,9 +64,9 @@ const RecipeDetails = () => {
 
       navigate("/");
 
-      setSuccessMessage("Recipe deleted successfully!");
+      toast.success("Recipe deleted successfully!");
     } catch (error) {
-      setError("Failed to delete recipe. Please try again.");
+      toast.error("An error occurred while deleting the recipe.");
     }
   };
 
@@ -87,10 +85,10 @@ const RecipeDetails = () => {
         throw new Error("Failed to save recipe");
       }
 
-      setIsSaved(true); // update UI
-      setSuccessMessage("Recipe saved successfully!");
+      setIsSaved(true);
+      toast.success("Recipe saved successfully!");
     } catch (error) {
-      setError("An error occurred while saving the recipe.");
+      toast.error("An error occurred while saving the recipe.");
     }
   };
 
@@ -110,9 +108,9 @@ const RecipeDetails = () => {
 
       setIsSaved(false);
 
-      setSuccessMessage("Recipe unsaved successfully!");
+      toast.success("Recipe unsaved successfully!");
     } catch (error) {
-      setError("An error occurred while trying to unsave the recipe.");
+      toast.error("An error occurred while trying to unsave the recipe.");
     }
   };
 
@@ -137,14 +135,14 @@ const RecipeDetails = () => {
         ...prev.rating,
         average: data.average,
         count: data.count,
+        userRating: data.userRating,
       },
-      userRating: data.userRating, 
     }));
 
-    setSuccessMessage("Rating submitted!");
+    toast.success("Rating submitted!");
 
   } catch (error) {
-    setError("Could not submit rating.");
+    toast.error("Could not submit rating.");
   }
 };
 
@@ -214,16 +212,18 @@ const RecipeDetails = () => {
             Average Rating: {recipe.rating?.average?.toFixed(1) || "N/A"} (
             {recipe.rating?.count || 0} rating{recipe.rating?.count === 1 ? "" : "s"})
           </p>
+            {recipe.rating?.userRating ? (
+              <p>You rated this recipe: {recipe.rating.userRating} ⭐</p>
+            ) : (
+              <p>You haven't rated this recipe yet.</p>
+            )}
         </div>
-
-        {error && <p className="error-message">{error}</p>}
-        {successMessage && <p className="success-message">{successMessage}</p>}
         
         <div className="button-group">
           {recipe.user_id?._id === localStorage.getItem("user_id") ? (
             <>
               <Link to={`/EditRecipe/${recipe._id}`} className="button-link">Edit recipe</Link>
-              <button className="btn" onClick={DeleteRecipe}>Delete recipe</button>
+              <button className="btn" onClick={DeleteRecipe} style={{ backgroundColor: 'red'}}>Delete recipe</button>
             </>
           ) : (
             isSaved ? (
