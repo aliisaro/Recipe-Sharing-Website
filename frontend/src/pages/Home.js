@@ -59,7 +59,6 @@ const Home = () => {
         setRecipeArray(data);
         setLoading(false);
       } catch (error) {
-        console.error(error);
         setError("Error fetching recipes");
         setRecipeArray([]);
         setLoading(false);

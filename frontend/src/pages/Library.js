@@ -47,11 +47,13 @@ const Library = () => {
 
       const token = localStorage.getItem("token");
 
-      const savedRes = await fetch(`${API_URL}/api/recipes/saved`, {
+      const queryString = query.toString();
+
+      const savedRes = await fetch(`${API_URL}/api/recipes/saved?${queryString}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const createdRes = await fetch(`${API_URL}/api/recipes/user`, {
+      const createdRes = await fetch(`${API_URL}/api/recipes/user?${queryString}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

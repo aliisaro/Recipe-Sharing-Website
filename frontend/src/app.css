@@ -673,8 +673,8 @@ button {
   flex-shrink: 0;
 }
 
-.btn,
-.button-link {
+.button-group .saveButton,
+.button-group .button-link {
   background-color: #50C37E;
   color: #fff;
   padding: 10px 18px;
@@ -686,9 +686,25 @@ button {
   transition: background-color 0.2s ease;
 }
 
-.btn:hover,
-.button-link:hover {
+.button-group .button:hover,
+.button-group .button-link:hover {
   background-color: #2f9a60;
+}
+
+.button-group .deleteButton, .unsaveButton {
+  background-color: red;
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.button-group .deleteButton:hover, .unsaveButton:hover {
+  background-color: rgb(209, 0, 0);
 }
 
 /*----------Library---------*/

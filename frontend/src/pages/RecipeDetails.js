@@ -226,13 +226,13 @@ const RecipeDetails = () => {
           {recipe.user_id?._id === localStorage.getItem("user_id") ? (
             <>
               <Link to={`/EditRecipe/${recipe._id}`} className="button-link">Edit recipe</Link>
-              <button className="btn" onClick={DeleteRecipe} style={{ backgroundColor: 'red'}}>Delete recipe</button>
+              <button className="deleteButton" onClick={DeleteRecipe}>Delete recipe</button>
             </>
           ) : (
             isSaved ? (
-              <button className="btn" onClick={UnsaveRecipe} style={{ backgroundColor: 'red'}}>Unsave recipe</button>
+              <button className="unsaveButton" onClick={UnsaveRecipe}>Unsave recipe</button>
             ) : (
-              <button className="btn" onClick={SaveRecipe}>Save recipe</button>
+              <button className="saveButton" onClick={SaveRecipe}>Save recipe</button>
             )
           )}
         </div>
