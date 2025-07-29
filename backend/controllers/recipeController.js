@@ -72,13 +72,22 @@ const getRecipeById = async (req, res) => {
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
-    console.log(recipe.user_id.username);
-    res.status(200).json(recipe);
+
+    const userRating = recipe.rating.ratings.find(r => r.user.toString() === user_id.toString())?.value;
+
+    res.status(200).json({
+      ...recipe.toObject(), // convert Mongoose doc to plain object
+      rating: {
+        ...recipe.rating.toObject(),
+        userRating: userRating || null,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server Error" });
   }
 };
+
 
 // ADD Recipe
 const addRecipe = async (req, res) => {

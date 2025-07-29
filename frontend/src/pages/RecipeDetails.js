@@ -208,15 +208,16 @@ const RecipeDetails = () => {
         )}
 
         <div className="rating-info">
+          {recipe.rating?.userRating ? (
+            <p>You rated this recipe: {recipe.rating.userRating} ⭐</p>
+          ) : (
+            <p>You haven't rated this recipe yet.</p>
+          )}
+
           <p>
             Average Rating: {recipe.rating?.average?.toFixed(1) || "N/A"} (
             {recipe.rating?.count || 0} rating{recipe.rating?.count === 1 ? "" : "s"})
           </p>
-            {recipe.rating?.userRating ? (
-              <p>You rated this recipe: {recipe.rating.userRating} ⭐</p>
-            ) : (
-              <p>You haven't rated this recipe yet.</p>
-            )}
         </div>
         
         <div className="button-group">
