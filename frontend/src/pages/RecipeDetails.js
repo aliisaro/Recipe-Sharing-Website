@@ -6,13 +6,15 @@ const RecipeDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
-  const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [hoveredStar, setHoveredStar] = useState(null);
 
   useEffect(() => {
     const getRecipe = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/recipes/rate/${id}`, {
+        const response = await fetch(`${API_URL}/api/recipes/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -49,14 +51,8 @@ const RecipeDetails = () => {
     getRecipe();
   }, [id]);
 
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!recipe) {
-    return <div>Loading...</div>;
-  }
+  
+  if (!recipe) return <div>Loading...</div>;
 
   // Function to delete the recipe
   const DeleteRecipe = async () => {
@@ -67,13 +63,12 @@ const RecipeDetails = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+
       navigate("/");
-      console.log("Recipe deleted successfully");
-      alert("Recipe deleted successfully");
+
+      setSuccessMessage("Recipe deleted successfully!");
     } catch (error) {
-      setError("Failed to delete recipe");
-      console.error("Error deleting recipe:", error);
-      alert("Failed to delete recipe. Please try again.");
+      setError("Failed to delete recipe. Please try again.");
     }
   };
 
@@ -93,9 +88,9 @@ const RecipeDetails = () => {
       }
 
       setIsSaved(true); // update UI
+      setSuccessMessage("Recipe saved successfully!");
     } catch (error) {
-      console.error(error);
-      alert("An error occurred while saving the recipe.");
+      setError("An error occurred while saving the recipe.");
     }
   };
 
@@ -113,17 +108,18 @@ const RecipeDetails = () => {
         throw new Error("Failed to unsave recipe");
       }
 
-      setIsSaved(false); // update UI
+      setIsSaved(false);
+
+      setSuccessMessage("Recipe unsaved successfully!");
     } catch (error) {
-      console.error(error);
-      alert("An error occurred while trying to unsave the recipe.");
+      setError("An error occurred while trying to unsave the recipe.");
     }
   };
 
   // Function to handle rating
   const handleRating = async (ratingValue) => {
   try {
-    const response = await fetch(`${API_URL}/api/recipes/${id}/rate`, {
+    const response = await fetch(`${API_URL}/api/recipes/rate/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -142,11 +138,13 @@ const RecipeDetails = () => {
         average: data.average,
         count: data.count,
       },
-      userRating: data.userRating,
+      userRating: data.userRating, 
     }));
+
+    setSuccessMessage("Rating submitted!");
+
   } catch (error) {
-    console.error("Error submitting rating:", error);
-    alert("Could not submit rating.");
+    setError("Could not submit rating.");
   }
 };
 
@@ -199,7 +197,9 @@ const RecipeDetails = () => {
               {[1, 2, 3, 4, 5].map((star) => (
                 <span
                   key={star}
-                  className={`star ${star <= recipe.userRating ? "selected" : ""}`}
+                  className={`star ${hoveredStar >= star || (!hoveredStar && recipe.userRating >= star) ? "selected" : ""}`}
+                  onMouseEnter={() => setHoveredStar(star)}
+                  onMouseLeave={() => setHoveredStar(null)}
                   onClick={() => handleRating(star)}
                 >
                   ★
@@ -215,6 +215,9 @@ const RecipeDetails = () => {
             {recipe.rating?.count || 0} rating{recipe.rating?.count === 1 ? "" : "s"})
           </p>
         </div>
+
+        {error && <p className="error-message">{error}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>}
         
         <div className="button-group">
           {recipe.user_id?._id === localStorage.getItem("user_id") ? (
