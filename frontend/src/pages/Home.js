@@ -30,8 +30,6 @@ const Home = () => {
 
   useEffect(() => {
     const getRecipes = async () => {
-      setLoading(true);
-      setError(null);
       try {
         const query = new URLSearchParams();
 
@@ -40,24 +38,25 @@ const Home = () => {
         if (filters.tags && filters.tags.length > 0) query.append("tags", filters.tags.join(","));
         if (searchTerm) query.append("search", searchTerm);
 
-        const response = await fetch(`${API_URL}/api/recipes/all?${query.toString()}`, {
+        const recipes = await fetch(`${API_URL}/api/recipes/all?${query.toString()}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
 
-        if (!response.ok) {
-          const data = await response.json();
-          setError(data.error);
+        if (!recipes.ok) {
+          const data = await recipes.json();
+          setError(data.error || "Error fetching recipes");
           setRecipeArray([]);
           setLoading(false);
           return;
         }
 
-        const data = await response.json();
+        const data = await recipes.json();
         setRecipeArray(data);
         setLoading(false);
+        
       } catch (error) {
         setError("Error fetching recipes");
         setRecipeArray([]);

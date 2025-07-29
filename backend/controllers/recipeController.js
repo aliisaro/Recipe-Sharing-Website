@@ -26,7 +26,6 @@ const getAllRecipes = async (req, res) => {
       // Filter recipes that have any of the tags in their tags array
       filter.tags = { $in: tagsArray };
     }
-
     
     if (search) {
       // Perform case-insensitive partial match on title or ingredients or steps, etc.
@@ -50,8 +49,37 @@ const getAllRecipes = async (req, res) => {
 const getRecipesByUser = async (req, res) => {
   try {
     const userId = req.user._id;
-    // Find recipes where user_id equals the logged-in user's ID
-    const recipes = await Recipe.find({ user_id: userId }).sort({ createdAt: -1 });
+    const { type, cuisine, tags, search} = req.query;
+
+    // Build the filter object dynamically based on query params
+    const filter = {};
+
+    if (type && type !== 'none') {
+      filter.type = type;
+    }
+    if (cuisine && cuisine !== 'none') {
+      filter.cuisine = cuisine;
+    }
+
+    if (tags && tags !== 'none') {
+      // Assume tags query param is a comma separated string, e.g. "vegan,gluten free"
+      const tagsArray = tags.split(',').map(tag => tag.trim());
+
+      // Filter recipes that have any of the tags in their tags array
+      filter.tags = { $in: tagsArray };
+    }
+
+    if (search) {
+      // Perform case-insensitive partial match on title or ingredients or steps, etc.
+      filter.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { ingredients: { $regex: search, $options: "i" } },
+        { steps: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // Find recipes created by the user with the specified filters
+    const recipes = await Recipe.find({ ...filter, user_id: userId }).sort({ createdAt: -1 });
     res.status(200).json(recipes);
   } catch (error) {
     console.error(error);

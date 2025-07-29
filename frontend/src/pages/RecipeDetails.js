@@ -154,7 +154,7 @@ const RecipeDetails = () => {
         <div className="recipe-image-description">
           <img
             src={`${API_URL}/${recipe.image}`}
-            alt="Not found..."
+            alt="Image not found..."
           />
 
           <ul>

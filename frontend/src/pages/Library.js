@@ -9,17 +9,16 @@ import {Type, Cuisine, Tags, SortByOptions} from '../data/recipeOptions';
 const Library = () => {
   const [createdRecipes, setCreatedRecipes] = useState([]);
   const [savedRecipes, setSavedRecipes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("created");
-
   const [searchTerm, setSearchTerm] = useState("");
-  
   const [filters, setFilters] = useState({
     type: null,
     cuisine: null,
     tags: [],
   });
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const handleFilterChange = (filterName, selectedOption) => {
     setFilters((prev) => ({
@@ -35,9 +34,8 @@ const Library = () => {
 
   useEffect(() => {
   const fetchLibrary = async () => {
-    setLoading(true);
-    setError(null);
     try {
+      const token = localStorage.getItem("token");
       const query = new URLSearchParams();
 
       if (filters.type && filters.type !== "none") query.append("type", filters.type);
@@ -45,21 +43,20 @@ const Library = () => {
       if (filters.tags && filters.tags.length > 0) query.append("tags", filters.tags.join(","));
       if (searchTerm) query.append("search", searchTerm);
 
-      const token = localStorage.getItem("token");
-
-      const queryString = query.toString();
-
-      const savedRes = await fetch(`${API_URL}/api/recipes/saved?${queryString}`, {
+      const savedRes = await fetch(`${API_URL}/api/recipes/saved?${query.toString()}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const createdRes = await fetch(`${API_URL}/api/recipes/user?${queryString}`, {
+      const createdRes = await fetch(`${API_URL}/api/recipes/user?${query.toString()}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!savedRes.ok || !createdRes.ok) {
-        const errData = await savedRes.json();
-        setError(errData.error || "Error fetching recipes");
+        const data = await savedRes.json();
+        setError(data.error || "Error fetching recipes");
+        setCreatedRecipes([]);
+        setSavedRecipes([]);
+        setLoading(false);
         return;
       }
 
@@ -118,11 +115,12 @@ const Library = () => {
         {loading ? (
         <><div className="loader"></div></>
         ) : error ? (
-          <h2>{error}</h2>
+          <h2>No recipes found...</h2>
         ) : (
           <>
             {activeTab === "created" && (
               <div className="CreatedRecipes">
+                {createdRecipes.length === 0 && <h2>No recipes found...</h2>}
                 {createdRecipes.length === 0 ? (
                   <p>No created recipes yet</p>
                 ) : (
@@ -137,6 +135,7 @@ const Library = () => {
 
             {activeTab === "saved" && (
               <div className="SavedRecipes">
+                {savedRecipes.length === 0 && <h2>No recipes found...</h2>}
                 {savedRecipes.length === 0 ? (
                   <p>No saved recipes yet.</p>
                 ) : (
