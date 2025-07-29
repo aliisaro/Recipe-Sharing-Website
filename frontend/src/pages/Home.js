@@ -5,12 +5,13 @@ import { API_URL } from '../config';
 import RecipeCard from "../components/RecipeCard";
 import {Type, Cuisine, Tags, SortByOptions} from '../data/recipeOptions';
 
-const Home = ({ searchTerm, setSearchTerm }) => {
+const Home = () => {
   const [recipeArray, setRecipeArray] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     type: null,
     cuisine: null,
-    tags: null,
+    tags: [],
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,10 +26,6 @@ const Home = ({ searchTerm, setSearchTerm }) => {
           ? selectedOption.value
           : null,
     }));
-  };
-
-  const handleChange = (e) => {
-    setSearchTerm(e.target.value);
   };
 
   useEffect(() => {
@@ -73,7 +70,7 @@ const Home = ({ searchTerm, setSearchTerm }) => {
   }, [filters, searchTerm]);
 
   return (
-    <div className="home-container">
+    <div className="home-page-container">
       <div className="searchbar-filters-container">
         <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <Filters

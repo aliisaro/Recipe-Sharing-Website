@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("../models/Users");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
@@ -68,28 +69,37 @@ const getUserByUsername = async (req, res) => {
 
 const patchUser = async (req, res) => {
   try {
-      // Extract only the fields you want to update from req.body
-      const { bio, image } = req.body;
+    const { username, email, password } = req.body;
 
-      // Create an object to hold the fields you want to update
-      let updateFields = {};
-      if (bio) updateFields.bio = bio;
-      if (image) updateFields.image = image;
+    // Build updateFields only with provided fields
+    let updateFields = {};
+    if (username !== undefined) updateFields.username = username;
+    if (email !== undefined) updateFields.email = email;
+    if (password !== undefined) updateFields.password = password;
 
-      // Use findOneAndUpdate to update only the specified fields
-      const user = await User.findOneAndUpdate(
-          { username: req.params.username },
-          updateFields, // Update only the specified fields
-          { new: true } // Return the updated document
-      );
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ msg: "No valid fields to update" });
+    }
 
-      if (!user) {
-          return res.status(404).json({ msg: "User not found" });
-      }
+    // If password is being updated, hash it before saving
+    if (updateFields.password) {
+      const salt = await bcrypt.genSalt(10);
+      updateFields.password = await bcrypt.hash(updateFields.password, salt);
+    }
 
-      res.json(user);
+    const user = await User.findOneAndUpdate(
+      { username: req.params.username },
+      updateFields,
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.json(user);
   } catch (error) {
-      res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 

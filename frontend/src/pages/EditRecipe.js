@@ -7,6 +7,7 @@ import { Difficulty, Type, Cuisine, Tags } from '../data/recipeOptions'; // Remo
 const EditRecipe = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [error, setError] = useState(null);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -47,6 +48,7 @@ const EditRecipe = () => {
         });
       } catch (error) {
         console.error("Error fetching recipe:", error);
+        setError("Failed to fetch recipe");
       }
     };
 
@@ -105,14 +107,14 @@ const EditRecipe = () => {
 
       if (!response.ok) throw new Error("Failed to update recipe");
 
-      const updatedRecipe = await response.json();
 
-      alert("Recipe updated successfully!");
+      const updatedRecipe = await response.json();
+      setError(null);
       console.log("Updated recipe:", updatedRecipe);
       navigate(`/${id}`);
     } catch (error) {
       console.error("Error updating recipe:", error);
-      alert("Failed to update recipe.");
+      setError(error.message || "An error occurred while updating the recipe.");
     }
   };
 
@@ -124,6 +126,8 @@ const EditRecipe = () => {
         encType="multipart/form-data"
       >
         <h1>Edit Recipe</h1>
+
+        {error && <div className="error-message">{error}</div>}
 
         <label>Title:</label>
         <input
@@ -201,7 +205,14 @@ const EditRecipe = () => {
         {formData.image && (
           <div className="mock-recipe-card">
             <div className="image-preview">
-              <img src={URL.createObjectURL(formData.image)} alt="Preview" />
+              <img
+                src={
+                  formData.image instanceof File
+                    ? URL.createObjectURL(formData.image)
+                    : formData.image
+                }
+                alt="Preview"
+              />
               <p>{formData.title || "Recipe Title"}</p>
             </div>
           </div>

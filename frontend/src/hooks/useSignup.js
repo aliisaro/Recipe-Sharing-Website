@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { API_URL } from '../config';
+import React, { useState } from "react";
 
 const useSignup = (setIsAuthenticated) => {
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   const handleSignup = async (username, email, password) => {
     try {
@@ -26,16 +28,17 @@ const useSignup = (setIsAuthenticated) => {
         navigate("/");
       } else {
         console.error("Sign up failed:", data.message || data.error);
-        alert(data.error || "Sign up failed");
+        setError(data.error || "Sign up failed");
       }
     } catch (error) {
       console.error("Error during sign up:", error);
-      alert("Something went wrong. Please try again later.");
+      setError("Something went wrong. Please try again later.");
     }
   };
 
   return {
     handleSignup,
+    error,
   };
 };
 

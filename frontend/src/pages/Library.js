@@ -4,6 +4,7 @@ import { API_URL } from '../config';
 import RecipeCard from "../components/RecipeCard";
 import Filters from "../components/Filters";
 import Searchbar from "../components/Searchbar";
+import {Type, Cuisine, Tags, SortByOptions} from '../data/recipeOptions';
 
 const Library = () => {
   const [createdRecipes, setCreatedRecipes] = useState([]);
@@ -12,9 +13,38 @@ const Library = () => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("created");
 
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  const [filters, setFilters] = useState({
+    type: null,
+    cuisine: null,
+    tags: [],
+  });
+
+  const handleFilterChange = (filterName, selectedOption) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterName]:
+        filterName === "tags"
+          ? selectedOption?.map((opt) => opt.value) || []
+          : selectedOption
+          ? selectedOption.value
+          : null,
+    }));
+  };
+
   useEffect(() => {
   const fetchLibrary = async () => {
+    setLoading(true);
+    setError(null);
     try {
+      const query = new URLSearchParams();
+
+      if (filters.type && filters.type !== "none") query.append("type", filters.type);
+      if (filters.cuisine && filters.cuisine !== "none") query.append("cuisine", filters.cuisine);
+      if (filters.tags && filters.tags.length > 0) query.append("tags", filters.tags.join(","));
+      if (searchTerm) query.append("search", searchTerm);
+
       const token = localStorage.getItem("token");
 
       const savedRes = await fetch(`${API_URL}/api/recipes/saved`, {
@@ -37,23 +67,33 @@ const Library = () => {
       setCreatedRecipes(created);
       setSavedRecipes(saved);
 
-      console.log("Created recipes from backend:", created);
-      console.log("Saved recipes from backend:", saved);
     } catch (error) {
       setError("Error fetching library");
-      console.error(error);
+      setCreatedRecipes([]);
+      setSavedRecipes([]);
     } finally {
       setLoading(false);
     }
   };
 
     fetchLibrary();
-  }, []);
+  }, [filters, searchTerm]);
 
   return (
     <div className="library-page-container">
+
       <div className="library-content">
+
         <div className="library-nav">
+          <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
+          <Filters
+            SortByOptions={SortByOptions}
+            TypeOptions={Type}
+            CuisineOptions={Cuisine}
+            TagOptions={Tags}
+            onFilterChange={handleFilterChange}
+          />
 
           <ul>
             <li>
@@ -76,8 +116,7 @@ const Library = () => {
         </div>
 
         {loading ? (
-          <><div className="loader"></div></>
-
+        <><div className="loader"></div></>
         ) : error ? (
           <h2>{error}</h2>
         ) : (
@@ -99,9 +138,7 @@ const Library = () => {
             {activeTab === "saved" && (
               <div className="SavedRecipes">
                 {savedRecipes.length === 0 ? (
-                  <p>
-                    No saved recipes yet. <Link to="/">Browse recipes</Link> and save your favorites!
-                  </p>
+                  <p style= {{ fontSize: "16px", marginLeft: "20px", color: "white" }}>No saved recipes yet.</p>
                 ) : (
                   <div className="recipes">
                     {savedRecipes.map((recipe) => (

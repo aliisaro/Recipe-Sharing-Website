@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require("multer"); // import multer
 const { storage } = require("../middleware/uploadMiddleware"); // import storage middleware
 const upload = multer({ storage }); // initialize multer with storage middleware
+
 const {
   getAllRecipes,
   getRecipesByUser,
@@ -13,6 +14,7 @@ const {
   saveRecipe,
   unsaveRecipe,
   getSavedRecipes,
+  rateRecipe
 } = require("../controllers/recipeController");
 
 const requireAuth = require("../requireAuth");
@@ -30,5 +32,6 @@ router.put("/:id",  upload.single("image"), updateRecipe);
 router.delete("/:id", deleteRecipe);
 router.post("/save/:id", saveRecipe);
 router.delete("/unsave/:id", unsaveRecipe);
+router.post("/rate/:id", rateRecipe);
 
 module.exports = router;

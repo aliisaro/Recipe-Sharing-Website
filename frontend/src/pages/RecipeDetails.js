@@ -120,6 +120,35 @@ const RecipeDetails = () => {
     }
   };
 
+  // Function to handle rating
+  const handleRating = async (ratingValue) => {
+  try {
+    const response = await fetch(`${API_URL}/api/recipes/${id}/rate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ value: ratingValue }),
+    });
+
+    if (!response.ok) throw new Error("Failed to rate recipe");
+    const data = await response.json();
+
+    setRecipe((prev) => ({
+      ...prev,
+      rating: {
+        ...prev.rating,
+        average: data.average,
+        count: data.count,
+      },
+    }));
+  } catch (error) {
+    console.error("Error submitting rating:", error);
+    alert("Could not submit rating.");
+  }
+};
+
   return (
     <div className="recipe-details-page-container">
       <div className="recipe-details">
@@ -162,9 +191,32 @@ const RecipeDetails = () => {
           </div>
         </div>
 
+        {recipe.user_id?._id !== localStorage.getItem("user_id") && (
+          <div className="rating-section">
+            <h3>Rate this recipe:</h3>
+            <div className="stars">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  className={`star ${star <= recipe.userRating ? "selected" : ""}`}
+                  onClick={() => handleRating(star)}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
+        <div className="rating-info">
+          <p>
+            Average Rating: {recipe.rating?.average?.toFixed(1) || "N/A"} (
+            {recipe.rating?.count || 0} rating{recipe.rating?.count === 1 ? "" : "s"})
+          </p>
+        </div>
+        
         <div className="button-group">
-          {recipe.user_id === localStorage.getItem("user_id") ? (
+          {recipe.user_id?._id === localStorage.getItem("user_id") ? (
             <>
               <Link to={`/EditRecipe/${recipe._id}`} className="button-link">Edit recipe</Link>
               <button className="btn" onClick={DeleteRecipe}>Delete recipe</button>
@@ -175,6 +227,9 @@ const RecipeDetails = () => {
             ) : (
               <button className="btn" onClick={SaveRecipe}>Save recipe</button>
             )
+
+
+            
           )}
         </div>
       </div>

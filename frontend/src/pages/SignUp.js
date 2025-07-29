@@ -3,6 +3,7 @@ import useField from "../hooks/useField";
 import useSignup from "../hooks/useSignup";
 import img from "../images/LogoIcon.png";
 import usePasswordStrength from "../hooks/usePasswordStrength";
+import React, { useState } from "react";
 
 const SignUp = ({ setIsAuthenticated }) => {
   const username = useField("username");
@@ -12,16 +13,21 @@ const SignUp = ({ setIsAuthenticated }) => {
 
   const { strength, requirements } = usePasswordStrength(password.value);
 
-  const { handleSignup } = useSignup(setIsAuthenticated);
+  // Get error and handleSignup from the hook
+  const { handleSignup, error } = useSignup(setIsAuthenticated);
+
+  // State for password mismatch error
+  const [localError, setLocalError] = useState("");
 
   const handler = (event) => {
     event.preventDefault();
     // Check if passwords match
     if (password.value !== password2.value) {
-      alert("Passwords don't match. Please try again.");
+      setLocalError("Passwords do not match.");
+      password2.onChange({ target: { value: "" } }); // Clear the second password field
       return;
     }
-    // Call handleSignup only if passwords match
+    setLocalError(""); // Clear local error if passwords match
     handleSignup(username.value, email.value, password.value);
   };
 
@@ -54,6 +60,10 @@ const SignUp = ({ setIsAuthenticated }) => {
 
         <input {...password2} placeholder="Write password again..." required/>
         <Link to="/SignIn" className="link">Already registered? Sign in</Link>
+
+        {error && <div className="error-message">{error}</div>}
+        {localError && <div className="error-message">{localError}</div>}
+
         <button type="submit">Sign up</button>
       </form>
     </div>

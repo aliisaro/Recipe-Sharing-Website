@@ -42,13 +42,19 @@ const recipeSchema = new mongoose.Schema(
       },
     ],
     rating: {
-      type: Number,
-      required: false,
+      average: { type: Number, default: 0 },
+      count: { type: Number, default: 0 },
+      ratings: [
+        {
+          user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+          value: { type: Number, min: 1, max: 5 },
+        }
+      ]
     },
-    user_id: { 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'User', 
-      required: true 
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     }
   },
   { timestamps: true }

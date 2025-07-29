@@ -91,18 +91,15 @@ const addRecipe = async (req, res) => {
     type,
     cuisine,
     tags,
-    rating,
-    user_id,
   } = req.body;
 
   try {
     const user_id = req.user._id;
 
     let imagePath = ""; // variable to store the image path
-
     if (req.file) {
       // Check if file is uploaded
-      imagePath = req.file.path; // Save the image path
+      imagePath = path.join("uploads", req.file.filename); // Save the image path
     }
 
     const newRecipe = new Recipe({
@@ -115,8 +112,7 @@ const addRecipe = async (req, res) => {
       type,
       cuisine,
       tags,
-      rating,
-      user_id: mongoose.Types.ObjectId(req.user._id),
+      user_id: req.user._id,
     });
 
     await newRecipe.save();
@@ -125,7 +121,6 @@ const addRecipe = async (req, res) => {
     const user = await User.findById(user_id);
     user.createdRecipes.push(newRecipe._id);
     await user.save();
-
     res.status(201).json(newRecipe);
   } catch (error) {
     console.error(error);
@@ -277,6 +272,52 @@ const getSavedRecipes = async (req, res) => {
   }
 };
 
+// Rate a recipe
+const rateRecipe = async (req, res) => {
+  try {
+    const recipeId = req.params.id;
+    const userId = req.user._id;
+    const { value } = req.body;
+
+    if (value < 1 || value > 5) {
+      return res.status(400).json({ error: "Rating must be between 1 and 5" });
+    }
+
+    const recipe = await Recipe.findById(recipeId);
+    if (!recipe) return res.status(404).json({ error: "Recipe not found" });
+
+    if (recipe.user_id.toString() === userId.toString()) {
+      return res.status(403).json({ error: "You cannot rate your own recipe." });
+    }
+
+    // Check if user already rated
+    const existingRating = recipe.rating.ratings.find((r) => r.user.toString() === userId.toString());
+
+    if (existingRating) {
+      existingRating.value = value;
+    } else {
+      recipe.rating.ratings.push({ user: userId, value });
+      recipe.rating.count += 1;
+    }
+
+    // Recalculate average
+    const total = recipe.rating.ratings.reduce((sum, r) => sum + r.value, 0);
+    recipe.rating.average = total / recipe.rating.ratings.length;
+
+    await recipe.save();
+
+    res.status(200).json({
+      average: recipe.rating.average,
+      count: recipe.rating.count,
+      message: "Rating submitted successfully.",
+    });
+
+  } catch (error) {
+    console.error("Error rating recipe:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 
 module.exports = {
   getAllRecipes,
@@ -288,4 +329,5 @@ module.exports = {
   saveRecipe,
   unsaveRecipe,
   getSavedRecipes,
+  rateRecipe
 };

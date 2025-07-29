@@ -32,44 +32,54 @@ const CreateRecipe = () => {
 
   //HANDLE IMAGE CHANGE
   const handleImageChange = (e) => {
-  const file = e.target.files[0];
-  if (file && file.size > 5 * 1024 * 1024) {
-    alert("Image must be less than 5MB.");
-    return;
-  }
-  setFormData({ ...formData, image: file });
+    const file = e.target.files[0];
+    if (file && file.size > 5 * 1024 * 1024) {
+      setError("Image must be less than 5MB.");
+      return;
+    }
+    setFormData({ ...formData, image: file });
+    setError(null);
   };
 
   //CREATE RECIPE
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Manual validation for react-select fields
+    if (
+      !formData.difficulty ||
+      !formData.type ||
+      !formData.cuisine ||
+      !formData.tags.length
+    ) {
+      setError("Please fill out all required fields including difficulty, type, cuisine, and tags.");
+      return;
+    }
+
     const recipeData = new FormData();
     for (const key in formData) {
       recipeData.append(key, formData[key]);
     }
 
-    console.log("Recipe Data: ", recipeData);
+    try {
+      const response = await fetch(`${API_URL}/api/recipes`, {
+        method: "POST",
+        body: recipeData,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-    const response = await fetch(`${API_URL}/api/recipes`, {
-      method: "POST",
-      body: recipeData,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+      const json = await response.json();
 
-    const json = await response.json();
-
-    if (!response.ok) {
-      setError(json.error);
-      console.log("Error: " + json.error);
-      alert("Failed to add recipe to database. Please try again.");
-    }
-    if (response.ok) {
-      console.log("Recipe added to database successfully");
-      alert("Recipe added to database successfully");
+      if (!response.ok) {
+        setError(json.error || "Failed to add recipe to database. Please try again.");
+        return;
+      }
+      setError(null);
       navigate("/");
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
     }
   };
 
@@ -98,6 +108,7 @@ const CreateRecipe = () => {
           name="time"
           value={formData.time}
           onChange={handleChange}
+          placeholder="Enter cooking time"
           required
         />
 
@@ -119,7 +130,8 @@ const CreateRecipe = () => {
           placeholder="Write the steps here:"
         />
 
-        <div className="section"> 
+        <div className="section">
+
           <div className="row">
             <label>Difficulty</label>
             <Select
@@ -129,7 +141,6 @@ const CreateRecipe = () => {
                 setFormData({ ...formData, difficulty: selectedOption.value })
               }
               value={{ label: formData.difficulty, value: formData.difficulty }}
-              required
             />
 
             <label>Type</label>
@@ -140,7 +151,6 @@ const CreateRecipe = () => {
                 setFormData({ ...formData, type: selectedOption.value })
               }
               value={{ label: formData.type, value: formData.type }}
-              required
             />
           </div>
 
@@ -153,7 +163,6 @@ const CreateRecipe = () => {
                 setFormData({ ...formData, cuisine: selectedOption.value })
               }
               value={{ label: formData.cuisine, value: formData.cuisine }}
-              required
             />
 
             <label>Tags</label>
@@ -168,7 +177,6 @@ const CreateRecipe = () => {
                 })
               }
               value={Tags.filter((tag) => formData.tags.includes(tag.value))}
-              required
             />
           </div>
         </div>
@@ -195,9 +203,13 @@ const CreateRecipe = () => {
           </>
         )}
 
+
+        {error && <div className="error-message">{error}</div>}
+
         <button type="submit">Submit Recipe</button>
       </form>
     </div>
   );
 };
+
 export default CreateRecipe;

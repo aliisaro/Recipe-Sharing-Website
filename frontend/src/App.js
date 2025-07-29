@@ -8,7 +8,6 @@ import Profile from "./pages/Profile";
 import CreateRecipe from "./pages/CreateRecipe";
 import EditRecipe from "./pages/EditRecipe";
 import RecipeDetails from "./pages/RecipeDetails";
-import EditProfile from "./pages/EditProfile";
 import Library from "./pages/Library";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -29,7 +28,7 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={isAuthenticated ? <Home searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> : <Navigate to="/SignIn" />}
+          element={isAuthenticated ? <Home/> : <Navigate to="/SignIn" />}
         />
         <Route
           path="/CreateRecipe"
@@ -44,10 +43,6 @@ function App() {
         <Route
           path="/Profile/:name"
           element={isAuthenticated ? <Profile /> : <Navigate to="/SignIn" />}
-        />
-        <Route
-          path="/EditProfile/:name"
-          element={isAuthenticated ? <EditProfile /> : <Navigate to="/SignIn" />}
         />
         <Route
           path="/SignIn"
