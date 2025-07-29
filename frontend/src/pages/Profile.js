@@ -58,10 +58,6 @@ const ProfilePage = () => {
   return (
     <div className="profile-page-container">
       <div className="profile-content">
-        {loading ? (
-          <div className="loader"></div>
-        ) : (
-          <>
             {error && <div className="error-message">{error}</div>}
             
             <h1>Profile</h1>
@@ -101,9 +97,6 @@ const ProfilePage = () => {
               </div>
               <button type="submit">Save changes</button>
             </form>
-
-          </>
-        )}
       </div>
     </div>
   );

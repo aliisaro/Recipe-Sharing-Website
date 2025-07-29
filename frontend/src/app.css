@@ -53,6 +53,13 @@ button {
   100% { transform: rotate(360deg); }
 }
 
+@keyframes fadeInForm {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Error message */
 .error-message {
   color: #ff4d4f;
@@ -396,13 +403,6 @@ button {
   animation: fadeInForm 0.4s ease-out forwards;
 }
 
-@keyframes fadeInForm {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* Titles */
 .recipe-form h1,
 .edit-recipe-form h1 {
@@ -589,7 +589,7 @@ button {
 }
 
 .recipe-details h2 {
-  margin-bottom: 10px;
+  font-size: 18px;
   color: #333;
   text-align: center;
 }
@@ -805,6 +805,8 @@ button {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  transform: translateY(20px);
+  animation: fadeInForm 0.4s ease-out forwards;
 }
 
 .profile-content h1 {

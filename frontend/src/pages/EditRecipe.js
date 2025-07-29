@@ -127,8 +127,6 @@ const EditRecipe = () => {
       >
         <h1>Edit Recipe</h1>
 
-        {error && <div className="error-message">{error}</div>}
-
         <label>Title:</label>
         <input
           type="text"
@@ -136,7 +134,6 @@ const EditRecipe = () => {
           value={formData.title}
           onChange={handleChange}
           placeholder="Enter title"
-          required
         />
 
         <label>Time:</label>
@@ -146,7 +143,6 @@ const EditRecipe = () => {
           value={formData.time}
           onChange={handleChange}
           placeholder="Enter cooking time"
-          required
         />
 
         <label>Ingredients:</label>
@@ -155,7 +151,6 @@ const EditRecipe = () => {
           value={formData.ingredients}
           onChange={handleChange}
           placeholder="Write the ingredients here:"
-          required
         />
 
         <label>Steps:</label>
@@ -164,7 +159,6 @@ const EditRecipe = () => {
           value={formData.steps}
           onChange={handleChange}
           placeholder="Write the steps here:"
-          required
         />
 
         <div className="section">
@@ -230,6 +224,8 @@ const EditRecipe = () => {
             <input type="file" onChange={handleImageChange} accept="image/*" />
           </>
         )}
+
+        {error && <div className="error-message">{error}</div>}
 
         <div className="edit-cancel-buttons">
           <button type="submit">Done</button>

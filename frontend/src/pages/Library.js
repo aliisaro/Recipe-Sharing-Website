@@ -81,9 +81,7 @@ const Library = () => {
 
   return (
     <div className="library-page-container">
-
       <div className="library-content">
-
         <div className="library-nav">
           <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 

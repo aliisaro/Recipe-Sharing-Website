@@ -12,7 +12,7 @@ const RecipeDetails = () => {
   useEffect(() => {
     const getRecipe = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/recipes/${id}`, {
+        const response = await fetch(`${API_URL}/api/recipes/rate/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -142,6 +142,7 @@ const RecipeDetails = () => {
         average: data.average,
         count: data.count,
       },
+      userRating: data.userRating,
     }));
   } catch (error) {
     console.error("Error submitting rating:", error);

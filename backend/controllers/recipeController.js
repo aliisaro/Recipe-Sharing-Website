@@ -286,10 +286,6 @@ const rateRecipe = async (req, res) => {
     const recipe = await Recipe.findById(recipeId);
     if (!recipe) return res.status(404).json({ error: "Recipe not found" });
 
-    if (recipe.user_id.toString() === userId.toString()) {
-      return res.status(403).json({ error: "You cannot rate your own recipe." });
-    }
-
     // Check if user already rated
     const existingRating = recipe.rating.ratings.find((r) => r.user.toString() === userId.toString());
 
@@ -306,9 +302,13 @@ const rateRecipe = async (req, res) => {
 
     await recipe.save();
 
+    // Get the user's rating for the response
+    const userRating = recipe.rating.ratings.find(r => r.user.toString() === userId.toString())?.value;
+
     res.status(200).json({
       average: recipe.rating.average,
       count: recipe.rating.count,
+      userRating,
       message: "Rating submitted successfully.",
     });
 
@@ -317,7 +317,6 @@ const rateRecipe = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 module.exports = {
   getAllRecipes,
