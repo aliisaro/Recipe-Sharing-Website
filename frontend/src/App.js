@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import "./app.css";
 
 import Navbar from "./components/Navbar";
@@ -23,7 +21,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ToastContainer />
 
       <Navbar
         isAuthenticated={isAuthenticated}

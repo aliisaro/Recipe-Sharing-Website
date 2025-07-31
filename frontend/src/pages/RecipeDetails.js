@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { API_URL } from '../config';
-import { toast } from 'react-toastify';
+import { showError, showSuccess } from "../utils/ShowMessages";
 
 const RecipeDetails = () => {
   const navigate = useNavigate();
@@ -9,6 +9,10 @@ const RecipeDetails = () => {
   const [recipe, setRecipe] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
   const [hoveredStar, setHoveredStar] = useState(null);
+  const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
+  const [stepsExpanded, setStepsExpanded] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   useEffect(() => {
     const getRecipe = async () => {
@@ -42,7 +46,7 @@ const RecipeDetails = () => {
         setIsSaved(saved);
 
       } catch (error) {
-        toast.error("Failed to load recipe details.");
+        showError(setError, error.message);
       }
     };
 
@@ -64,9 +68,9 @@ const RecipeDetails = () => {
 
       navigate("/");
 
-      toast.success("Recipe deleted successfully!");
+      showSuccess(setSuccess, "Recipe deleted successfully!");
     } catch (error) {
-      toast.error("An error occurred while deleting the recipe.");
+      showError(setError, "An error occurred while deleting the recipe.");
     }
   };
 
@@ -86,9 +90,9 @@ const RecipeDetails = () => {
       }
 
       setIsSaved(true);
-      toast.success("Recipe saved successfully!");
+      showSuccess(setSuccess, "Recipe saved successfully!");
     } catch (error) {
-      toast.error("An error occurred while saving the recipe.");
+      showError(setError, "An error occurred while saving the recipe.");
     }
   };
 
@@ -108,9 +112,9 @@ const RecipeDetails = () => {
 
       setIsSaved(false);
 
-      toast.success("Recipe unsaved successfully!");
+      showSuccess(setSuccess, "Recipe unsaved successfully!");
     } catch (error) {
-      toast.error("An error occurred while trying to unsave the recipe.");
+      showError(setError, "An error occurred while trying to unsave the recipe.");
     }
   };
 
@@ -139,10 +143,9 @@ const RecipeDetails = () => {
       },
     }));
 
-    toast.success("Rating submitted!");
-
+    showSuccess(setSuccess, "Rating submitted!");
   } catch (error) {
-    toast.error("Could not submit rating.");
+    showError(setError, "Could not submit rating.");
   }
 };
 
@@ -169,24 +172,41 @@ const RecipeDetails = () => {
         </div>
    
         <div className="recipe-ingredients-steps">
-          <div className ="row">
+          <div className="row">
             <h2>Ingredients</h2>
             <ul>
-              {recipe.ingredients.split('\n').map((line, index) => (
+              {(ingredientsExpanded
+                ? recipe.ingredients.split('\n')
+                : recipe.ingredients.split('\n').slice(0, 3)
+              ).map((line, index) => (
                 <li key={index}>{line}</li>
               ))}
             </ul>
+            {recipe.ingredients.split('\n').length > 3 && (
+              <button onClick={() => setIngredientsExpanded(!ingredientsExpanded)}>
+                {ingredientsExpanded ? "Show less" : "Show all ingredients"}
+              </button>
+            )}
           </div>
 
           <div className="row">
             <h2>Steps</h2>
             <ol>
-              {recipe.steps.split('\n').map((step, index) => (
+              {(stepsExpanded
+                ? recipe.steps.split('\n')
+                : recipe.steps.split('\n').slice(0, 3)
+              ).map((step, index) => (
                 <li key={index}>{step}</li>
               ))}
             </ol>
+            {recipe.steps.split('\n').length > 3 && (
+              <button onClick={() => setStepsExpanded(!stepsExpanded)}>
+                {stepsExpanded ? "Show less" : "Show all steps"}
+              </button>
+            )}
           </div>
         </div>
+
 
         {recipe.user_id?._id !== localStorage.getItem("user_id") && (
           <div className="rating-section">
@@ -206,6 +226,11 @@ const RecipeDetails = () => {
             </div>
           </div>
         )}
+        
+        <p>
+          Average Rating: {recipe.rating?.average?.toFixed(1) || "N/A"} (
+          {recipe.rating?.count || 0} rating{recipe.rating?.count === 1 ? "" : "s"})
+        </p>
 
         {recipe.user_id?._id !== localStorage.getItem("user_id") && (
           <div className="rating-info">
@@ -214,14 +239,12 @@ const RecipeDetails = () => {
             ) : (
               <p>You haven't rated this recipe yet.</p>
             )}
-
-            <p>
-              Average Rating: {recipe.rating?.average?.toFixed(1) || "N/A"} (
-              {recipe.rating?.count || 0} rating{recipe.rating?.count === 1 ? "" : "s"})
-            </p>
           </div>
         )}
-        
+
+        {success && <div className="success-message">{success}</div>}
+        {error && <div className="error-message">{error}</div>}
+
         <div className="button-group">
           {recipe.user_id?._id === localStorage.getItem("user_id") ? (
             <>

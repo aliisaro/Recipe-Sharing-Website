@@ -436,6 +436,7 @@ button {
 .edit-recipe-form input[type="text"],
 .edit-recipe-form textarea {
   width: 100%;
+  max-width: 100%;
   padding: 12px 16px;
   border: 1px solid #ccc;
   border-radius: 12px;
@@ -462,7 +463,6 @@ button {
   border-color: #27ae60;
 }
 
-/* Labels */
 .recipe-form label,
 .edit-recipe-form label {
   font-size: 14px;
@@ -492,6 +492,16 @@ button {
 .edit-recipe-form .section .row {
   width: 100%;
 }
+
+/* Custom styles for react-select dropdowns */
+.recipe-form .Select__control,
+.recipe-form .Select__menu,
+.recipe-form .Select__single-value,
+.recipe-form .Select__placeholder,
+.recipe-form .Select__option {
+  font-size: 14px !important;
+}
+
 
 .mock-recipe-card {
   width: 100px;
@@ -652,6 +662,22 @@ button {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
 }
+
+.recipe-ingredients-steps button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+  padding: 4px 0;
+}
+
+.rating-section, .rating-info {
+  margin: 0;
+  padding: 0px;
+}
+
 
 .star {
   font-size: 24px;

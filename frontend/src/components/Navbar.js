@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import img from "../images/Logo.png";
+import { useNavigate } from "react-router-dom";
 
 
 const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
@@ -10,12 +11,17 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
   // Retrieve username from localStorage
   const username = localStorage.getItem("username");
 
+  const navigate = useNavigate();
+
   // Function to handle logout
   const handleClick = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("user_id");
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+
+    // Redirect to the sign-in page
+    navigate("/SignIn");
   };
 
  return (

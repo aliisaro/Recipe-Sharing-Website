@@ -116,7 +116,7 @@ const CreateRecipe = () => {
           name="ingredients"
           value={formData.ingredients}
           onChange={handleChange}
-          placeholder="Write the ingredients here:"
+          placeholder="Write the ingredients here (separate each ingredient with enter):"
         />
 
         <label>Steps</label>
@@ -125,45 +125,65 @@ const CreateRecipe = () => {
           value={formData.steps}
           onChange={handleChange}
           required
-          placeholder="Write the steps here:"
+          placeholder="Write the steps here (separate each step with enter):"
         />
 
         <div className="section">
           <div className="row">
             <label>Difficulty</label>
             <Select
+              className="Select"
+              classNamePrefix="Select"
               options={Difficulty}
               placeholder="Choose difficulty:"
               onChange={(selectedOption) =>
                 setFormData({ ...formData, difficulty: selectedOption.value })
               }
-              value={{ label: formData.difficulty, value: formData.difficulty }}
+              value={
+                formData.difficulty
+                  ? { label: formData.difficulty, value: formData.difficulty }
+                  : null
+              }
             />
 
             <label>Type</label>
             <Select
+              className="Select"
+              classNamePrefix="Select"
               options={Type}
               placeholder="Choose type:"
               onChange={(selectedOption) =>
                 setFormData({ ...formData, type: selectedOption.value })
               }
-              value={{ label: formData.type, value: formData.type }}
+              value={
+                formData.type
+                  ? { label: formData.type, value: formData.type }
+                  : null
+              }
             />
           </div>
 
           <div className="row">
             <label>Cuisine</label>
             <Select
+              className="Select"
+              classNamePrefix="Select"
               options={Cuisine}
               placeholder="Choose cuisine:"
               onChange={(selectedOption) =>
                 setFormData({ ...formData, cuisine: selectedOption.value })
               }
-              value={{ label: formData.cuisine, value: formData.cuisine }}
+              value={
+                formData.cuisine
+                  ? { label: formData.cuisine, value: formData.cuisine }
+                  : null
+              }
             />
 
             <label>Tags</label>
             <Select
+              className="Select"
+              classNamePrefix="Select"
               isMulti
               options={Tags}
               placeholder="Select tags:"
