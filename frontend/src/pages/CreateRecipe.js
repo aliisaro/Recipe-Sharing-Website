@@ -132,8 +132,7 @@ const CreateRecipe = () => {
           <div className="row">
             <label>Difficulty</label>
             <Select
-              className="Select"
-              classNamePrefix="Select"
+              classNamePrefix="recipe-select"
               options={Difficulty}
               placeholder="Choose difficulty:"
               onChange={(selectedOption) =>
@@ -148,8 +147,7 @@ const CreateRecipe = () => {
 
             <label>Type</label>
             <Select
-              className="Select"
-              classNamePrefix="Select"
+              classNamePrefix="recipe-select"
               options={Type}
               placeholder="Choose type:"
               onChange={(selectedOption) =>
@@ -166,8 +164,7 @@ const CreateRecipe = () => {
           <div className="row">
             <label>Cuisine</label>
             <Select
-              className="Select"
-              classNamePrefix="Select"
+              classNamePrefix="recipe-select"
               options={Cuisine}
               placeholder="Choose cuisine:"
               onChange={(selectedOption) =>
@@ -182,8 +179,7 @@ const CreateRecipe = () => {
 
             <label>Tags</label>
             <Select
-              className="Select"
-              classNamePrefix="Select"
+              classNamePrefix="recipe-select"
               isMulti
               options={Tags}
               placeholder="Select tags:"

@@ -165,6 +165,7 @@ const EditRecipe = () => {
           <div className="row">
             <label>Difficulty:</label>
             <Select
+              classNamePrefix="recipe-select"
               options={Difficulty}
               value={formData.difficulty}
               onChange={selected => setFormData(prev => ({ ...prev, difficulty: selected }))}
@@ -172,6 +173,7 @@ const EditRecipe = () => {
 
             <label>Type:</label>
             <Select
+              classNamePrefix="recipe-select"
               options={Type}
               value={formData.type}
               onChange={selected => setFormData(prev => ({ ...prev, type: selected }))}
@@ -181,6 +183,7 @@ const EditRecipe = () => {
           <div className="row">
             <label>Cuisine:</label>
             <Select
+              classNamePrefix="recipe-select"
               options={Cuisine}
               value={formData.cuisine}
               onChange={selected => setFormData(prev => ({ ...prev, cuisine: selected }))}
@@ -188,6 +191,7 @@ const EditRecipe = () => {
 
             <label>Tags:</label>
             <Select
+              classNamePrefix="recipe-select"
               isMulti
               options={Tags}
               onChange={selectedOptions => setFormData(prev => ({ ...prev, tags: selectedOptions }))}

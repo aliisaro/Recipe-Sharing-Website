@@ -10,18 +10,21 @@ const Filters = ({
   return (
     <div className="filters">
       <Select
+        classNamePrefix="filters-select"
         options={TypeOptions}
         placeholder="Type"
         onChange={(selected) => onFilterChange?.("type", selected)}
       />
 
       <Select
+        classNamePrefix="filters-select"
         options={CuisineOptions}
         placeholder="Cuisine"
         onChange={(selected) => onFilterChange?.("cuisine", selected)}
       />
 
       <Select
+        classNamePrefix="filters-select"
         options={TagOptions}
         placeholder="Tags"
         isMulti
