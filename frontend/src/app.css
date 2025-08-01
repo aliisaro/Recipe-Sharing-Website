@@ -231,6 +231,17 @@ button {
   color: #ff4d4f;
 }
 
+/* Responsive styles */
+@media screen and (max-width: 800px) {
+  .login-register-form {
+    width: 90%;
+  }
+
+  .login-register-form h3 {
+    font-size: 24px;
+  }
+}
+
 /*----------Navigation bar-------*/
 .navbar {
   background-color: #E3F6EC;
@@ -277,13 +288,64 @@ button {
   border-radius: 12px;
 }
 
+/* Responsive styles */
+@media screen and (max-width: 800px) {
+  .navbar {
+    padding: 0 20px;
+    height: 80px;
+  }
+
+  .nav-left .logo {
+    height: 20px;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .nav-right {
+    display: none;
+  }
+
+  .nav-right.open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 80px;
+    right: 0;
+    width: 50%;
+    z-index: 2000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-right.open a,
+  .nav-right.open button.logout {
+    text-decoration: none;
+    color: #5a6268;
+    font-size: 14px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    border-radius: 0px;
+  }
+
+  .nav-right.open button.logout {
+    border-radius: 0 0 12px 12px;
+  }
+
+  .nav-right.open a:hover,
+  .nav-right button.logout:hover {
+    background-color: hsl(145, 28%, 82%);
+
+  }
+}
 
 /*----------Home page-------*/
 /* Container */
 .home-page-container {
   display: flex;
   flex-direction: column;
-  padding-top: 100px;
+  margin-top: 100px;
   min-height: 100vh;
   width: 100%;
 }
@@ -294,7 +356,6 @@ button {
 
 /* Search + filters*/
 .searchbar-filters-container {
-  position: fixed;
   display: flex;
   flex-direction: row;
   gap: 30px;
@@ -303,9 +364,8 @@ button {
   background-color: rgba(0, 0, 0, 0.3);
   width: 100%;
   justify-content: space-between;
-  z-index: 1000;
+  position: sticky;
 }
-
 
 .searchbar-filters-container .searchbar-wrapper {
   width: 50%;
@@ -400,6 +460,40 @@ button {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+/*Responsive styles*/
+@media screen and (max-width: 800px) {
+  .home-page-container {
+    margin-top: 80px;
+    padding: 0px;
+  }
+  
+  .searchbar-filters-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .searchbar-filters-container .searchbar-wrapper,
+  .searchbar-filters-container .filters {
+    width: 100%;
+  }
+
+  .searchbar-filters-container .filters {
+    justify-content: space-between;
+    gap: 0px;
+  }
+
+  .searchbar-filters-container .filters .filters-select__control {
+    min-width: 130px;
+    width: 100%;
+  }
+
+  .recipes {
+    justify-content: center;
+  }
 }
 
 /*----------Create Recipe Form & Edit Recipe Form---------*/
