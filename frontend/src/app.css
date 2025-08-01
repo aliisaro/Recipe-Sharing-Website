@@ -320,7 +320,7 @@ button {
 }
 
 .searchbar-filters-container .searchbar-wrapper input:focus {
-  outline: 1px solid #50C37E;
+  outline: 2px solid #50C37E;
 }
 
 .searchbar-filters-container .filters {
@@ -334,7 +334,14 @@ button {
 
 .searchbar-filters-container .filters .filters-select__control {
   min-width: 100px;
-  height: 20px;
+  border-radius: 12px;
+}
+
+.searchbar-filters-container .filters .filters-select__control:focus,
+.searchbar-filters-container .filters .filters-select__control--is-focused {
+  box-shadow: none !important;
+  outline: 1px solid #50C37E !important;
+  border-color: #50C37E !important;
 }
 
 /* Main content area */
@@ -820,19 +827,28 @@ button {
 }
 
 .library-nav .searchbar-wrapper input:focus {
-  outline: 1px solid #50C37E;
+  outline: 2px solid #50C37E;
 }
 
 .library-nav .filters {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
   font-size: 14px;
+  width: 30%;
 }
 
-.library-nav .filters-select__control {
+.library-nav .filters .filters-select__control {
   min-width: 100px;
-  height: 20px;
+  border-radius: 12px;
+}
+
+.library-nav .filters .filters-select__control:focus,
+.library-nav .filters .filters-select__control--is-focused {
+  box-shadow: none !important;
+  outline: 1px solid #50C37E !important;
+  border-color: #50C37E !important;
 }
 
 .SavedRecipes p, .CreatedRecipes p {
@@ -924,21 +940,20 @@ button {
 .profile-form input {
   width: 100%;
   padding: 10px;
-  border: 2px solid #aaa;
+  border: 1px solid #aaa;
   border-radius: 8px;
   font-size: 15px;
 }
 
 .profile-form input:focus {
   outline: none;
-  border-color: #37b36f;
+  border-color: 2px solid #37b36f;
 }
 
 .profile-form input:hover {
   outline: none;
   border: 2px solid #37b36f;
 }
-
 
 .profile-form button {
   margin: 20px 0 0 0;
