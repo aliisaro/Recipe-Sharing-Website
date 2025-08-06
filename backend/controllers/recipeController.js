@@ -179,8 +179,7 @@ const addRecipe = async (req, res) => {
 
     let imagePath = ""; // variable to store the image path
     if (req.file) {
-      // Check if file is uploaded
-      imagePath = `uploads/${req.file.filename}`;
+      imagePath = `uploads/${req.file.filename}`.replace(/\\/g, "/");
     }
 
     const newRecipe = new Recipe({
@@ -222,7 +221,7 @@ const updateRecipe = async (req, res) => {
     }
 
     if (req.file) {
-      // Delete old image
+      // If there's an existing image, delete it
       if (recipe.image) {
         try {
           await fs.unlink(path.join(__dirname, "..", recipe.image));
@@ -230,9 +229,7 @@ const updateRecipe = async (req, res) => {
           console.error("Error deleting old image:", err);
         }
       }
-
-      // Set new image path
-      recipe.image = path.join("uploads", req.file.filename);
+      recipe.image = `uploads/${req.file.filename}`.replace(/\\/g, "/");
     }
 
     // Update only allowed fields

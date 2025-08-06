@@ -927,7 +927,10 @@ button {
   padding: 10px;
   width: 100%;
   white-space: nowrap;
-  overflow-x:auto
+  flex-wrap: wrap;
+  align-items: flex-start;
+  overflow-x: visible;  overflow-y: visible !important;
+  z-index: 10;
 }
 
 .library-nav .searchbar-wrapper {
@@ -955,7 +958,7 @@ button {
   font-size: 14px;
   width: 30%;
   gap: 10px;
-  
+  flex: 1 1 auto;
 }
 
 .library-nav .filters .filters-select__control {
@@ -970,6 +973,13 @@ button {
   outline: 1px solid #50C37E !important;
   border-color: #50C37E !important;
 }
+
+.library-nav .filters .filters-select__menu {
+  position: absolute;
+  z-index: 1000;
+  overflow: visible;
+}
+
 
 .library-nav ul {
   list-style-type: none;
@@ -1012,8 +1022,6 @@ button {
   margin: 20px 5px 20px 20px;
   width: 200px;
   height: 200px;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 
