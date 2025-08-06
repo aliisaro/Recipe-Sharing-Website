@@ -180,7 +180,7 @@ const addRecipe = async (req, res) => {
     let imagePath = ""; // variable to store the image path
     if (req.file) {
       // Check if file is uploaded
-      imagePath = path.join("uploads", req.file.filename); // Save the image path
+      imagePath = `uploads/${req.file.filename}`;
     }
 
     const newRecipe = new Recipe({
