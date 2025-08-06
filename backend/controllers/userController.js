@@ -9,7 +9,7 @@ const createToken = (_id) => {
 
 // sign in a user
 const signinUser = async (req, res) => {
-  console.log("Signin request body:", req.body);  // <-- Add this
+  console.log("Signin request body:", req.body);
   const { username, password } = req.body;
 
   try {

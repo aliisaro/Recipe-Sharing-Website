@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import { API_URL } from '../config';
 import { Difficulty, Type, Cuisine, Tags } from '../data/recipeOptions'; // Removed TimeOptions import
+import { showError, showSuccess } from "../utils/ShowMessages";
 
 const EditRecipe = () => {
   const navigate = useNavigate();
@@ -47,8 +48,7 @@ const EditRecipe = () => {
           image: data.image || null,
         });
       } catch (error) {
-        console.error("Error fetching recipe:", error);
-        setError("Failed to fetch recipe");
+        showError(setError,"Failed to fetch recipe");
       }
     };
 
@@ -109,12 +109,11 @@ const EditRecipe = () => {
 
 
       const updatedRecipe = await response.json();
+
       setError(null);
-      console.log("Updated recipe:", updatedRecipe);
       navigate(`/${id}`);
     } catch (error) {
-      console.error("Error updating recipe:", error);
-      setError(error.message || "An error occurred while updating the recipe.");
+      showError(setError,error.message || "An error occurred while updating the recipe.");
     }
   };
 
@@ -169,6 +168,8 @@ const EditRecipe = () => {
               options={Difficulty}
               value={formData.difficulty}
               onChange={selected => setFormData(prev => ({ ...prev, difficulty: selected }))}
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
             />
 
             <label>Type:</label>
@@ -177,6 +178,8 @@ const EditRecipe = () => {
               options={Type}
               value={formData.type}
               onChange={selected => setFormData(prev => ({ ...prev, type: selected }))}
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
             />
           </div>
 
@@ -187,6 +190,8 @@ const EditRecipe = () => {
               options={Cuisine}
               value={formData.cuisine}
               onChange={selected => setFormData(prev => ({ ...prev, cuisine: selected }))}
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
             />
 
             <label>Tags:</label>
@@ -196,6 +201,8 @@ const EditRecipe = () => {
               options={Tags}
               onChange={selectedOptions => setFormData(prev => ({ ...prev, tags: selectedOptions }))}
               value={formData.tags}
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
             />
           </div>
         </div>

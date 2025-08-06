@@ -54,15 +54,17 @@ const SignUp = ({ setIsAuthenticated }) => {
                 ))}
               </ul>
             )}
-
           </div>
         )}
 
         <input {...password2} placeholder="Write password again..."/>
         <Link to="/SignIn" className="link">Already registered? Sign in</Link>
 
-        {error && <div className="error-message">{error}</div>}
-        {localError && <div className="error-message">{localError}</div>}
+        {/* Show only one error at a time */}
+        {localError
+          ? <div className="error-message">{localError}</div>
+          : error && <div className="error-message">{error}</div>
+        }
 
         <button type="submit">Sign up</button>
       </form>

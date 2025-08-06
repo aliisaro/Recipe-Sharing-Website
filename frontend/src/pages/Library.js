@@ -5,6 +5,7 @@ import RecipeCard from "../components/RecipeCard";
 import Filters from "../components/Filters";
 import Searchbar from "../components/Searchbar";
 import {Type, Cuisine, Tags, SortByOptions} from '../data/recipeOptions';
+import { showError, showSuccess } from "../utils/ShowMessages";
 
 const Library = () => {
   const [createdRecipes, setCreatedRecipes] = useState([]);
@@ -67,7 +68,7 @@ const Library = () => {
       setSavedRecipes(saved);
 
     } catch (error) {
-      setError("Error fetching library");
+      showError(setError,"Error fetching library");
       setCreatedRecipes([]);
       setSavedRecipes([]);
     } finally {

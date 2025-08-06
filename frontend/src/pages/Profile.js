@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '../config';
+import { showError, showSuccess } from "../utils/ShowMessages";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({});
   const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState("");
+  const [success, setSuccess] = useState("");
 
   const [formData, setFormData] = useState({
     username: "",
@@ -17,8 +18,8 @@ const ProfilePage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`${API_URL}/api/users/profile/${username}`, {
-        method: 'PUT',
+      const response = await fetch(`${API_URL}/api/users/${username}`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -31,9 +32,9 @@ const ProfilePage = () => {
       const data = await response.json();
 
       setProfile(data);
-      setSuccessMessage("Profile updated successfully!");
+      showSuccess(setSuccess,"Profile updated successfully!");
     } catch (error) {
-      setError('Error updating profile');
+      showError(setError,'Error updating profile');
     }
   };
 
@@ -47,7 +48,7 @@ const ProfilePage = () => {
         const data = await response.json();
         setProfile(data);
       } catch (error) {
-        setError('Error fetching profile data');
+        showError(setError,'Error fetching profile data');
       }
     };
 
@@ -92,7 +93,7 @@ const ProfilePage = () => {
         />
 
           {error && <p className="error-message">{error}</p>}
-          {successMessage && <p className="success-message">{successMessage}</p>}
+          {success && <p className="success-message">{success}</p>}
 
           <button type="submit">Save changes</button>
         </form>

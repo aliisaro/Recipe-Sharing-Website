@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { API_URL } from '../config';
 import { Difficulty, Type, Cuisine, Tags } from '../data/recipeOptions';
+import { showError, showSuccess } from "../utils/ShowMessages";
 
 const CreateRecipe = () => {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const CreateRecipe = () => {
     const file = e.target.files[0];
     if (file && file.size > 5 * 1024 * 1024) {
       setError("Image must be less than 5MB.");
+
       return;
     }
     setFormData({ ...formData, image: file });
@@ -52,7 +54,7 @@ const CreateRecipe = () => {
       !formData.cuisine ||
       !formData.tags.length
     ) {
-      setError("Please fill out all required fields including difficulty, type, cuisine, and tags.");
+      showError(setError,"Please fill out all required fields including difficulty, type, cuisine, and tags.");
       return;
     }
 
@@ -74,13 +76,13 @@ const CreateRecipe = () => {
       const json = await response.json();
 
       if (!response.ok) {
-        setError(json.error || "Failed to add recipe to database. Please try again.");
+        showError(setError,json.error || "Failed to add recipe to database. Please try again.");
         return;
       }
       setError(null);
       navigate("/");
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      showError(setError,"An unexpected error occurred. Please try again.");
     }
   };
 
@@ -143,6 +145,8 @@ const CreateRecipe = () => {
                   ? { label: formData.difficulty, value: formData.difficulty }
                   : null
               }
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
             />
 
             <label>Type</label>
@@ -158,6 +162,8 @@ const CreateRecipe = () => {
                   ? { label: formData.type, value: formData.type }
                   : null
               }
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
             />
           </div>
 
@@ -175,6 +181,8 @@ const CreateRecipe = () => {
                   ? { label: formData.cuisine, value: formData.cuisine }
                   : null
               }
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
             />
 
             <label>Tags</label>
@@ -190,6 +198,8 @@ const CreateRecipe = () => {
                 })
               }
               value={Tags.filter((tag) => formData.tags.includes(tag.value))}
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
             />
           </div>
         </div>
