@@ -80,10 +80,10 @@ const getRecipesByUser = async (req, res) => {
 
     // Find recipes created by the user with the specified filters
     const user = await User.findById(userId);
-    filter._id = { $in: user.ownRecipes };
+    filter._id = { $in: user.createdRecipes };
 
-    const ownRecipes = await Recipe.find(filter).sort({ createdAt: -1 });
-    res.status(200).json(ownRecipes);
+    const createdRecipes = await Recipe.find(filter).sort({ createdAt: -1 });
+    res.status(200).json(createdRecipes);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to get user's recipes" });

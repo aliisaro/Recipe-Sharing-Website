@@ -1000,7 +1000,9 @@ button {
   flex-wrap: wrap;}
 
 .SavedRecipes p, .CreatedRecipes p {
-  font-size: 14px;
+  font-size: 16px;
+  color: #E3F6EC;
+  margin: 10px;
 }
 
 .recipe-card {
@@ -1076,9 +1078,6 @@ button {
     margin: 2px 0px;
     font-size: 18px;
   }
-
-
-
 }
 
 /*----------Profile---------*/
