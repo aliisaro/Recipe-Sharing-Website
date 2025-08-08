@@ -18,7 +18,7 @@ const ProfilePage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`${API_URL}/api/users/${username}`, {
+      const response = await fetch(`${API_URL}/api/users/update/${username}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
