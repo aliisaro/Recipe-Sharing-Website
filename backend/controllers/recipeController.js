@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const Recipe = require("../models/Recipe");
 const User = require("../models/Users");
+const { getGFS } = require("../config/gfs");
 
 // Get all recipes by all users, with optional filters
 const getAllRecipes = async (req, res) => {
@@ -177,9 +178,16 @@ const addRecipe = async (req, res) => {
   try {
     const user_id = req.user._id;
 
-    let imagePath = ""; // variable to store the image path
+    // Old code for handling image upload
+    //let imagePath = ""; // variable to store the image path
+    //if (req.file) {
+    //  imagePath = `uploads/${req.file.filename}`.replace(/\\/g, "/");
+    //}
+
+    // New code for handling GridFS image upload
+    let imagePath = "";
     if (req.file) {
-      imagePath = `uploads/${req.file.filename}`.replace(/\\/g, "/");
+      imagePath = req.file.filename; // GridFS stores the file by filename
     }
 
     const newRecipe = new Recipe({
@@ -220,16 +228,30 @@ const updateRecipe = async (req, res) => {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    if (req.file) {
+    // Old code for handling image upload
+    //if (req.file) {
       // If there's an existing image, delete it
+     // if (recipe.image) {
+       // try {
+        //  await fs.unlink(path.join(__dirname, "..", recipe.image));
+       //} catch (err) {
+        //  console.error("Error deleting old image:", err);
+       // }
+     // }
+     // recipe.image = `uploads/${req.file.filename}`.replace(/\\/g, "/");
+    //}
+
+    // New code for handling GridFS image upload
+    const gfs = getGFS(); // import or get your GridFS instance here
+
+    if (req.file) {
       if (recipe.image) {
-        try {
-          await fs.unlink(path.join(__dirname, "..", recipe.image));
-        } catch (err) {
-          console.error("Error deleting old image:", err);
+        const oldFile = await gfs.files.findOne({ filename: recipe.image });
+        if (oldFile) {
+          await gfs.remove({ _id: oldFile._id, root: "uploads" }); // "uploads" is your bucketName
         }
       }
-      recipe.image = `uploads/${req.file.filename}`.replace(/\\/g, "/");
+      recipe.image = req.file.filename;
     }
 
     // Update only allowed fields
@@ -283,13 +305,23 @@ const deleteRecipe = async (req, res) => {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    // Delete the image file
+    // Old code for deleting the image file
+    // if (recipe.image) {
+      //fs.unlink(path.join(__dirname, "..", recipe.image), (err) => {
+        //if (err) {
+        //   console.error(err);
+      //  }
+    // });
+   //}
+
+    // New code for deleting the image from GridFS
+    const gfs = getGFS();
+
     if (recipe.image) {
-      fs.unlink(path.join(__dirname, "..", recipe.image), (err) => {
-        if (err) {
-          console.error(err);
-        }
-      });
+      const file = await gfs.files.findOne({ filename: recipe.image });
+      if (file) {
+        await gfs.remove({ _id: file._id, root: "uploads" });
+      }
     }
 
     // Remove recipe ID from the creator's createdRecipes array

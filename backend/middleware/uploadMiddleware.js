@@ -1,18 +1,18 @@
+// middleware/uploadMiddleware.js
 const multer = require("multer");
 const path = require("path");
 
-// Define storage for the files
+// Base storage for uploads folder
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./uploads/"); // Specify the directory where files will be stored
+    cb(null, path.join(__dirname, "../uploads")); // consistent path
   },
   filename: function (req, file, cb) {
-    // Rename the file with current timestamp to avoid duplicates
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 
-// Filter function to accept only image files
+// Filter for images only
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
@@ -21,16 +21,20 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Initialize multer
+// Default upload config
 const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5, // 5MB file size limit
-  },
-  fileFilter: fileFilter,
+  storage,
+  limits: { fileSize: 1024 * 1024 * 5 }, // 5MB
+  fileFilter,
 });
 
-module.exports = {
-  upload: upload,
-  storage: storage,
+// Function to create custom configs
+const createUpload = (options = {}) => {
+  return multer({
+    storage: options.storage || storage,
+    limits: options.limits || { fileSize: 1024 * 1024 * 5 },
+    fileFilter: options.fileFilter || fileFilter,
+  });
 };
+
+module.exports = { upload, createUpload, storage };

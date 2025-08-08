@@ -46,6 +46,12 @@ const ProfilePage = () => {
       const data = await response.json();
       setProfile(data);
       showSuccess(setSuccess, "Profile updated successfully!");
+      // Clear form data after successful update
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+      });
     } catch (error) {
       showError(setError, 'Error updating profile');
     }
