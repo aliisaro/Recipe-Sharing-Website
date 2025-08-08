@@ -7,7 +7,7 @@ const { storage } = require("../middleware/uploadMiddleware");
 const upload = multer({ storage }); // initialize multer with storage middleware
 
 // Import GridFS upload middleware
-const uploadGridFS = require("../middleware/gridFSpload");
+const uploadGridFS = require("../middleware/gridFSupload");
 
 const {
   getAllRecipes,

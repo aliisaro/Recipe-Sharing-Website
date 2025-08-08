@@ -6,7 +6,7 @@ const connectDB = require("./config/db");
 const customMiddleware = require("./middleware/customMiddleware");
 const userRoutes = require("./routers/userRoutes");
 const recipeRoutes = require("./routers/recipeRoutes");
-const fileRoutes = require("./routers/fileRoutes"); // <-- new
+const fileRoutes = require("./routers/fileRoutes");
 const path = require('path');
 const { initGFS } = require("./config/gfs");
 
