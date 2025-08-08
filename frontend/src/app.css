@@ -1098,8 +1098,8 @@ button {
 }
 
 .profile-content {
-  width: 100%;
-  max-width: 600px;
+  width: 30%;
+  min-width: 500px;
   margin: 40px auto;
   padding: 30px;
   background-color: #ffffff; 
@@ -1169,4 +1169,13 @@ button {
 
 .profile-form button:hover {
   background-color: #2f9a60;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 800px) {
+  .profile-content {
+    width: 90%;
+    min-width: 200px;
+    padding: 20px;
+  }
 }
