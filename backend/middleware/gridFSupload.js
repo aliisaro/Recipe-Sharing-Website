@@ -3,7 +3,7 @@ const multer = require("multer");
 const { GridFsStorage } = require("multer-gridfs-storage");
 const path = require("path");
 const crypto = require("crypto");
-const { MONGO_URI } = require("./utils/config");
+const { MONGO_URI } = require("../utils/config");
 
 // Create storage engine
 const storage = new GridFsStorage({
