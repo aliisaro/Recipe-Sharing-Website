@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const Recipe = require("../models/Recipe");
 const User = require("../models/Users");
-const { getGFS } = require("./config/gfs");
+const { getGFS } = require("../config/gfs");
 
 // Get all recipes by all users, with optional filters
 const getAllRecipes = async (req, res) => {
