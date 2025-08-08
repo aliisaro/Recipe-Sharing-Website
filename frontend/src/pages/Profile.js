@@ -16,25 +16,38 @@ const ProfilePage = () => {
   const username = localStorage.getItem('username');
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await fetch(`${API_URL}/api/users/update/${username}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update profile');
-      }
-      const data = await response.json();
+  event.preventDefault();
 
+  // Remove fields that are empty strings
+  const cleanedFormData = Object.fromEntries(
+    Object.entries(formData).filter(([_, value]) => value.trim() !== "")
+  );
+
+  // If nothing to update, skip the request
+  if (Object.keys(cleanedFormData).length === 0) {
+    showError(setError, "No changes to update");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/api/users/update/${username}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(cleanedFormData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update profile');
+    }
+
+      const data = await response.json();
       setProfile(data);
-      showSuccess(setSuccess,"Profile updated successfully!");
+      showSuccess(setSuccess, "Profile updated successfully!");
     } catch (error) {
-      showError(setError,'Error updating profile');
+      showError(setError, 'Error updating profile');
     }
   };
 
