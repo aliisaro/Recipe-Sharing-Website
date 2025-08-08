@@ -292,6 +292,18 @@ const deleteRecipe = async (req, res) => {
       });
     }
 
+    // Remove recipe ID from the creator's createdRecipes array
+    await User.updateOne(
+      { _id: user_id },
+      { $pull: { createdRecipes: id } }
+    );
+
+    // Remove recipe ID from all users' savedRecipes arrays
+    await User.updateMany(
+      { savedRecipes: id },
+      { $pull: { savedRecipes: id } }
+    );
+
     res.status(200).json({ message: "Recipe deleted successfully" });
   } catch (error) {
     console.error(error);
