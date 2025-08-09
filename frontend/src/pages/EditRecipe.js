@@ -214,7 +214,7 @@ const EditRecipe = () => {
                 src={
                   formData.image instanceof File
                     ? URL.createObjectURL(formData.image)
-                    : formData.image
+                    : `${API_URL}/uploads/${formData.image}`
                 }
                 alt="Preview"
               />

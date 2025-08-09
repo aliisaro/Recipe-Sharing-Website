@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { API_URL } from '../config';
 import { Difficulty, Type, Cuisine, Tags } from '../data/recipeOptions';
-import { showError, showSuccess } from "../utils/ShowMessages";
+import { showError } from "../utils/ShowMessages";
 
 const CreateRecipe = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
-  //INITIAL FORM DATA
   const [formData, setFormData] = useState({
     title: "",
     ingredients: "",
@@ -22,45 +21,52 @@ const CreateRecipe = () => {
     tags: [],
   });
 
-  //HANDLE FORM CHANGE
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
-  //HANDLE IMAGE CHANGE
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.size > 5 * 1024 * 1024) {
       setError("Image must be less than 5MB.");
       return;
     }
-    setFormData({ ...formData, image: file });
+    setFormData(prev => ({ ...prev, image: file }));
     setError(null);
   };
 
-  //CREATE RECIPE
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Manual validation for react-select fields
     if (
       !formData.difficulty ||
       !formData.type ||
       !formData.cuisine ||
-      !formData.tags.length
+      formData.tags.length === 0
     ) {
-      showError(setError,"Please fill out all required fields including difficulty, type, cuisine, and tags.");
+      showError(setError, "Please fill out all required fields including difficulty, type, cuisine, and tags.");
+      return;
+    }
+
+    if (!formData.image) {
+      showError(setError, "Please upload an image.");
       return;
     }
 
     const recipeData = new FormData();
-    
+
     for (const key in formData) {
-      recipeData.append(key, formData[key]);
+      if (key === "tags") {
+        recipeData.append(key, JSON.stringify(formData[key]));
+      } else if (key === "image") {
+        recipeData.append(key, formData.image);
+      } else {
+        recipeData.append(key, formData[key]);
+      }
     }
 
     try {
@@ -69,19 +75,21 @@ const CreateRecipe = () => {
         body: recipeData,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
+          // No Content-Type header! Let the browser set it automatically.
         },
       });
 
       const json = await response.json();
 
       if (!response.ok) {
-        showError(setError,json.error || "Failed to add recipe to database. Please try again.");
+        showError(setError, json.error || "Failed to add recipe to database. Please try again.");
         return;
       }
+
       setError(null);
       navigate("/");
     } catch (err) {
-      showError(setError,"An unexpected error occurred. Please try again.");
+      showError(setError, "An unexpected error occurred. Please try again.");
     }
   };
 
@@ -137,7 +145,7 @@ const CreateRecipe = () => {
               options={Difficulty}
               placeholder="Choose difficulty:"
               onChange={(selectedOption) =>
-                setFormData({ ...formData, difficulty: selectedOption.value })
+                setFormData(prev => ({ ...prev, difficulty: selectedOption.value }))
               }
               value={
                 formData.difficulty
@@ -154,7 +162,7 @@ const CreateRecipe = () => {
               options={Type}
               placeholder="Choose type:"
               onChange={(selectedOption) =>
-                setFormData({ ...formData, type: selectedOption.value })
+                setFormData(prev => ({ ...prev, type: selectedOption.value }))
               }
               value={
                 formData.type
@@ -173,7 +181,7 @@ const CreateRecipe = () => {
               options={Cuisine}
               placeholder="Choose cuisine:"
               onChange={(selectedOption) =>
-                setFormData({ ...formData, cuisine: selectedOption.value })
+                setFormData(prev => ({ ...prev, cuisine: selectedOption.value }))
               }
               value={
                 formData.cuisine
@@ -191,12 +199,12 @@ const CreateRecipe = () => {
               options={Tags}
               placeholder="Select tags:"
               onChange={(selectedOptions) =>
-                setFormData({
-                  ...formData,
-                  tags: selectedOptions.map((option) => option.value),
-                })
+                setFormData(prev => ({
+                  ...prev,
+                  tags: selectedOptions ? selectedOptions.map(option => option.value) : [],
+                }))
               }
-              value={Tags.filter((tag) => formData.tags.includes(tag.value))}
+              value={Tags.filter(tag => formData.tags.includes(tag.value))}
               menuPortalTarget={document.body}
               styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
             />
@@ -212,7 +220,6 @@ const CreateRecipe = () => {
           </div>
         )}
 
-        {/* Show upload or change image input depending on whether image is set */}
         {formData.image == null ? (
           <>
             <label>Upload Image:</label>

@@ -1,11 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer"); // import multer
-
 const { storage } = require("../middleware/uploadMiddleware");
 const upload = multer({ storage }); // initialize multer with storage middleware
-
-//const { uploadSingle, setStorageType } = require("../middleware/gridFSupload");
 
 const {
   getAllRecipes,
@@ -31,7 +28,7 @@ router.post("/", upload.single("image"), addRecipe);
 
 // then the param route:
 router.get("/:id", getRecipeById);
-router.put("/", upload.single("image"), updateRecipe);
+router.put("/:id", upload.single("image"), updateRecipe);
 router.delete("/:id", deleteRecipe);
 router.post("/save/:id", saveRecipe);
 router.delete("/unsave/:id", unsaveRecipe);

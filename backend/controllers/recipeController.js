@@ -160,11 +160,19 @@ const getRecipeById = async (req, res) => {
   }
 };
 
-// Add a new recipe
+// Create recipe
 const addRecipe = async (req, res) => {
+  const user_id = req.user._id;
+  const { title, ingredients, steps, time, difficulty, type, cuisine, tags } = req.body;
+
+  // Validate required fields
+  if (!title || !ingredients || !steps || !time || !difficulty || !type || !cuisine || !tags) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
   try {
-    const user_id = req.user._id;
-    const {
+    // Create new recipe instance
+    const recipe = new Recipe({
       title,
       ingredients,
       steps,
@@ -172,87 +180,64 @@ const addRecipe = async (req, res) => {
       difficulty,
       type,
       cuisine,
-      tags
-    } = req.body;
-
-    let imagePath = "";
-    if (req.file) {
-      imagePath = req.file.filename;  // filename from multer
-    }
-
-    const newRecipe = new Recipe({
-      title,
-      ingredients,
-      steps,
-      time,
-      difficulty,
-      image: imagePath,
-      type,
-      cuisine,
-      tags,
+      tags: JSON.parse(tags), // Parse tags from JSON string
+      image: req.file ? req.file.filename : null, // Use uploaded file name
       user_id
     });
 
-    await newRecipe.save();
+    // Save recipe to database
+    await recipe.save();
 
-    const user = await User.findById(user_id);
-    user.createdRecipes.push(newRecipe._id);
-    await user.save();
+    // Add recipe ID to user's createdRecipes array
+    await User.findByIdAndUpdate(user_id, { $push: { createdRecipes: recipe._id } });
 
-    res.status(201).json(newRecipe);
+    res.status(201).json(recipe);
   } catch (error) {
-    console.error("Error in addRecipe:", error);
+    console.error("addRecipe error:", error);
     res.status(500).json({ error: "Server Error" });
   }
 };
 
-// Update a recipe
+// Update recipe example (simplified, adjust as needed)
 const updateRecipe = async (req, res) => {
-  const id = req.params.id;
-  const user_id = req.user._id;
-
   try {
+    const id = req.params.id;
+    const user_id = req.user._id;
+
     const recipe = await Recipe.findOne({ _id: id, user_id });
     if (!recipe) {
-      return res.status(404).json({ message: "Recipe not found" });
+      return res.status(404).json({ error: "Recipe not found" });
     }
 
+    // Update image if new file uploaded
     if (req.file) {
-      // Delete old local image file if exists
       if (recipe.image) {
-        try {
-          await fs.promises.unlink(path.join(__dirname, "..", "uploads", recipe.image));
-        } catch (err) {
-          console.error("Error deleting old local image:", err);
-        }
+        // Delete old image file
+        const oldImagePath = path.join(__dirname, "..", "uploads", recipe.image);
+        fs.unlink(oldImagePath, (err) => {
+          if (err) console.error("Failed to delete old image:", err);
+        });
       }
       recipe.image = req.file.filename;
     }
 
-    const allowedFields = [
-      "title",
-      "ingredients",
-      "steps",
-      "time",
-      "difficulty",
-      "type",
-      "cuisine",
-      "tags"
-    ];
-
-    allowedFields.forEach(field => {
+    // Update other fields (parse tags)
+    const fieldsToUpdate = ["title", "ingredients", "steps", "time", "difficulty", "type", "cuisine", "tags"];
+    fieldsToUpdate.forEach((field) => {
       if (req.body[field] !== undefined) {
-        recipe[field] = typeof req.body[field] === "string"
-          ? JSON.parse(req.body[field] || '""')
-          : req.body[field];
+        if (field === "tags") {
+          recipe.tags = JSON.parse(req.body.tags);
+        } else {
+          recipe[field] = req.body[field];
+        }
       }
     });
 
     await recipe.save();
-    res.status(200).json(recipe);
+    res.json(recipe);
   } catch (error) {
-    console.error("Update error:", error);
-    res.status(500).json({ error: error.message || "Server Error" });
+    console.error("updateRecipe error:", error);
+    res.status(500).json({ error: "Server error" });
   }
 };
 
