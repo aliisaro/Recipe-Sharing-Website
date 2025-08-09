@@ -160,84 +160,114 @@ const getRecipeById = async (req, res) => {
   }
 };
 
-// Create recipe
+// ADD Recipe
 const addRecipe = async (req, res) => {
-  const user_id = req.user._id;
-  const { title, ingredients, steps, time, difficulty, type, cuisine, tags } = req.body;
-
-  // Validate required fields
-  if (!title || !ingredients || !steps || !time || !difficulty || !type || !cuisine || !tags) {
-    return res.status(400).json({ error: "All fields are required" });
-  }
+  const {
+    title,
+    ingredients,
+    steps,
+    time,
+    difficulty,
+    type,
+    cuisine,
+    tags,
+  } = req.body;
 
   try {
-    // Create new recipe instance
-    const recipe = new Recipe({
+    const user_id = req.user._id;
+
+    let imagePath = ""; // variable to store the image path
+    if (req.file) {
+      // Check if file is uploaded
+      imagePath = path.join("uploads", req.file.filename); // Save the image path
+    }
+
+    const newRecipe = new Recipe({
       title,
       ingredients,
       steps,
       time,
       difficulty,
+      image: imagePath,
       type,
       cuisine,
-      tags: JSON.parse(tags), // Parse tags from JSON string
-      image: req.file ? req.file.filename : null, // Use uploaded file name
-      user_id
+      tags,
+      user_id: req.user._id,
     });
 
-    // Save recipe to database
-    await recipe.save();
+    await newRecipe.save();
 
-    // Add recipe ID to user's createdRecipes array
-    await User.findByIdAndUpdate(user_id, { $push: { createdRecipes: recipe._id } });
-
-    res.status(201).json(recipe);
+    // add to user's createdRecipes array
+    const user = await User.findById(user_id);
+    user.createdRecipes.push(newRecipe._id);
+    await user.save();
+    res.status(201).json(newRecipe);
   } catch (error) {
-    console.error("addRecipe error:", error);
+    console.error(error);
     res.status(500).json({ error: "Server Error" });
   }
 };
 
-// Update recipe example (simplified, adjust as needed)
+// Update Recipe by ID
 const updateRecipe = async (req, res) => {
+  const id = req.params.id;
+  const user_id = req.user._id;
+
   try {
-    const id = req.params.id;
-    const user_id = req.user._id;
-
     const recipe = await Recipe.findOne({ _id: id, user_id });
+
     if (!recipe) {
-      return res.status(404).json({ error: "Recipe not found" });
+      return res.status(404).json({ message: "Recipe not found" });
     }
 
-    // Update image if new file uploaded
     if (req.file) {
+      // Delete old image
       if (recipe.image) {
-        // Delete old image file
-        const oldImagePath = path.join(__dirname, "..", "uploads", recipe.image);
-        fs.unlink(oldImagePath, (err) => {
-          if (err) console.error("Failed to delete old image:", err);
-        });
+        try {
+          await fs.unlink(path.join(__dirname, "..", recipe.image));
+        } catch (err) {
+          console.error("Error deleting old image:", err);
+        }
       }
-      recipe.image = req.file.filename;
+
+      // Set new image path
+      recipe.image = path.join("uploads", req.file.filename);
     }
 
-    // Update other fields (parse tags)
-    const fieldsToUpdate = ["title", "ingredients", "steps", "time", "difficulty", "type", "cuisine", "tags"];
-    fieldsToUpdate.forEach((field) => {
-      if (req.body[field] !== undefined) {
-        if (field === "tags") {
-          recipe.tags = JSON.parse(req.body.tags);
-        } else {
-          recipe[field] = req.body[field];
+    // Update only allowed fields
+    const allowedFields = [
+      "title",
+      "ingredients",
+      "steps",
+      "time",
+      "difficulty",
+      "type",
+      "cuisine",
+      "tags"
+    ];
+
+    const parseJSONIfNeeded = (field) => {
+      if (typeof req.body[field] === "string") {
+        try {
+          return JSON.parse(req.body[field]);
+        } catch (e) {
+          return req.body[field];
         }
+      }
+      return req.body[field];
+    };
+
+    allowedFields.forEach(field => {
+      if (req.body[field] !== undefined) {
+        recipe[field] = parseJSONIfNeeded(field);
       }
     });
 
     await recipe.save();
-    res.json(recipe);
+    res.status(200).json(recipe);
   } catch (error) {
-    console.error("updateRecipe error:", error);
-    res.status(500).json({ error: "Server error" });
+    console.error("Update error:", error);
+    res.status(500).json({ error: error.message || "Server Error" });
   }
 };
 
