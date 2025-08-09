@@ -27,11 +27,6 @@ const recipeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    storageType: {
-      type: String,
-      enum: ["local", "gridfs"],
-      default: "local"
-    },
     type: {
       type: String,
       required: true,

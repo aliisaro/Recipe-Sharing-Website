@@ -5,14 +5,7 @@ const RecipeCard = ({ recipe }) => (
   <div key={recipe._id} className="recipe-card">
     <Link to={`/${recipe._id}`}>
       <div className="image-container">
-        <img
-          src={
-            recipe.storageType === "gridfs"
-              ? `${API_URL}/api/files/${recipe.image}`
-              : `${API_URL}/uploads/${recipe.image}`
-          }
-          alt={recipe.title}
-        />
+        <img src={`${API_URL}/uploads/${recipe.image}`}alt={recipe.title}/>
         <p>{recipe.title}</p>
       </div>
     </Link>

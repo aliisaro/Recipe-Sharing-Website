@@ -177,11 +177,8 @@ const addRecipe = async (req, res) => {
     } = req.body;
 
     let imagePath = "";
-    let storageType = "local"; // default
-
     if (req.file) {
-      imagePath = req.file.filename;
-      storageType = req.file.storageType || "gridfs"; // set in middleware
+      imagePath = req.file.filename;  // filename from multer
     }
 
     const newRecipe = new Recipe({
@@ -191,7 +188,6 @@ const addRecipe = async (req, res) => {
       time,
       difficulty,
       image: imagePath,
-      storageType,
       type,
       cuisine,
       tags,
@@ -211,6 +207,7 @@ const addRecipe = async (req, res) => {
   }
 };
 
+// Update a recipe
 const updateRecipe = async (req, res) => {
   const id = req.params.id;
   const user_id = req.user._id;
@@ -222,24 +219,15 @@ const updateRecipe = async (req, res) => {
     }
 
     if (req.file) {
-      if (recipe.storageType === "gridfs" && recipe.image) {
-        // delete old GridFS file
-        const gfs = getGFS();
-        const oldFile = await gfs.files.findOne({ filename: recipe.image });
-        if (oldFile) {
-          await gfs.remove({ _id: oldFile._id, root: "uploads" });
-        }
-      } else if (recipe.storageType === "local" && recipe.image) {
-        // delete old local file
+      // Delete old local image file if exists
+      if (recipe.image) {
         try {
-          await fs.unlink(path.join(__dirname, "..", "uploads", recipe.image));
+          await fs.promises.unlink(path.join(__dirname, "..", "uploads", recipe.image));
         } catch (err) {
           console.error("Error deleting old local image:", err);
         }
       }
-
       recipe.image = req.file.filename;
-      recipe.storageType = req.file.storageType || "gridfs";
     }
 
     const allowedFields = [
@@ -269,8 +257,7 @@ const updateRecipe = async (req, res) => {
   }
 };
 
-
-// Delete Recipe by ID
+// Delete a recipe
 const deleteRecipe = async (req, res) => {
   const id = req.params.id;
   const user_id = req.user._id;
@@ -281,20 +268,12 @@ const deleteRecipe = async (req, res) => {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    // Delete image based on storage type
+    // Delete local image file
     if (recipe.image) {
-      if (recipe.storageType === "gridfs") {
-        const gfs = getGFS();
-        const file = await gfs.files.findOne({ filename: recipe.image });
-        if (file) {
-          await gfs.remove({ _id: file._id, root: "uploads" });
-        }
-      } else if (recipe.storageType === "local") {
-        try {
-          await fs.unlink(path.join(__dirname, "..", "uploads", recipe.image));
-        } catch (err) {
-          console.error("Error deleting local file:", err);
-        }
+      try {
+        await fs.promises.unlink(path.join(__dirname, "..", "uploads", recipe.image));
+      } catch (err) {
+        console.error("Error deleting local file:", err);
       }
     }
 

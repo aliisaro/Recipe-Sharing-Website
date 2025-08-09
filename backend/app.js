@@ -26,7 +26,7 @@ app.get("/", (req, res) => res.send("API Running!"));
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/recipes", recipeRoutes);
-app.use("/api/files", fileRoutes); // <-- new route for fetching GridFS images
+//app.use("/api/files", fileRoutes); // <-- new route for fetching GridFS images
 
 // Error handling
 app.use(customMiddleware.requestLogger);
@@ -34,8 +34,8 @@ app.use(customMiddleware.unknownEndpoint);
 app.use(customMiddleware.errorHandler);
 
 // Init GFS once DB is ready
-mongoose.connection.once("open", () => {
-  initGFS(mongoose.connection, mongoose.mongo);
-});
+//mongoose.connection.once("open", () => {
+//  initGFS(mongoose.connection, mongoose.mongo);
+//});
 
 module.exports = app;
