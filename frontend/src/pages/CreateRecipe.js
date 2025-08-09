@@ -36,7 +36,6 @@ const CreateRecipe = () => {
     const file = e.target.files[0];
     if (file && file.size > 5 * 1024 * 1024) {
       setError("Image must be less than 5MB.");
-
       return;
     }
     setFormData({ ...formData, image: file });

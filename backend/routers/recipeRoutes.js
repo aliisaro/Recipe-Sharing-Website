@@ -27,12 +27,10 @@ router.use(requireAuth);
 router.get("/all", getAllRecipes);
 router.get("/user", getRecipesByUser);
 router.get("/saved", getSavedRecipes);
-//router.post("/", uploadSingle, setStorageType, addRecipe);
 router.post("/", upload.single("image"), addRecipe);
 
 // then the param route:
 router.get("/:id", getRecipeById);
-//router.put("/:id", uploadSingle, setStorageType, updateRecipe);
 router.put("/", upload.single("image"), updateRecipe);
 router.delete("/:id", deleteRecipe);
 router.post("/save/:id", saveRecipe);
