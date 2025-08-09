@@ -5,24 +5,25 @@ const path = require("path");
 const crypto = require("crypto");
 const { MONGO_URI } = require("../utils/config");
 
-// Create storage engine
 const storage = new GridFsStorage({
-  url: MONGO_URI,
+  url: process.env.MONGO_URI,
   file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      // Generate a unique filename
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) return reject(err);
-        const filename = buf.toString("hex") + path.extname(file.originalname);
-        resolve({
-          filename: filename,
-          bucketName: "uploads", // collection will be uploads.files & uploads.chunks
-        });
-      });
-    });
-  },
+    return {
+      filename: `${Date.now()}-${file.originalname}`,
+      bucketName: "uploads",
+    };
+  }
 });
 
 const uploadGridFS = multer({ storage });
 
-module.exports = uploadGridFS;
+// Add a property so controller knows storage type
+const setStorageType = (req, res, next) => {
+  if (req.file) {
+    req.file.storageType = "gridfs";
+  }
+  next();
+};
+
+module.exports = [uploadGridFS.single("image"), setStorageType];
+

@@ -161,33 +161,27 @@ const getRecipeById = async (req, res) => {
   }
 };
 
-
-// ADD Recipe
+// Add a new recipe
 const addRecipe = async (req, res) => {
-  const {
-    title,
-    ingredients,
-    steps,
-    time,
-    difficulty,
-    type,
-    cuisine,
-    tags,
-  } = req.body;
-
   try {
     const user_id = req.user._id;
+    const {
+      title,
+      ingredients,
+      steps,
+      time,
+      difficulty,
+      type,
+      cuisine,
+      tags
+    } = req.body;
 
-    // Old code for handling image upload
-    //let imagePath = ""; // variable to store the image path
-    //if (req.file) {
-    //  imagePath = `uploads/${req.file.filename}`.replace(/\\/g, "/");
-    //}
-
-    // New code for handling GridFS image upload
     let imagePath = "";
+    let storageType = "local"; // default
+
     if (req.file) {
-      imagePath = req.file.filename; // GridFS stores the file by filename
+      imagePath = req.file.filename;
+      storageType = req.file.storageType || "gridfs"; // set in middleware
     }
 
     const newRecipe = new Recipe({
@@ -197,64 +191,57 @@ const addRecipe = async (req, res) => {
       time,
       difficulty,
       image: imagePath,
+      storageType,
       type,
       cuisine,
       tags,
-      user_id: req.user._id,
+      user_id
     });
 
     await newRecipe.save();
 
-    // add to user's createdRecipes array
     const user = await User.findById(user_id);
     user.createdRecipes.push(newRecipe._id);
     await user.save();
+
     res.status(201).json(newRecipe);
   } catch (error) {
-    console.error(error);
+    console.error("Error in addRecipe:", error);
     res.status(500).json({ error: "Server Error" });
   }
 };
 
-// Update Recipe by ID
 const updateRecipe = async (req, res) => {
   const id = req.params.id;
   const user_id = req.user._id;
 
   try {
     const recipe = await Recipe.findOne({ _id: id, user_id });
-
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    // Old code for handling image upload
-    //if (req.file) {
-      // If there's an existing image, delete it
-     // if (recipe.image) {
-       // try {
-        //  await fs.unlink(path.join(__dirname, "..", recipe.image));
-       //} catch (err) {
-        //  console.error("Error deleting old image:", err);
-       // }
-     // }
-     // recipe.image = `uploads/${req.file.filename}`.replace(/\\/g, "/");
-    //}
-
-    // New code for handling GridFS image upload
-    const gfs = getGFS(); // import or get your GridFS instance here
-
     if (req.file) {
-      if (recipe.image) {
+      if (recipe.storageType === "gridfs" && recipe.image) {
+        // delete old GridFS file
+        const gfs = getGFS();
         const oldFile = await gfs.files.findOne({ filename: recipe.image });
         if (oldFile) {
-          await gfs.remove({ _id: oldFile._id, root: "uploads" }); // "uploads" is your bucketName
+          await gfs.remove({ _id: oldFile._id, root: "uploads" });
+        }
+      } else if (recipe.storageType === "local" && recipe.image) {
+        // delete old local file
+        try {
+          await fs.unlink(path.join(__dirname, "..", "uploads", recipe.image));
+        } catch (err) {
+          console.error("Error deleting old local image:", err);
         }
       }
+
       recipe.image = req.file.filename;
+      recipe.storageType = req.file.storageType || "gridfs";
     }
 
-    // Update only allowed fields
     const allowedFields = [
       "title",
       "ingredients",
@@ -266,20 +253,11 @@ const updateRecipe = async (req, res) => {
       "tags"
     ];
 
-    const parseJSONIfNeeded = (field) => {
-      if (typeof req.body[field] === "string") {
-        try {
-          return JSON.parse(req.body[field]);
-        } catch (e) {
-          return req.body[field];
-        }
-      }
-      return req.body[field];
-    };
-
     allowedFields.forEach(field => {
       if (req.body[field] !== undefined) {
-        recipe[field] = parseJSONIfNeeded(field);
+        recipe[field] = typeof req.body[field] === "string"
+          ? JSON.parse(req.body[field] || '""')
+          : req.body[field];
       }
     });
 
@@ -291,46 +269,41 @@ const updateRecipe = async (req, res) => {
   }
 };
 
+
 // Delete Recipe by ID
 const deleteRecipe = async (req, res) => {
   const id = req.params.id;
-  try {
-    const user_id = req.user._id;
-    const recipe = await Recipe.findByIdAndDelete({
-      _id: id,
-      user_id: user_id,
-    });
+  const user_id = req.user._id;
 
+  try {
+    const recipe = await Recipe.findOne({ _id: id, user_id });
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    // Old code for deleting the image file
-    // if (recipe.image) {
-      //fs.unlink(path.join(__dirname, "..", recipe.image), (err) => {
-        //if (err) {
-        //   console.error(err);
-      //  }
-    // });
-   //}
-
-    // New code for deleting the image from GridFS
-    const gfs = getGFS();
-
+    // Delete image based on storage type
     if (recipe.image) {
-      const file = await gfs.files.findOne({ filename: recipe.image });
-      if (file) {
-        await gfs.remove({ _id: file._id, root: "uploads" });
+      if (recipe.storageType === "gridfs") {
+        const gfs = getGFS();
+        const file = await gfs.files.findOne({ filename: recipe.image });
+        if (file) {
+          await gfs.remove({ _id: file._id, root: "uploads" });
+        }
+      } else if (recipe.storageType === "local") {
+        try {
+          await fs.unlink(path.join(__dirname, "..", "uploads", recipe.image));
+        } catch (err) {
+          console.error("Error deleting local file:", err);
+        }
       }
     }
 
-    // Remove recipe ID from the creator's createdRecipes array
-    await User.updateOne(
-      { _id: user_id },
-      { $pull: { createdRecipes: id } }
-    );
+    await Recipe.deleteOne({ _id: id, user_id });
 
-    // Remove recipe ID from all users' savedRecipes arrays
+    // Remove from user's createdRecipes
+    await User.findByIdAndUpdate(user_id, { $pull: { createdRecipes: id } });
+
+    // Remove from all users' savedRecipes
     await User.updateMany(
       { savedRecipes: id },
       { $pull: { savedRecipes: id } }
@@ -338,7 +311,7 @@ const deleteRecipe = async (req, res) => {
 
     res.status(200).json({ message: "Recipe deleted successfully" });
   } catch (error) {
-    console.error(error);
+    console.error("Delete error:", error);
     res.status(500).json({ error: "Server Error" });
   }
 };
