@@ -1,9 +1,7 @@
-// middleware/gridfsUpload.js
 const multer = require("multer");
 const { GridFsStorage } = require("multer-gridfs-storage");
 const path = require("path");
 const crypto = require("crypto");
-const { MONGO_URI } = require("../utils/config");
 
 const storage = new GridFsStorage({
   url: process.env.MONGO_URI,
@@ -17,6 +15,8 @@ const storage = new GridFsStorage({
 
 const uploadGridFS = multer({ storage });
 
+const uploadSingle = uploadGridFS.single("image");
+
 // Add a property so controller knows storage type
 const setStorageType = (req, res, next) => {
   if (req.file) {
@@ -25,5 +25,7 @@ const setStorageType = (req, res, next) => {
   next();
 };
 
-module.exports = [uploadGridFS.single("image"), setStorageType];
-
+module.exports = {
+  uploadSingle,
+  setStorageType
+};
