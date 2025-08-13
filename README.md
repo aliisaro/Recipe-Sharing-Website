@@ -1,4 +1,4 @@
-# Welcome to Palate, a recipe sharing website
+# Palate (a recipe sharing website)
 Palate is a MERN-stack web application to share, search and rate recipes.
 
 ## Features
