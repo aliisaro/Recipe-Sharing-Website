@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '../config';
 import { showError, showSuccess } from "../utils/ShowMessages";
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
+    const navigate = useNavigate();
   const [profile, setProfile] = useState({});
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
@@ -13,7 +15,7 @@ const ProfilePage = () => {
     password: "",
   });
 
-  const userId = localStorage.getItem("userId"); // store user ID in localStorage on login/signup
+  const userId = localStorage.getItem("userId");
 
   // Fetch profile by user ID
   useEffect(() => {
