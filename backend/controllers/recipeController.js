@@ -160,7 +160,7 @@ const getRecipeById = async (req, res) => {
   }
 };
 
-// ADD Recipe
+// Add Recipe
 const addRecipe = async (req, res) => {
   try {
     if (!req.body.image) {

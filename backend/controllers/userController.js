@@ -7,7 +7,7 @@ const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
 };
 
-// sign in a user
+// Sign in a user
 const signinUser = async (req, res) => {
   console.log("Signin request body:", req.body);
   const { username, password } = req.body;
@@ -28,7 +28,7 @@ const signinUser = async (req, res) => {
   }
 };
 
-// signup a user
+// Signup a user
 const signupUser = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -50,11 +50,12 @@ const signupUser = async (req, res) => {
   }
 };
 
-const getUserByUsername = async (req, res) => {
-  const { username } = req.params;
+// Get user by ID
+const getUserById = async (req, res) => {
+  const userId = req.params.id;
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -62,11 +63,12 @@ const getUserByUsername = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    console.error(error);
+    console.error("Fetch user error:", error.message);
     res.status(500).json({ error: "Server Error" });
   }
 };
 
+// Update user
 const patchUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -87,8 +89,9 @@ const patchUser = async (req, res) => {
       updateFields.password = await bcrypt.hash(updateFields.password, salt);
     }
 
-    const user = await User.findOneAndUpdate(
-      { username: req.params.username },
+    // Update by user ID instead of username
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
       updateFields,
       { new: true }
     );
@@ -103,4 +106,38 @@ const patchUser = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, signinUser, getUserByUsername, patchUser };
+// Delete user
+const deleteUser = async (req, res) => {
+  const userId = req.params.id; // get user ID from route
+
+  try {
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Delete all recipes created by this user
+    const recipesToDelete = await Recipe.find({ user_id: userId });
+    const recipeIds = recipesToDelete.map(r => r._id);
+
+    // Remove recipes from DB
+    await Recipe.deleteMany({ user_id: userId });
+
+    // Remove these recipes from all users' savedRecipes
+    await User.updateMany(
+      { savedRecipes: { $in: recipeIds } },
+      { $pull: { savedRecipes: { $in: recipeIds } } }
+    );
+
+    // Delete the user
+    await User.deleteOne({ _id: userId });
+
+    res.status(200).json({ message: "User and their recipes deleted successfully" });
+  } catch (error) {
+    console.error("Delete user error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { signupUser, signinUser, getUserById, patchUser, deleteUser };

@@ -1209,6 +1209,23 @@ button {
   background-color: #2f9a60;
 }
 
+.profile-form .delete-account-button {
+  margin: 20px 0 0 0;
+  padding: 12px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.profile-form .delete-account-button:hover {
+  background-color: rgb(209, 0, 0);
+}
+
+
 /* Responsive styles */
 @media screen and (max-width: 800px) {
   .profile-content {

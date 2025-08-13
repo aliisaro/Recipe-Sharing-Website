@@ -6,8 +6,10 @@ router.post("/signup", users.signupUser);
 
 router.post("/signin", users.signinUser);
 
-router.get("/profile/:username", users.getUserByUsername);
+router.get("/profile/:id", users.getUserById);
 
-router.patch("/update/:username", users.patchUser);
+router.patch("/update/:id", users.patchUser);
+
+router.delete("/delete/:id", users.deleteUser);
 
 module.exports = router;
