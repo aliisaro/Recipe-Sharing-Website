@@ -43,7 +43,7 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
           <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
           <Link to="/CreateRecipe" onClick={() => setMenuOpen(false)}>Create New Recipe</Link>
           <Link to="/Library" onClick={() => setMenuOpen(false)}>Library</Link>
-          <Link to={`/profile/${username}`} onClick={() => setMenuOpen(false)}>Profile</Link>
+          <Link to={`/Profile`} onClick={() => setMenuOpen(false)}>Profile</Link>
           <button className="logout" onClick={handleClick}>Log out</button>
         </div>
       )}

@@ -17,8 +17,6 @@ function App() {
     Boolean(localStorage.getItem("token")) || false
   );
 
-  const [searchTerm, setSearchTerm] = useState("");
-
   return (
     <BrowserRouter>
 
