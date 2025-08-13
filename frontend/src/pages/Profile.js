@@ -101,7 +101,6 @@ const ProfilePage = () => {
 
       // Clear local storage and redirect
       localStorage.clear();
-      setIsAuthenticated(false);
     } catch (error) {
       showError(setError, error.message);
     }
