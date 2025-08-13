@@ -168,7 +168,7 @@ const addRecipe = async (req, res) => {
     }
 
     // Parse tags if sent as JSON
-    const tags = req.body.tags ? JSON.parse(req.body.tags) : [];
+    const tags = req.body.tags || [];
 
     const newRecipe = new Recipe({
       title: req.body.title,
@@ -211,20 +211,6 @@ const updateRecipe = async (req, res) => {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    if (req.file) {
-      // Delete old image
-      if (recipe.image) {
-        try {
-          await fs.unlink(path.join(__dirname, "..", recipe.image));
-        } catch (err) {
-          console.error("Error deleting old image:", err);
-        }
-      }
-
-      // Set new image path
-      recipe.image = path.join("uploads", req.file.filename);
-    }
-
     // Update only allowed fields
     const allowedFields = [
       "title",
@@ -234,23 +220,13 @@ const updateRecipe = async (req, res) => {
       "difficulty",
       "type",
       "cuisine",
-      "tags"
+      "tags",
+      "image" // include image if frontend sends new Base64
     ];
-
-    const parseJSONIfNeeded = (field) => {
-      if (typeof req.body[field] === "string") {
-        try {
-          return JSON.parse(req.body[field]);
-        } catch (e) {
-          return req.body[field];
-        }
-      }
-      return req.body[field];
-    };
 
     allowedFields.forEach(field => {
       if (req.body[field] !== undefined) {
-        recipe[field] = parseJSONIfNeeded(field);
+        recipe[field] = req.body[field]; // directly assign
       }
     });
 

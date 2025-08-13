@@ -80,40 +80,33 @@ const EditRecipe = () => {
         : [],
     };
 
-    const recipeData = new FormData();
-
-    for (const key in formattedData) {
-      const value = formattedData[key];
-
-      if (key === "image") {
-        if (value instanceof File) {
-          recipeData.append("image", value, value.name);
-        }
-      } else if (Array.isArray(value)) {
-        recipeData.append(key, JSON.stringify(value));
-      } else if (value !== undefined && value !== null) {
-        recipeData.append(key, value);
-      }
+    // Convert image File to Base64 if it's a new File
+    if (formData.image instanceof File) {
+      const fileToBase64 = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (err) => reject(err);
+        });
+      formattedData.image = await fileToBase64(formData.image);
     }
 
     try {
       const response = await fetch(`${API_URL}/api/recipes/${id}`, {
         method: "PUT",
-        body: recipeData,
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
+        body: JSON.stringify(formattedData),
       });
 
       if (!response.ok) throw new Error("Failed to update recipe");
 
-
-      const updatedRecipe = await response.json();
-
-      setError(null);
       navigate(`/${id}`);
     } catch (error) {
-      showError(setError,error.message || "An error occurred while updating the recipe.");
+      showError(setError, error.message || "An error occurred while updating the recipe.");
     }
   };
 
