@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
+app.use(express.json({ limit: "10mb" })); // increase limit for Base64
 //const upload = require("../middleware/uploadMiddleware");
+
 const {
   getAllRecipes,
   getRecipesByUser,
@@ -21,8 +23,7 @@ router.use(requireAuth);
 router.get("/all", getAllRecipes);
 router.get("/user", getRecipesByUser);
 router.get("/saved", getSavedRecipes);
-router.post("/", addRecipe); // file will be stored
-
+router.post("/", addRecipe);
 
 router.get("/:id", getRecipeById);
 router.put("/:id",  updateRecipe);

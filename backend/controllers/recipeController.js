@@ -179,7 +179,7 @@ const addRecipe = async (req, res) => {
       type: req.body.type,
       cuisine: req.body.cuisine,
       tags,
-      image: req.body.image, // store Base64 directly
+      image: req.body.image,
       user_id: req.user._id
     });
 

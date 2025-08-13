@@ -100,7 +100,6 @@ const CreateRecipe = () => {
     }
   };
 
-
   return (
     <div className="recipe-form-page-container">
       <form
