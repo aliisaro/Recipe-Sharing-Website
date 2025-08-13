@@ -40,7 +40,7 @@ function App() {
           element={isAuthenticated ? <Library /> : <Navigate to="/SignIn" />}
         />
         <Route
-          path="/Profile"
+          path="/Profile/:id"
           element={isAuthenticated ? <Profile /> : <Navigate to="/SignIn" />}
         />
         <Route

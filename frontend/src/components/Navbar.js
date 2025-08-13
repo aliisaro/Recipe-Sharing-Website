@@ -8,8 +8,8 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
   // State to manage the menu open/close state
   const [menuOpen, setMenuOpen] = useState(false);
   
-  // Retrieve username from localStorage
-  const username = localStorage.getItem("username");
+  // Retrieve user id from localStorage
+  const userId = localStorage.getItem("userId");
 
   const navigate = useNavigate();
 
@@ -43,7 +43,7 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
           <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
           <Link to="/CreateRecipe" onClick={() => setMenuOpen(false)}>Create New Recipe</Link>
           <Link to="/Library" onClick={() => setMenuOpen(false)}>Library</Link>
-          <Link to={`/Profile`} onClick={() => setMenuOpen(false)}>Profile</Link>
+          <Link to={`/Profile/${userId}`} onClick={() => setMenuOpen(false)}>Profile</Link>
           <button className="logout" onClick={handleClick}>Log out</button>
         </div>
       )}
