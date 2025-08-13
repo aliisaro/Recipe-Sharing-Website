@@ -156,7 +156,7 @@ const RecipeDetails = () => {
 
         <div className="recipe-image-description">
           <img
-            src={`${API_URL}/uploads/${recipe.image}`}
+            src={`${recipe.image}`}
             alt="Image not found..."
           />
 
@@ -246,9 +246,10 @@ const RecipeDetails = () => {
         {error && <div className="error-message">{error}</div>}
 
         <div className="button-group">
+          <button className="return-button" onClick={() => navigate(-1)}>Return</button>
           {recipe.user_id?._id === localStorage.getItem("user_id") ? (
             <>
-              <Link to={`/EditRecipe/${recipe._id}`} className="button-link">Edit recipe</Link>
+              <Link to={`/EditRecipe/${recipe._id}`} className="edit-button">Edit recipe</Link>
               <button className="deleteButton" onClick={DeleteRecipe}>Delete recipe</button>
             </>
           ) : (

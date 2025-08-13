@@ -866,7 +866,8 @@ button {
 }
 
 .button-group .saveButton,
-.button-group .button-link {
+.button-group .return-button,
+.button-group .edit-button {
   background-color: #50C37E;
   color: #fff;
   padding: 10px 18px;

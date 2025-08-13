@@ -38,7 +38,7 @@ const EditRecipe = () => {
 
         setFormData({
           ...data,
-          time: data.time || "", // keep as string
+          time: data.time || "",
           difficulty: Difficulty.find(opt => opt.value === data.difficulty) || null,
           type: Type.find(opt => opt.value === data.type) || null,
           cuisine: Cuisine.find(opt => opt.value === data.cuisine) || null,
@@ -142,7 +142,7 @@ const EditRecipe = () => {
           name="ingredients"
           value={formData.ingredients}
           onChange={handleChange}
-          placeholder="Write the ingredients here:"
+          placeholder="Write the ingredients here (separate each ingredient with enter):"
         />
 
         <label>Steps:</label>
@@ -150,7 +150,7 @@ const EditRecipe = () => {
           name="steps"
           value={formData.steps}
           onChange={handleChange}
-          placeholder="Write the steps here:"
+          placeholder="Write the steps here (separate each step with enter):"
         />
 
         <div className="section">
@@ -207,7 +207,7 @@ const EditRecipe = () => {
                 src={
                   formData.image instanceof File
                     ? URL.createObjectURL(formData.image)
-                    : `${API_URL}/uploads/${formData.image}`
+                    : formData.image // <-- already Base64
                 }
                 alt="Preview"
               />
