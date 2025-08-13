@@ -162,51 +162,47 @@ const getRecipeById = async (req, res) => {
 
 // ADD Recipe
 const addRecipe = async (req, res) => {
-  const {
-    title,
-    ingredients,
-    steps,
-    time,
-    difficulty,
-    type,
-    cuisine,
-    tags,
-  } = req.body;
-
   try {
     const user_id = req.user._id;
 
-    let imagePath = ""; // variable to store the image path
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
+
+    let imagePath = "";
     if (req.file) {
-      // Check if file is uploaded
-      imagePath = path.join("uploads", req.file.filename); // Save the image path
+      imagePath = path.join("uploads", req.file.filename);
     }
 
+    const parsedTags = typeof req.body.tags === "string"
+      ? JSON.parse(req.body.tags)
+      : req.body.tags;
+
     const newRecipe = new Recipe({
-      title,
-      ingredients,
-      steps,
-      time,
-      difficulty,
+      title: req.body.title,
+      ingredients: req.body.ingredients,
+      steps: req.body.steps,
+      time: req.body.time,
+      difficulty: req.body.difficulty,
       image: imagePath,
-      type,
-      cuisine,
-      tags,
-      user_id: req.user._id,
+      type: req.body.type,
+      cuisine: req.body.cuisine,
+      tags: parsedTags,
+      user_id,
     });
 
     await newRecipe.save();
 
-    // add to user's createdRecipes array
     const user = await User.findById(user_id);
     user.createdRecipes.push(newRecipe._id);
     await user.save();
+
     res.status(201).json(newRecipe);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server Error" });
   }
 };
+
 
 // Update Recipe by ID
 const updateRecipe = async (req, res) => {

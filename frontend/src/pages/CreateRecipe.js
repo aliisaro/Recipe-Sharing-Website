@@ -75,7 +75,6 @@ const CreateRecipe = () => {
         body: recipeData,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-          // No Content-Type header! Let the browser set it automatically.
         },
       });
 
