@@ -16,7 +16,7 @@ connectDB();
 
 // Middleware
 app.use(cors({ origin: '*' }));
-app.use(express.json());
+app.use(express.json({ limit: "10mb" })); // increase limit for Base64
 //app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/", (req, res) => res.send("API Running!"));

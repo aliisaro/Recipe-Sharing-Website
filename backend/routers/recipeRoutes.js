@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-app.use(express.json({ limit: "10mb" })); // increase limit for Base64
 //const upload = require("../middleware/uploadMiddleware");
 
 const {
