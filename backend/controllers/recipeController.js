@@ -163,21 +163,18 @@ const getRecipeById = async (req, res) => {
 // ADD Recipe
 const addRecipe = async (req, res) => {
   try {
-    const user_id = req.user._id;
+    // Multer puts the file path in req.file
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
-
-    let imagePath = "";
-    if (req.file) {
-      imagePath = path.join("uploads", req.file.filename);
+    if (!imagePath) {
+      return res.status(400).json({ error: "Image is required" });
     }
 
-    const parsedTags = typeof req.body.tags === "string"
+    const tags = req.body.tags
       ? JSON.parse(req.body.tags)
-      : req.body.tags;
+      : [];
 
-    const newRecipe = new Recipe({
+    const recipe = new Recipe({
       title: req.body.title,
       ingredients: req.body.ingredients,
       steps: req.body.steps,
@@ -186,23 +183,18 @@ const addRecipe = async (req, res) => {
       image: imagePath,
       type: req.body.type,
       cuisine: req.body.cuisine,
-      tags: parsedTags,
-      user_id,
+      tags: tags,
+      user_id: req.user._id // from requireAuth middleware
     });
 
-    await newRecipe.save();
+    await recipe.save();
 
-    const user = await User.findById(user_id);
-    user.createdRecipes.push(newRecipe._id);
-    await user.save();
-
-    res.status(201).json(newRecipe);
+    res.status(201).json(recipe);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server Error" });
+    console.error("Error adding recipe:", error);
+    res.status(500).json({ error: error.message });
   }
 };
-
 
 // Update Recipe by ID
 const updateRecipe = async (req, res) => {
