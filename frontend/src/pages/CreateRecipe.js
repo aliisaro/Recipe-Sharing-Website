@@ -57,25 +57,33 @@ const CreateRecipe = () => {
       return;
     }
 
-    const recipeData = new FormData();
-
-    for (const key in formData) {
-      if (key === "tags") {
-        recipeData.append(key, JSON.stringify(formData[key]));
-      } else if (key === "image") {
-        recipeData.append(key, formData.image);
-      } else {
-        recipeData.append(key, formData[key]);
-      }
-    }
-
     try {
+      // Convert image file to Base64
+      const fileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (err) => reject(err);
+        });
+      };
+
+      const imageBase64 = await fileToBase64(formData.image);
+
+      // Prepare JSON data instead of FormData
+      const recipeData = {
+        ...formData,
+        tags: formData.tags,
+        image: imageBase64,
+      };
+
       const response = await fetch(`${API_URL}/api/recipes`, {
         method: "POST",
-        body: recipeData,
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
+        body: JSON.stringify(recipeData),
       });
 
       const json = await response.json();
@@ -91,6 +99,7 @@ const CreateRecipe = () => {
       showError(setError, "An unexpected error occurred. Please try again.");
     }
   };
+
 
   return (
     <div className="recipe-form-page-container">
