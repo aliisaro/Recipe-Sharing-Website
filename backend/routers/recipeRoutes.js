@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const multer = require("multer"); // import multer
-const { storage } = require("../middleware/uploadMiddleware");
-const upload = multer({ storage }); // initialize multer with storage middleware
+const upload = require("../middleware/uploadMiddleware"); // import multer instance
 
 const {
   getAllRecipes,
@@ -24,9 +22,8 @@ router.use(requireAuth);
 router.get("/all", getAllRecipes);
 router.get("/user", getRecipesByUser);
 router.get("/saved", getSavedRecipes);
-router.post("/", upload.single("image"), addRecipe);
+router.post("/", upload.single("image"), addRecipe); // file will be stored
 
-// then the param route:
 router.get("/:id", getRecipeById);
 router.put("/:id", upload.single("image"), updateRecipe);
 router.delete("/:id", deleteRecipe);
