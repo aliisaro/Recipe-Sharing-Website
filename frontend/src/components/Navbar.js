@@ -40,6 +40,7 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
 
       {isAuthenticated && (
         <div className={`nav-right ${menuOpen ? "open" : ""}`}>
+          <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
           <Link to="/CreateRecipe" onClick={() => setMenuOpen(false)}>Create New Recipe</Link>
           <Link to="/Library" onClick={() => setMenuOpen(false)}>Library</Link>
           <Link to={`/profile/${username}`} onClick={() => setMenuOpen(false)}>Profile</Link>

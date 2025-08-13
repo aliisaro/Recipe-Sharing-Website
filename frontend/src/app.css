@@ -794,6 +794,7 @@ button {
   flex-direction: row;
   align-items: center;
   margin-bottom: 20px;
+
 }
 
 .recipe-image-description img {
@@ -802,11 +803,13 @@ button {
   object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
 }
 
 .recipe-image-description ul {
   list-style-type: none;
   margin-left: 20px;
+
 }
 
 .recipe-image-description li {
@@ -898,6 +901,40 @@ button {
 
 .button-group .deleteButton:hover, .unsaveButton:hover {
   background-color: rgb(209, 0, 0);
+}
+
+/* Responsive styles*/
+@media screen and (max-width: 800px) {
+  .recipe-details {
+    width: 90%;
+  }
+
+  .recipe-image-description {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .recipe-image-description img {
+    width: 100%;
+    height: auto;
+    min-width: 200px;
+  }
+
+  .recipe-image-description ul {
+    list-style-type: none;
+    margin: 20px 0 0 0;
+    padding: 0px;
+    align-items: left;
+  }
+
+  .recipe-ingredients-steps {
+    flex-direction: column;
+  }
+
+  .recipe-ingredients-steps .row {
+    width: 100%;
+    min-width: 200px;
+  }
 }
 
 /*----------Library---------*/
