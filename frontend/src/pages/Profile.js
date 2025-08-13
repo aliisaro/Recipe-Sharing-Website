@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '../config';
 import { showError, showSuccess } from "../utils/ShowMessages";
-import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
-    const navigate = useNavigate();
   const [profile, setProfile] = useState({});
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
@@ -103,7 +101,7 @@ const ProfilePage = () => {
 
       // Clear local storage and redirect
       localStorage.clear();
-      navigate("/signUp");
+      setIsAuthenticated(false);
     } catch (error) {
       showError(setError, error.message);
     }
