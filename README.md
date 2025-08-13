@@ -1,6 +1,8 @@
 # Welcome to Palate, a recipe sharing website
 Palate is a MERN-stack web application to share, search and rate recipes.
 
+<img src="PalatePreview.png" alt="Palate Picker Preview" width="400"/>
+
 ## Features
 
 - User authentication (signup/login)
