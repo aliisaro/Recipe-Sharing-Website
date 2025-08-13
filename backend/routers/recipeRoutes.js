@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../middleware/uploadMiddleware"); // import multer instance
-
+//const upload = require("../middleware/uploadMiddleware");
 const {
   getAllRecipes,
   getRecipesByUser,
@@ -22,10 +21,11 @@ router.use(requireAuth);
 router.get("/all", getAllRecipes);
 router.get("/user", getRecipesByUser);
 router.get("/saved", getSavedRecipes);
-router.post("/", upload.single("image"), addRecipe); // file will be stored
+router.post("/", addRecipe); // file will be stored
+
 
 router.get("/:id", getRecipeById);
-router.put("/:id", upload.single("image"), updateRecipe);
+router.put("/:id",  updateRecipe);
 router.delete("/:id", deleteRecipe);
 router.post("/save/:id", saveRecipe);
 router.delete("/unsave/:id", unsaveRecipe);

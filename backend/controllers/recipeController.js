@@ -163,12 +163,9 @@ const getRecipeById = async (req, res) => {
 // ADD Recipe
 const addRecipe = async (req, res) => {
   try {
-    // Check if image uploaded
-    if (!req.file) {
+    if (!req.body.image) {
       return res.status(400).json({ error: "Image is required" });
     }
-
-    const imagePath = `/uploads/${req.file.filename}`;
 
     // Parse tags if sent as JSON
     const tags = req.body.tags ? JSON.parse(req.body.tags) : [];
@@ -182,7 +179,7 @@ const addRecipe = async (req, res) => {
       type: req.body.type,
       cuisine: req.body.cuisine,
       tags,
-      image: imagePath,
+      image: req.body.image, // store Base64 directly
       user_id: req.user._id
     });
 
@@ -200,6 +197,7 @@ const addRecipe = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Update Recipe by ID
 const updateRecipe = async (req, res) => {
