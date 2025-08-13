@@ -13,7 +13,7 @@ const ProfilePage = () => {
     password: "",
   });
 
-  const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("user_id");
 
   // Fetch profile by user ID
   useEffect(() => {
