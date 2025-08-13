@@ -1,4 +1,17 @@
-# Work in progress / unfinished website made with Javascript, React, Express, MongoDB (MERN-stack)
+# Welcome to Palate, a recipe sharing website
+Palate is a MERN-stack web application to share, search and rate recipes.
 
 ## Features
-### Share and search recipes with versatile filtering options.
+
+- User authentication (signup/login)
+- Create, edit, and delete recipes
+- Save favorite recipes
+- Rate recipes
+- Search and filter recipes by type, cuisine, difficulty, and tags
+- Image uploads
+
+## Tech Stack
+
+- **Frontend:** React, React Router, react-select  
+- **Backend:** Express, Node.js, MongoDB, Mongoose  
+- **Deployment:** Render
