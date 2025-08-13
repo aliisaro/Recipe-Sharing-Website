@@ -222,12 +222,22 @@ const CreateRecipe = () => {
         {formData.image == null ? (
           <>
             <label>Upload Image:</label>
-            <input type="file" onChange={handleImageChange} accept="image/*" />
+            <input
+              type="file"
+              name="image"
+              onChange={handleImageChange}
+              accept="image/*"
+            />
           </>
         ) : (
           <>
             <label>Change Image:</label>
-            <input type="file" onChange={handleImageChange} accept="image/*" />
+            <input
+              type="file"
+              name="image"
+              onChange={handleImageChange}
+              accept="image/*"
+            />
           </>
         )}
 
