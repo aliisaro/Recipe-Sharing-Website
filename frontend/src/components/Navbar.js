@@ -9,7 +9,7 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
   const [menuOpen, setMenuOpen] = useState(false);
   
   // Retrieve user id from localStorage
-  const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("user_id");
 
   const navigate = useNavigate();
 
