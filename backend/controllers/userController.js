@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../models/Users");
+const Recipe = require("../models/Recipe");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -108,7 +109,7 @@ const patchUser = async (req, res) => {
 
 // Delete user
 const deleteUser = async (req, res) => {
-  const userId = req.params.id; // get user ID from route
+  const userId = req.params.id;
 
   try {
     // Find the user
