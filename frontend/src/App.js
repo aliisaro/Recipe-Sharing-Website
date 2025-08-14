@@ -19,7 +19,6 @@ function App() {
 
   return (
     <BrowserRouter>
-
       <Navbar
         isAuthenticated={isAuthenticated}
         setIsAuthenticated={setIsAuthenticated}

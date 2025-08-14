@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import { API_URL } from '../config';
 import { Difficulty, Type, Cuisine, Tags } from '../data/recipeOptions'; // Removed TimeOptions import
-import { showError, showSuccess } from "../utils/ShowMessages";
+import { showError} from "../utils/ShowMessages";
 
 const EditRecipe = () => {
   const navigate = useNavigate();
@@ -232,8 +232,8 @@ const EditRecipe = () => {
         {error && <div className="error-message">{error}</div>}
 
         <div className="edit-cancel-buttons">
-          <button type="submit">Done</button>
-          <button type="button" onClick={() => navigate(`/${id}`)}>
+          <button className="done-button" type="submit">Done</button>
+          <button className="cancel-button" type="button" onClick={() => navigate(`/${id}`)}>
             Cancel
           </button>
         </div>

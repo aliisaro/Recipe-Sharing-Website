@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '../config';
 import { showError, showSuccess } from "../utils/ShowMessages";
+import usePasswordStrength from "../hooks/usePasswordStrength";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({});
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
+
+  const { strength, requirements } = usePasswordStrength(formData.password);
 
   const userId = localStorage.getItem("user_id");
 
@@ -54,6 +59,16 @@ const ProfilePage = () => {
       return;
     }
 
+    if (formData.password && requirements.some(r => !r.passed)) {
+      showError(setError, "Password does not meet the required criteria");
+      return;
+    }
+
+    if (formData.password && formData.password !== formData.confirmPassword) {
+      showError(setError, "Passwords do not match");
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/api/users/update/${userId}`, {
         method: 'PATCH',
@@ -73,7 +88,7 @@ const ProfilePage = () => {
       showSuccess(setSuccess, "Profile updated successfully!");
 
       // Clear form data after successful update
-      setFormData({ username: "", email: "", password: "" });
+      setFormData({ username: "", email: "", password: "", confirmPassword: "" });
     } catch (error) {
       showError(setError, error.message || 'Error updating profile');
     }
@@ -81,12 +96,6 @@ const ProfilePage = () => {
 
   // Delete user account
   const handleDelete = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete your account? This will remove all your recipes and cannot be undone."
-    );
-
-    if (!confirmDelete) return;
-
     try {
       const response = await fetch(`${API_URL}/api/users/delete/${userId}`, {
         method: "DELETE",
@@ -101,6 +110,7 @@ const ProfilePage = () => {
 
       // Clear local storage and redirect
       localStorage.clear();
+      window.location.href = "/SignIn";
     } catch (error) {
       showError(setError, error.message);
     }
@@ -138,17 +148,63 @@ const ProfilePage = () => {
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />
 
+          {formData.password && (
+            <div className="password-strength-container">
+              <p className={`password-strength ${strength}`}>
+                Password strength: {strength}
+              </p>
+              {requirements.length > 0 && (
+                <ul className="password-requirements">
+                  {requirements.map(({ message, passed }) => (
+                    <li key={message} className={passed ? "passed" : "failed"}>
+                      {passed ? "✔️" : "❌"} {message}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          <label>Write password again</label>
+          <input 
+            type="password"
+            id="password"
+            value={formData.confirmPassword}
+            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+          />
+
           {error && <p className="error-message">{error}</p>}
           {success && <p className="success-message">{success}</p>}
 
           <button type="submit">Save changes</button>
-          <button 
-            type="button" 
-            className="delete-account-button" 
-            onClick={handleDelete}
-          >
-            Delete Account
-          </button>
+
+          {!showConfirm ? (
+            <button
+              type="button"
+              className="delete-account-button"
+              onClick={() => setShowConfirm(true)}
+            >
+              Delete Account
+            </button>
+          ) : (
+            <div className="confirm-delete-buttons">
+              <p>Are you sure you want to delete your account? This action will delete all your recipes and cannot be undone.</p>
+              <button
+                type="button"
+                className="confirm-delete"
+                onClick={handleDelete}
+              >
+                Confirm Delete
+              </button>
+              <button
+                type="button"
+                className="cancel-delete"
+                onClick={() => setShowConfirm(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </div>

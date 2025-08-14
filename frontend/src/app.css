@@ -62,17 +62,16 @@ button {
 
 /* Error message */
 .error-message {
-  color: #ff4d4f;
-  padding: 10px 15px;
+  color: red;
   border-radius: 6px;
   text-align: center;
+  margin: 10px 0;
 }
 
 /* Success message */
 .success-message {
   color: #28a745;
-  background-color: #e6f9ec;
-  padding: 10px 15px;
+  margin: 10px 0;
   border-radius: 6px;
   text-align: center;
   transition: opacity 0.3s ease-in-out;
@@ -733,7 +732,6 @@ button {
 }
 
 .edit-cancel-buttons button {
-  background-color: #27ae60;
   color: #fff;
   padding: 10px 18px;
   border: none;
@@ -744,8 +742,20 @@ button {
   transition: background-color 0.2s ease;
 }
 
-.edit-cancel-buttons button:hover {
-  background-color: #5a6268;
+.edit-cancel-buttons .done-button {
+  background-color: #37b36f;
+}
+
+.edit-cancel-buttons .done-button:hover {
+  background-color: #2f9a60;
+}
+
+.edit-cancel-buttons .cancel-button {
+  background-color: red;
+}
+
+.edit-cancel-buttons .cancel-button:hover {
+  background-color: rgb(209, 0, 0);
 }
 
 /* ---------- Recipe Details Page ---------- */
@@ -871,7 +881,7 @@ button {
 .button-group .saveButton,
 .button-group .return-button,
 .button-group .edit-button {
-  background-color: #50C37E;
+  background-color: #37b36f;
   color: #fff;
   padding: 10px 18px;
   border: none;
@@ -882,8 +892,8 @@ button {
   transition: background-color 0.2s ease;
 }
 
-.button-group .button:hover,
-.button-group .button-link:hover {
+.button-group .return-button:hover,
+.button-group .edit-button:hover {
   background-color: #2f9a60;
 }
 
@@ -1194,7 +1204,7 @@ button {
 }
 
 .profile-form button {
-  margin: 20px 0 0 0;
+  margin-top: 5px;
   padding: 12px;
   background-color: #37b36f;
   color: white;
@@ -1209,8 +1219,9 @@ button {
   background-color: #2f9a60;
 }
 
-.profile-form .delete-account-button {
-  margin: 20px 0 0 0;
+.profile-form .delete-account-button,
+.profile-form .confirm-delete{
+  margin-top: 5px;
   padding: 12px;
   background-color: red;
   color: white;
@@ -1221,10 +1232,16 @@ button {
   transition: background-color 0.2s ease;
 }
 
-.profile-form .delete-account-button:hover {
+.profile-form .delete-account-button:hover,
+.profile-form .confirm-delete:hover {
   background-color: rgb(209, 0, 0);
 }
 
+.profile-form .confirm-delete-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
 
 /* Responsive styles */
 @media screen and (max-width: 800px) {
