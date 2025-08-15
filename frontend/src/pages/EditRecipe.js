@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
-import { API_URL } from '../config';
-import { Difficulty, Type, Cuisine, Tags } from '../data/recipeOptions'; // Removed TimeOptions import
-import { showError} from "../utils/ShowMessages";
+import { API_URL } from "../config";
+import { Difficulty, Type, Cuisine, Tags } from "../data/recipeOptions"; // Removed TimeOptions import
+import { showError } from "../utils/ShowMessages";
 
 const EditRecipe = () => {
   const navigate = useNavigate();
@@ -39,16 +39,18 @@ const EditRecipe = () => {
         setFormData({
           ...data,
           time: data.time || "",
-          difficulty: Difficulty.find(opt => opt.value === data.difficulty) || null,
-          type: Type.find(opt => opt.value === data.type) || null,
-          cuisine: Cuisine.find(opt => opt.value === data.cuisine) || null,
-          tags: (data.tags || []).map(tag =>
-            Tags.find(t => t.value === tag) || { value: tag, label: tag }
+          difficulty:
+            Difficulty.find((opt) => opt.value === data.difficulty) || null,
+          type: Type.find((opt) => opt.value === data.type) || null,
+          cuisine: Cuisine.find((opt) => opt.value === data.cuisine) || null,
+          tags: (data.tags || []).map(
+            (tag) =>
+              Tags.find((t) => t.value === tag) || { value: tag, label: tag },
           ),
           image: data.image || null,
         });
       } catch (error) {
-        showError(setError,"Failed to fetch recipe");
+        showError(setError, "Failed to fetch recipe");
       }
     };
 
@@ -57,11 +59,11 @@ const EditRecipe = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       image: e.target.files[0],
     }));
@@ -76,7 +78,9 @@ const EditRecipe = () => {
       type: formData.type ? formData.type.value : null,
       cuisine: formData.cuisine ? formData.cuisine.value : null,
       tags: Array.isArray(formData.tags)
-        ? formData.tags.map(tag => (typeof tag === "string" ? tag : tag.value))
+        ? formData.tags.map((tag) =>
+            typeof tag === "string" ? tag : tag.value,
+          )
         : [],
     };
 
@@ -106,7 +110,10 @@ const EditRecipe = () => {
 
       navigate(`/${id}`);
     } catch (error) {
-      showError(setError, error.message || "An error occurred while updating the recipe.");
+      showError(
+        setError,
+        error.message || "An error occurred while updating the recipe.",
+      );
     }
   };
 
@@ -160,9 +167,11 @@ const EditRecipe = () => {
               classNamePrefix="recipe-select"
               options={Difficulty}
               value={formData.difficulty}
-              onChange={selected => setFormData(prev => ({ ...prev, difficulty: selected }))}
+              onChange={(selected) =>
+                setFormData((prev) => ({ ...prev, difficulty: selected }))
+              }
               menuPortalTarget={document.body}
-              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
 
             <label>Type:</label>
@@ -170,9 +179,11 @@ const EditRecipe = () => {
               classNamePrefix="recipe-select"
               options={Type}
               value={formData.type}
-              onChange={selected => setFormData(prev => ({ ...prev, type: selected }))}
+              onChange={(selected) =>
+                setFormData((prev) => ({ ...prev, type: selected }))
+              }
               menuPortalTarget={document.body}
-              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
           </div>
 
@@ -182,9 +193,11 @@ const EditRecipe = () => {
               classNamePrefix="recipe-select"
               options={Cuisine}
               value={formData.cuisine}
-              onChange={selected => setFormData(prev => ({ ...prev, cuisine: selected }))}
+              onChange={(selected) =>
+                setFormData((prev) => ({ ...prev, cuisine: selected }))
+              }
               menuPortalTarget={document.body}
-              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
 
             <label>Tags:</label>
@@ -192,10 +205,12 @@ const EditRecipe = () => {
               classNamePrefix="recipe-select"
               isMulti
               options={Tags}
-              onChange={selectedOptions => setFormData(prev => ({ ...prev, tags: selectedOptions }))}
+              onChange={(selectedOptions) =>
+                setFormData((prev) => ({ ...prev, tags: selectedOptions }))
+              }
               value={formData.tags}
               menuPortalTarget={document.body}
-              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
           </div>
         </div>
@@ -232,8 +247,14 @@ const EditRecipe = () => {
         {error && <div className="error-message">{error}</div>}
 
         <div className="edit-cancel-buttons">
-          <button className="done-button" type="submit">Done</button>
-          <button className="cancel-button" type="button" onClick={() => navigate(`/${id}`)}>
+          <button className="done-button" type="submit">
+            Done
+          </button>
+          <button
+            className="cancel-button"
+            type="button"
+            onClick={() => navigate(`/${id}`)}
+          >
             Cancel
           </button>
         </div>

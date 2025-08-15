@@ -14,7 +14,7 @@ import SignUp from "./pages/SignUp";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
-    Boolean(localStorage.getItem("token")) || false
+    Boolean(localStorage.getItem("token")) || false,
   );
 
   return (
@@ -26,11 +26,13 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={isAuthenticated ? <Home/> : <Navigate to="/SignIn" />}
+          element={isAuthenticated ? <Home /> : <Navigate to="/SignIn" />}
         />
         <Route
           path="/CreateRecipe"
-          element={isAuthenticated ? <CreateRecipe /> : <Navigate to="/SignIn" />}
+          element={
+            isAuthenticated ? <CreateRecipe /> : <Navigate to="/SignIn" />
+          }
         />
         <Route path="/:id" element={<RecipeDetails />} />
         <Route path="/EditRecipe/:id" element={<EditRecipe />} />
@@ -44,11 +46,23 @@ function App() {
         />
         <Route
           path="/SignIn"
-          element={!isAuthenticated ? <SignIn setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/" />}
+          element={
+            !isAuthenticated ? (
+              <SignIn setIsAuthenticated={setIsAuthenticated} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
         <Route
           path="/SignUp"
-          element={!isAuthenticated ? <SignUp setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/" />}
+          element={
+            !isAuthenticated ? (
+              <SignUp setIsAuthenticated={setIsAuthenticated} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
       </Routes>
     </BrowserRouter>

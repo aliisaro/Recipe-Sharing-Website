@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { API_URL } from '../config';
+import { API_URL } from "../config";
 import { showError, showSuccess } from "../utils/ShowMessages";
 
 const RecipeDetails = () => {
@@ -44,7 +44,6 @@ const RecipeDetails = () => {
         const savedRecipes = await savedResponse.json();
         const saved = savedRecipes.some((r) => r._id === data._id);
         setIsSaved(saved);
-
       } catch (error) {
         showError(setError, error.message);
       }
@@ -53,7 +52,6 @@ const RecipeDetails = () => {
     getRecipe();
   }, [id]);
 
-  
   if (!recipe) return <div>Loading...</div>;
 
   // Function to delete the recipe
@@ -74,16 +72,18 @@ const RecipeDetails = () => {
     }
   };
 
-
   // Function to save the recipe to the user's library
   const SaveRecipe = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/recipes/save/${recipe._id}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      const response = await fetch(
+        `${API_URL}/api/recipes/save/${recipe._id}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Failed to save recipe");
@@ -99,12 +99,15 @@ const RecipeDetails = () => {
   // Function to unsave the recipe from the user's library
   const UnsaveRecipe = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/recipes/unsave/${recipe._id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      const response = await fetch(
+        `${API_URL}/api/recipes/unsave/${recipe._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Failed to unsave recipe");
@@ -114,40 +117,43 @@ const RecipeDetails = () => {
 
       showSuccess(setSuccess, "Recipe unsaved successfully!");
     } catch (error) {
-      showError(setError, "An error occurred while trying to unsave the recipe.");
+      showError(
+        setError,
+        "An error occurred while trying to unsave the recipe.",
+      );
     }
   };
 
   // Function to handle rating
   const handleRating = async (ratingValue) => {
-  try {
-    const response = await fetch(`${API_URL}/api/recipes/rate/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({ value: ratingValue }),
-    });
+    try {
+      const response = await fetch(`${API_URL}/api/recipes/rate/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ value: ratingValue }),
+      });
 
-    if (!response.ok) throw new Error("Failed to rate recipe");
-    const data = await response.json();
+      if (!response.ok) throw new Error("Failed to rate recipe");
+      const data = await response.json();
 
-    setRecipe((prev) => ({
-      ...prev,
-      rating: {
-        ...prev.rating,
-        average: data.average,
-        count: data.count,
-        userRating: data.userRating,
-      },
-    }));
+      setRecipe((prev) => ({
+        ...prev,
+        rating: {
+          ...prev.rating,
+          average: data.average,
+          count: data.count,
+          userRating: data.userRating,
+        },
+      }));
 
-    showSuccess(setSuccess, "Rating submitted!");
-  } catch (error) {
-    showError(setError, "Could not submit rating.");
-  }
-};
+      showSuccess(setSuccess, "Rating submitted!");
+    } catch (error) {
+      showError(setError, "Could not submit rating.");
+    }
+  };
 
   return (
     <div className="recipe-details-page-container">
@@ -155,35 +161,50 @@ const RecipeDetails = () => {
         <h1>{recipe.title}</h1>
 
         <div className="recipe-image-description">
-          <img
-            src={`${recipe.image}`}
-            alt="Image not found..."
-          />
+          <img src={`${recipe.image}`} alt="Not found..." />
 
           <ul>
-            <li><strong>Time:</strong> {recipe.time}</li>
-            <li><strong>Difficulty:</strong> {recipe.difficulty}</li>
-            <li><strong>Type:</strong> {recipe.type}</li>
-            <li><strong>Cuisine:</strong> {recipe.cuisine}</li>
-            <li><strong>Tags:</strong> {recipe.tags}</li>
-            <li><strong>Created by:</strong> {recipe.user_id?.username || 'Unknown'}</li>
-            <li><strong>Created at:</strong> {new Date(recipe.createdAt).toLocaleDateString()}</li>
+            <li>
+              <strong>Time:</strong> {recipe.time}
+            </li>
+            <li>
+              <strong>Difficulty:</strong> {recipe.difficulty}
+            </li>
+            <li>
+              <strong>Type:</strong> {recipe.type}
+            </li>
+            <li>
+              <strong>Cuisine:</strong> {recipe.cuisine}
+            </li>
+            <li>
+              <strong>Tags:</strong> {recipe.tags}
+            </li>
+            <li>
+              <strong>Created by:</strong>{" "}
+              {recipe.user_id?.username || "Unknown"}
+            </li>
+            <li>
+              <strong>Created at:</strong>{" "}
+              {new Date(recipe.createdAt).toLocaleDateString()}
+            </li>
           </ul>
         </div>
-   
+
         <div className="recipe-ingredients-steps">
           <div className="row">
             <h2>Ingredients</h2>
             <ul>
               {(ingredientsExpanded
-                ? recipe.ingredients.split('\n')
-                : recipe.ingredients.split('\n').slice(0, 3)
+                ? recipe.ingredients.split("\n")
+                : recipe.ingredients.split("\n").slice(0, 3)
               ).map((line, index) => (
                 <li key={index}>{line}</li>
               ))}
             </ul>
-            {recipe.ingredients.split('\n').length > 3 && (
-              <button onClick={() => setIngredientsExpanded(!ingredientsExpanded)}>
+            {recipe.ingredients.split("\n").length > 3 && (
+              <button
+                onClick={() => setIngredientsExpanded(!ingredientsExpanded)}
+              >
                 {ingredientsExpanded ? "Show less" : "Show all ingredients"}
               </button>
             )}
@@ -193,20 +214,19 @@ const RecipeDetails = () => {
             <h2>Steps</h2>
             <ol>
               {(stepsExpanded
-                ? recipe.steps.split('\n')
-                : recipe.steps.split('\n').slice(0, 3)
+                ? recipe.steps.split("\n")
+                : recipe.steps.split("\n").slice(0, 3)
               ).map((step, index) => (
                 <li key={index}>{step}</li>
               ))}
             </ol>
-            {recipe.steps.split('\n').length > 3 && (
+            {recipe.steps.split("\n").length > 3 && (
               <button onClick={() => setStepsExpanded(!stepsExpanded)}>
                 {stepsExpanded ? "Show less" : "Show all steps"}
               </button>
             )}
           </div>
         </div>
-
 
         {recipe.user_id?._id !== localStorage.getItem("user_id") && (
           <div className="rating-section">
@@ -226,10 +246,11 @@ const RecipeDetails = () => {
             </div>
           </div>
         )}
-        
+
         <p>
           Average Rating: {recipe.rating?.average?.toFixed(1) || "N/A"} (
-          {recipe.rating?.count || 0} rating{recipe.rating?.count === 1 ? "" : "s"})
+          {recipe.rating?.count || 0} rating
+          {recipe.rating?.count === 1 ? "" : "s"})
         </p>
 
         {recipe.user_id?._id !== localStorage.getItem("user_id") && (
@@ -246,23 +267,31 @@ const RecipeDetails = () => {
         {error && <div className="error-message">{error}</div>}
 
         <div className="button-group">
-          <button className="return-button" onClick={() => navigate(-1)}>Return</button>
+          <button className="return-button" onClick={() => navigate(-1)}>
+            Return
+          </button>
           {recipe.user_id?._id === localStorage.getItem("user_id") ? (
             <>
-              <Link to={`/EditRecipe/${recipe._id}`} className="edit-button">Edit recipe</Link>
-              <button className="deleteButton" onClick={DeleteRecipe}>Delete recipe</button>
+              <Link to={`/EditRecipe/${recipe._id}`} className="edit-button">
+                Edit recipe
+              </Link>
+              <button className="deleteButton" onClick={DeleteRecipe}>
+                Delete recipe
+              </button>
             </>
+          ) : isSaved ? (
+            <button className="unsaveButton" onClick={UnsaveRecipe}>
+              Unsave recipe
+            </button>
           ) : (
-            isSaved ? (
-              <button className="unsaveButton" onClick={UnsaveRecipe}>Unsave recipe</button>
-            ) : (
-              <button className="saveButton" onClick={SaveRecipe}>Save recipe</button>
-            )
+            <button className="saveButton" onClick={SaveRecipe}>
+              Save recipe
+            </button>
           )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default RecipeDetails;

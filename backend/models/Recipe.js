@@ -24,8 +24,8 @@ const recipeSchema = new mongoose.Schema(
       required: true,
     },
     image: {
-    type: String, // Base64 string
-    required: true
+      type: String, // Base64 string
+      required: true,
     },
     type: {
       type: String,
@@ -46,18 +46,18 @@ const recipeSchema = new mongoose.Schema(
       count: { type: Number, default: 0 },
       ratings: [
         {
-          user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+          user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
           value: { type: Number, min: 1, max: 5 },
-        }
-      ]
+        },
+      ],
     },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
-    }
+      ref: "User",
+      required: true,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Recipe", recipeSchema);

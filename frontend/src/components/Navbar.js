@@ -3,11 +3,10 @@ import React, { useState } from "react";
 import img from "../images/Logo.png";
 import { useNavigate } from "react-router-dom";
 
-
-const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
+const Navbar = ({ setIsAuthenticated, isAuthenticated }) => {
   // State to manage the menu open/close state
   const [menuOpen, setMenuOpen] = useState(false);
-  
+
   // Retrieve user id from localStorage
   const userId = localStorage.getItem("user_id");
 
@@ -24,7 +23,7 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
     navigate("/SignIn");
   };
 
- return (
+  return (
     <nav className="navbar">
       <div className="nav-left">
         <Link to="/">
@@ -33,18 +32,28 @@ const Navbar = ({ setIsAuthenticated, isAuthenticated}) => {
       </div>
 
       {isAuthenticated && (
-      <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-        ☰
-      </button>
+        <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+          ☰
+        </button>
       )}
 
       {isAuthenticated && (
         <div className={`nav-right ${menuOpen ? "open" : ""}`}>
-          <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
-          <Link to="/CreateRecipe" onClick={() => setMenuOpen(false)}>Create New Recipe</Link>
-          <Link to="/Library" onClick={() => setMenuOpen(false)}>Library</Link>
-          <Link to={`/Profile/${userId}`} onClick={() => setMenuOpen(false)}>Profile</Link>
-          <button className="logout" onClick={handleClick}>Log out</button>
+          <Link to="/" onClick={() => setMenuOpen(false)}>
+            Home
+          </Link>
+          <Link to="/CreateRecipe" onClick={() => setMenuOpen(false)}>
+            Create New Recipe
+          </Link>
+          <Link to="/Library" onClick={() => setMenuOpen(false)}>
+            Library
+          </Link>
+          <Link to={`/Profile/${userId}`} onClick={() => setMenuOpen(false)}>
+            Profile
+          </Link>
+          <button className="logout" onClick={handleClick}>
+            Log out
+          </button>
         </div>
       )}
     </nav>

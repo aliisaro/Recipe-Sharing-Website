@@ -6,7 +6,7 @@ const connectDB = require("./config/db");
 const customMiddleware = require("./middleware/customMiddleware");
 const userRoutes = require("./routers/userRoutes");
 const recipeRoutes = require("./routers/recipeRoutes");
-const path = require('path');
+const path = require("path");
 
 // express app
 const app = express();
@@ -15,7 +15,7 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: "*" }));
 app.use(express.json({ limit: "10mb" })); // increase limit for Base64
 //app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

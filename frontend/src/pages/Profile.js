@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { API_URL } from '../config';
+import React, { useState, useEffect } from "react";
+import { API_URL } from "../config";
 import { showError, showSuccess } from "../utils/ShowMessages";
 import usePasswordStrength from "../hooks/usePasswordStrength";
 
@@ -31,13 +31,13 @@ const ProfilePage = () => {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch profile');
+          throw new Error("Failed to fetch profile");
         }
 
         const data = await response.json();
         setProfile(data);
       } catch (error) {
-        showError(setError,'Error fetching profile data');
+        showError(setError, "Error fetching profile data");
       }
     };
 
@@ -50,7 +50,7 @@ const ProfilePage = () => {
 
     // Remove fields that are empty strings
     const cleanedFormData = Object.fromEntries(
-      Object.entries(formData).filter(([_, value]) => value.trim() !== "")
+      Object.entries(formData).filter(([_, value]) => value.trim() !== ""),
     );
 
     // If nothing to update, skip the request
@@ -59,7 +59,7 @@ const ProfilePage = () => {
       return;
     }
 
-    if (formData.password && requirements.some(r => !r.passed)) {
+    if (formData.password && requirements.some((r) => !r.passed)) {
       showError(setError, "Password does not meet the required criteria");
       return;
     }
@@ -71,16 +71,16 @@ const ProfilePage = () => {
 
     try {
       const response = await fetch(`${API_URL}/api/users/update/${userId}`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(cleanedFormData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update profile');
+        throw new Error("Failed to update profile");
       }
 
       const data = await response.json();
@@ -88,9 +88,14 @@ const ProfilePage = () => {
       showSuccess(setSuccess, "Profile updated successfully!");
 
       // Clear form data after successful update
-      setFormData({ username: "", email: "", password: "", confirmPassword: "" });
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
     } catch (error) {
-      showError(setError, error.message || 'Error updating profile');
+      showError(setError, error.message || "Error updating profile");
     }
   };
 
@@ -118,7 +123,7 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-page-container">
-      <div className="profile-content">            
+      <div className="profile-content">
         <h1>Profile</h1>
         <p>Username: {profile.username}</p>
         <p>Email: {profile.email}</p>
@@ -129,7 +134,9 @@ const ProfilePage = () => {
             type="text"
             id="username"
             value={formData.username}
-            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, username: e.target.value })
+            }
           />
 
           <label>Change Email</label>
@@ -137,7 +144,9 @@ const ProfilePage = () => {
             type="email"
             id="email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
           />
 
           <label>Change Password</label>
@@ -145,7 +154,9 @@ const ProfilePage = () => {
             type="password"
             id="password"
             value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
           />
 
           {formData.password && (
@@ -166,11 +177,13 @@ const ProfilePage = () => {
           )}
 
           <label>Write password again</label>
-          <input 
+          <input
             type="password"
             id="password"
             value={formData.confirmPassword}
-            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, confirmPassword: e.target.value })
+            }
           />
 
           {error && <p className="error-message">{error}</p>}
@@ -188,7 +201,10 @@ const ProfilePage = () => {
             </button>
           ) : (
             <div className="confirm-delete-buttons">
-              <p>Are you sure you want to delete your account? This action will delete all your recipes and cannot be undone.</p>
+              <p>
+                Are you sure you want to delete your account? This action will
+                delete all your recipes and cannot be undone.
+              </p>
               <button
                 type="button"
                 className="confirm-delete"

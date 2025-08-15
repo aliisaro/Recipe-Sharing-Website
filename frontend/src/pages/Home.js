@@ -1,9 +1,9 @@
 import Filters from "../components/Filters";
 import Searchbar from "../components/Searchbar";
 import React, { useState, useEffect } from "react";
-import { API_URL } from '../config';
+import { API_URL } from "../config";
 import RecipeCard from "../components/RecipeCard";
-import {Type, Cuisine, Tags, SortByOptions} from '../data/recipeOptions';
+import { Type, Cuisine, Tags, SortByOptions } from "../data/recipeOptions";
 
 const Home = () => {
   const [recipeArray, setRecipeArray] = useState([]);
@@ -23,8 +23,8 @@ const Home = () => {
         filterName === "tags"
           ? selectedOption?.map((opt) => opt.value) || []
           : selectedOption
-          ? selectedOption.value
-          : null,
+            ? selectedOption.value
+            : null,
     }));
   };
 
@@ -33,17 +33,23 @@ const Home = () => {
       try {
         const query = new URLSearchParams();
 
-        if (filters.type && filters.type !== "none") query.append("type", filters.type);
-        if (filters.cuisine && filters.cuisine !== "none") query.append("cuisine", filters.cuisine);
-        if (filters.tags && filters.tags.length > 0) query.append("tags", filters.tags.join(","));
+        if (filters.type && filters.type !== "none")
+          query.append("type", filters.type);
+        if (filters.cuisine && filters.cuisine !== "none")
+          query.append("cuisine", filters.cuisine);
+        if (filters.tags && filters.tags.length > 0)
+          query.append("tags", filters.tags.join(","));
         if (searchTerm) query.append("search", searchTerm);
 
-        const recipes = await fetch(`${API_URL}/api/recipes/all?${query.toString()}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        const recipes = await fetch(
+          `${API_URL}/api/recipes/all?${query.toString()}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           },
-        });
+        );
 
         if (!recipes.ok) {
           const data = await recipes.json();
@@ -56,7 +62,6 @@ const Home = () => {
         const data = await recipes.json();
         setRecipeArray(data);
         setLoading(false);
-        
       } catch (error) {
         setError("Error fetching recipes");
         setRecipeArray([]);

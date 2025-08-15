@@ -22,13 +22,15 @@ export default function usePasswordStrength(password) {
 
     setRequirements(requirementsData);
 
-    if (validator.isStrongPassword(password, {
-      minLength: 8,
-      minLowercase: 1,
-      minUppercase: 1,
-      minNumbers: 1,
-      minSymbols: 1
-    })) {
+    if (
+      validator.isStrongPassword(password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+    ) {
       setStrength("strong");
     } else if (password.length >= 6) {
       setStrength("medium");

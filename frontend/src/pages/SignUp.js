@@ -38,13 +38,15 @@ const SignUp = ({ setIsAuthenticated }) => {
           <img src={img} className="logo" alt="logo" />
           <h3>Sign Up</h3>
         </div>
-        <input {...username} placeholder="Username"/>
-        <input {...email} placeholder="Email"/>
-        <input {...password} placeholder="Password"/>
+        <input {...username} placeholder="Username" />
+        <input {...email} placeholder="Email" />
+        <input {...password} placeholder="Password" />
 
         {password.value && (
           <div className="password-strength-container">
-            <p className={`password-strength ${strength}`}>Password strength: {strength}</p>
+            <p className={`password-strength ${strength}`}>
+              Password strength: {strength}
+            </p>
             {requirements.length > 0 && (
               <ul className="password-requirements">
                 {requirements.map(({ message, passed }) => (
@@ -57,14 +59,17 @@ const SignUp = ({ setIsAuthenticated }) => {
           </div>
         )}
 
-        <input {...password2} placeholder="Write password again..."/>
-        <Link to="/SignIn" className="link">Already registered? Sign in</Link>
+        <input {...password2} placeholder="Write password again..." />
+        <Link to="/SignIn" className="link">
+          Already registered? Sign in
+        </Link>
 
         {/* Show only one error at a time */}
-        {localError
-          ? <div className="error-message">{localError}</div>
-          : error && <div className="error-message">{error}</div>
-        }
+        {localError ? (
+          <div className="error-message">{localError}</div>
+        ) : (
+          error && <div className="error-message">{error}</div>
+        )}
 
         <button type="submit">Sign up</button>
       </form>

@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { API_URL } from '../config';
+import { API_URL } from "../config";
 import RecipeCard from "../components/RecipeCard";
 import Filters from "../components/Filters";
 import Searchbar from "../components/Searchbar";
-import {Type, Cuisine, Tags, SortByOptions} from '../data/recipeOptions';
-import { showError, showSuccess } from "../utils/ShowMessages";
+import { Type, Cuisine, Tags, SortByOptions } from "../data/recipeOptions";
+import { showError } from "../utils/ShowMessages";
 
 const Library = () => {
   const [createdRecipes, setCreatedRecipes] = useState([]);
@@ -28,53 +27,61 @@ const Library = () => {
         filterName === "tags"
           ? selectedOption?.map((opt) => opt.value) || []
           : selectedOption
-          ? selectedOption.value
-          : null,
+            ? selectedOption.value
+            : null,
     }));
   };
 
   useEffect(() => {
-  const fetchLibrary = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const query = new URLSearchParams();
+    const fetchLibrary = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const query = new URLSearchParams();
 
-      if (filters.type && filters.type !== "none") query.append("type", filters.type);
-      if (filters.cuisine && filters.cuisine !== "none") query.append("cuisine", filters.cuisine);
-      if (filters.tags && filters.tags.length > 0) query.append("tags", filters.tags.join(","));
-      if (searchTerm) query.append("search", searchTerm);
+        if (filters.type && filters.type !== "none")
+          query.append("type", filters.type);
+        if (filters.cuisine && filters.cuisine !== "none")
+          query.append("cuisine", filters.cuisine);
+        if (filters.tags && filters.tags.length > 0)
+          query.append("tags", filters.tags.join(","));
+        if (searchTerm) query.append("search", searchTerm);
 
-      const savedRes = await fetch(`${API_URL}/api/recipes/saved?${query.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+        const savedRes = await fetch(
+          `${API_URL}/api/recipes/saved?${query.toString()}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
 
-      const createdRes = await fetch(`${API_URL}/api/recipes/user?${query.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+        const createdRes = await fetch(
+          `${API_URL}/api/recipes/user?${query.toString()}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
 
-      if (!savedRes.ok || !createdRes.ok) {
-        const data = await savedRes.json();
-        setError(data.error || "Error fetching recipes");
+        if (!savedRes.ok || !createdRes.ok) {
+          const data = await savedRes.json();
+          setError(data.error || "Error fetching recipes");
+          setCreatedRecipes([]);
+          setSavedRecipes([]);
+          setLoading(false);
+          return;
+        }
+
+        const saved = await savedRes.json();
+        const created = await createdRes.json();
+
+        setCreatedRecipes(created);
+        setSavedRecipes(saved);
+      } catch (error) {
+        showError(setError, "Error fetching library");
         setCreatedRecipes([]);
         setSavedRecipes([]);
+      } finally {
         setLoading(false);
-        return;
       }
-
-      const saved = await savedRes.json();
-      const created = await createdRes.json();
-
-      setCreatedRecipes(created);
-      setSavedRecipes(saved);
-
-    } catch (error) {
-      showError(setError,"Error fetching library");
-      setCreatedRecipes([]);
-      setSavedRecipes([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
     fetchLibrary();
   }, [filters, searchTerm]);
@@ -114,7 +121,9 @@ const Library = () => {
         </div>
 
         {loading ? (
-        <><div className="loader"></div></>
+          <>
+            <div className="loader"></div>
+          </>
         ) : error ? (
           <p>No recipes found...</p>
         ) : (

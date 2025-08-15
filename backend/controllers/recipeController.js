@@ -7,26 +7,26 @@ const User = require("../models/Users");
 // Get all recipes by all users, with optional filters
 const getAllRecipes = async (req, res) => {
   try {
-    const { type, cuisine, tags, search} = req.query;
+    const { type, cuisine, tags, search } = req.query;
 
     // Build the filter object dynamically based on query params
     const filter = {};
 
-    if (type && type !== 'none') {
+    if (type && type !== "none") {
       filter.type = type;
     }
-    if (cuisine && cuisine !== 'none') {
+    if (cuisine && cuisine !== "none") {
       filter.cuisine = cuisine;
     }
 
-    if (tags && tags !== 'none') {
+    if (tags && tags !== "none") {
       // Assume tags query param is a comma separated string, e.g. "vegan,gluten free"
-      const tagsArray = tags.split(',').map(tag => tag.trim());
+      const tagsArray = tags.split(",").map((tag) => tag.trim());
 
       // Filter recipes that have any of the tags in their tags array
       filter.tags = { $in: tagsArray };
     }
-    
+
     if (search) {
       // Perform case-insensitive partial match on title or ingredients or steps, etc.
       filter.$or = [
@@ -44,26 +44,25 @@ const getAllRecipes = async (req, res) => {
   }
 };
 
-
 // Get all Recipes by single user
 const getRecipesByUser = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { type, cuisine, tags, search} = req.query;
+    const { type, cuisine, tags, search } = req.query;
 
     // Build the filter object dynamically based on query params
     const filter = {};
 
-    if (type && type !== 'none') {
+    if (type && type !== "none") {
       filter.type = type;
     }
-    if (cuisine && cuisine !== 'none') {
+    if (cuisine && cuisine !== "none") {
       filter.cuisine = cuisine;
     }
 
-    if (tags && tags !== 'none') {
+    if (tags && tags !== "none") {
       // Assume tags query param is a comma separated string, e.g. "vegan,gluten free"
-      const tagsArray = tags.split(',').map(tag => tag.trim());
+      const tagsArray = tags.split(",").map((tag) => tag.trim());
 
       // Filter recipes that have any of the tags in their tags array
       filter.tags = { $in: tagsArray };
@@ -99,16 +98,16 @@ const getSavedRecipes = async (req, res) => {
     // Build the filter object dynamically based on query params
     const filter = {};
 
-    if (type && type !== 'none') {
+    if (type && type !== "none") {
       filter.type = type;
     }
-    if (cuisine && cuisine !== 'none') {
+    if (cuisine && cuisine !== "none") {
       filter.cuisine = cuisine;
     }
 
-    if (tags && tags !== 'none') {
+    if (tags && tags !== "none") {
       // Assume tags query param is a comma separated string, e.g. "vegan,gluten free"
-      const tagsArray = tags.split(',').map(tag => tag.trim());
+      const tagsArray = tags.split(",").map((tag) => tag.trim());
       filter.tags = { $in: tagsArray };
     }
 
@@ -140,12 +139,14 @@ const getRecipeById = async (req, res) => {
 
   try {
     const user_id = req.user._id;
-    const recipe = await Recipe.findById(id).populate('user_id');
+    const recipe = await Recipe.findById(id).populate("user_id");
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    const userRating = recipe.rating.ratings.find(r => r.user.toString() === user_id.toString())?.value;
+    const userRating = recipe.rating.ratings.find(
+      (r) => r.user.toString() === user_id.toString(),
+    )?.value;
 
     res.status(200).json({
       ...recipe.toObject(), // convert Mongoose doc to plain object
@@ -180,7 +181,7 @@ const addRecipe = async (req, res) => {
       cuisine: req.body.cuisine,
       tags,
       image: req.body.image,
-      user_id: req.user._id
+      user_id: req.user._id,
     });
 
     await newRecipe.save();
@@ -197,7 +198,6 @@ const addRecipe = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 // Update Recipe by ID
 const updateRecipe = async (req, res) => {
@@ -221,10 +221,10 @@ const updateRecipe = async (req, res) => {
       "type",
       "cuisine",
       "tags",
-      "image" // include image if frontend sends new Base64
+      "image", // include image if frontend sends new Base64
     ];
 
-    allowedFields.forEach(field => {
+    allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {
         recipe[field] = req.body[field]; // directly assign
       }
@@ -252,7 +252,9 @@ const deleteRecipe = async (req, res) => {
     // Delete local image file
     if (recipe.image) {
       try {
-        await fs.promises.unlink(path.join(__dirname, "..", "uploads", recipe.image));
+        await fs.promises.unlink(
+          path.join(__dirname, "..", "uploads", recipe.image),
+        );
       } catch (err) {
         console.error("Error deleting local file:", err);
       }
@@ -266,7 +268,7 @@ const deleteRecipe = async (req, res) => {
     // Remove from all users' savedRecipes
     await User.updateMany(
       { savedRecipes: id },
-      { $pull: { savedRecipes: id } }
+      { $pull: { savedRecipes: id } },
     );
 
     res.status(200).json({ message: "Recipe deleted successfully" });
@@ -284,10 +286,10 @@ const saveRecipe = async (req, res) => {
   try {
     const user = await User.findById(userId);
 
-  if (!user.savedRecipes.some(id => id.toString() === recipeId)) {
-    user.savedRecipes.push(recipeId);
-    await user.save();
-  }
+    if (!user.savedRecipes.some((id) => id.toString() === recipeId)) {
+      user.savedRecipes.push(recipeId);
+      await user.save();
+    }
 
     res.status(200).json({ message: "Recipe saved successfully" });
   } catch (error) {
@@ -304,7 +306,9 @@ const unsaveRecipe = async (req, res) => {
   try {
     const user = await User.findById(userId);
 
-    user.savedRecipes = user.savedRecipes.filter(id => id.toString() !== recipeId);
+    user.savedRecipes = user.savedRecipes.filter(
+      (id) => id.toString() !== recipeId,
+    );
     await user.save();
 
     res.status(200).json({ message: "Recipe unsaved successfully" });
@@ -329,7 +333,9 @@ const rateRecipe = async (req, res) => {
     if (!recipe) return res.status(404).json({ error: "Recipe not found" });
 
     // Check if user already rated
-    const existingRating = recipe.rating.ratings.find((r) => r.user.toString() === userId.toString());
+    const existingRating = recipe.rating.ratings.find(
+      (r) => r.user.toString() === userId.toString(),
+    );
 
     if (existingRating) {
       existingRating.value = value;
@@ -345,7 +351,9 @@ const rateRecipe = async (req, res) => {
     await recipe.save();
 
     // Get the user's rating for the response
-    const userRating = recipe.rating.ratings.find(r => r.user.toString() === userId.toString())?.value;
+    const userRating = recipe.rating.ratings.find(
+      (r) => r.user.toString() === userId.toString(),
+    )?.value;
 
     res.status(200).json({
       average: recipe.rating.average,
@@ -353,7 +361,6 @@ const rateRecipe = async (req, res) => {
       userRating,
       message: "Rating submitted successfully.",
     });
-
   } catch (error) {
     console.error("Error rating recipe:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -370,5 +377,5 @@ module.exports = {
   saveRecipe,
   unsaveRecipe,
   getSavedRecipes,
-  rateRecipe
+  rateRecipe,
 };

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import { API_URL } from '../config';
-import { Difficulty, Type, Cuisine, Tags } from '../data/recipeOptions';
+import { API_URL } from "../config";
+import { Difficulty, Type, Cuisine, Tags } from "../data/recipeOptions";
 import { showError } from "../utils/ShowMessages";
 
 const CreateRecipe = () => {
@@ -23,7 +23,7 @@ const CreateRecipe = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -35,7 +35,7 @@ const CreateRecipe = () => {
       setError("Image must be less than 5MB.");
       return;
     }
-    setFormData(prev => ({ ...prev, image: file }));
+    setFormData((prev) => ({ ...prev, image: file }));
     setError(null);
   };
 
@@ -48,7 +48,10 @@ const CreateRecipe = () => {
       !formData.cuisine ||
       formData.tags.length === 0
     ) {
-      showError(setError, "Please fill out all required fields including difficulty, type, cuisine, and tags.");
+      showError(
+        setError,
+        "Please fill out all required fields including difficulty, type, cuisine, and tags.",
+      );
       return;
     }
 
@@ -89,7 +92,10 @@ const CreateRecipe = () => {
       const json = await response.json();
 
       if (!response.ok) {
-        showError(setError, json.error || "Failed to add recipe to database. Please try again.");
+        showError(
+          setError,
+          json.error || "Failed to add recipe to database. Please try again.",
+        );
         return;
       }
 
@@ -152,7 +158,10 @@ const CreateRecipe = () => {
               options={Difficulty}
               placeholder="Choose difficulty:"
               onChange={(selectedOption) =>
-                setFormData(prev => ({ ...prev, difficulty: selectedOption.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  difficulty: selectedOption.value,
+                }))
               }
               value={
                 formData.difficulty
@@ -160,7 +169,7 @@ const CreateRecipe = () => {
                   : null
               }
               menuPortalTarget={document.body}
-              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
 
             <label>Type</label>
@@ -169,7 +178,7 @@ const CreateRecipe = () => {
               options={Type}
               placeholder="Choose type:"
               onChange={(selectedOption) =>
-                setFormData(prev => ({ ...prev, type: selectedOption.value }))
+                setFormData((prev) => ({ ...prev, type: selectedOption.value }))
               }
               value={
                 formData.type
@@ -177,7 +186,7 @@ const CreateRecipe = () => {
                   : null
               }
               menuPortalTarget={document.body}
-              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
           </div>
 
@@ -188,7 +197,10 @@ const CreateRecipe = () => {
               options={Cuisine}
               placeholder="Choose cuisine:"
               onChange={(selectedOption) =>
-                setFormData(prev => ({ ...prev, cuisine: selectedOption.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  cuisine: selectedOption.value,
+                }))
               }
               value={
                 formData.cuisine
@@ -196,7 +208,7 @@ const CreateRecipe = () => {
                   : null
               }
               menuPortalTarget={document.body}
-              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
 
             <label>Tags</label>
@@ -206,14 +218,16 @@ const CreateRecipe = () => {
               options={Tags}
               placeholder="Select tags:"
               onChange={(selectedOptions) =>
-                setFormData(prev => ({
+                setFormData((prev) => ({
                   ...prev,
-                  tags: selectedOptions ? selectedOptions.map(option => option.value) : [],
+                  tags: selectedOptions
+                    ? selectedOptions.map((option) => option.value)
+                    : [],
                 }))
               }
-              value={Tags.filter(tag => formData.tags.includes(tag.value))}
+              value={Tags.filter((tag) => formData.tags.includes(tag.value))}
               menuPortalTarget={document.body}
-              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
           </div>
         </div>

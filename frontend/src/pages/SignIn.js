@@ -25,7 +25,9 @@ const SignIn = ({ setIsAuthenticated }) => {
         </div>
         <input {...username} placeholder="Username" />
         <input {...password} placeholder="Password" />
-        <Link to="/SignUp" className="link">Not registered? Sign up </Link>
+        <Link to="/SignUp" className="link">
+          Not registered? Sign up{" "}
+        </Link>
         {error && <div className="error-message">{error}</div>}
         <button type="submit">Sign in</button>
       </form>

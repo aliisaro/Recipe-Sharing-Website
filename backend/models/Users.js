@@ -24,26 +24,26 @@ const userSchema = new Schema({
   },
   image: {
     type: String,
-    default: ""
+    default: "",
   },
   followers: {
     type: Number,
-    default: 0
+    default: 0,
   },
   following: {
     type: Number,
-    default: 0
+    default: 0,
   },
   savedRecipes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Recipe',
+      ref: "Recipe",
     },
   ],
   createdRecipes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Recipe',
+      ref: "Recipe",
     },
   ],
 });
@@ -56,14 +56,16 @@ userSchema.statics.signup = async function (username, email, password) {
   }
   if (!validator.isEmail(email)) {
     throw Error("Please enter a valid email address.");
-  }  
-  if (!validator.isStrongPassword(password, {
-    minLength: 8,
-    minLowercase: 1,
-    minUppercase: 1,
-    minNumbers: 1,
-    minSymbols: 1
-  })) {
+  }
+  if (
+    !validator.isStrongPassword(password, {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    })
+  ) {
     throw Error("Password not strong enough.");
   }
 
@@ -72,7 +74,7 @@ userSchema.statics.signup = async function (username, email, password) {
     throw Error("Email already in use");
   }
 
-    const usernameExists = await this.findOne({ username });
+  const usernameExists = await this.findOne({ username });
   if (usernameExists) {
     throw Error("Username is already taken.");
   }
@@ -100,6 +102,5 @@ userSchema.statics.signin = async function (username, password) {
   }
   return user;
 };
-
 
 module.exports = mongoose.model("User", userSchema);

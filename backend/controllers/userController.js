@@ -91,11 +91,9 @@ const patchUser = async (req, res) => {
     }
 
     // Update by user ID instead of username
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      updateFields,
-      { new: true }
-    );
+    const user = await User.findByIdAndUpdate(req.params.id, updateFields, {
+      new: true,
+    });
 
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
@@ -120,7 +118,7 @@ const deleteUser = async (req, res) => {
 
     // Delete all recipes created by this user
     const recipesToDelete = await Recipe.find({ user_id: userId });
-    const recipeIds = recipesToDelete.map(r => r._id);
+    const recipeIds = recipesToDelete.map((r) => r._id);
 
     // Remove recipes from DB
     await Recipe.deleteMany({ user_id: userId });
@@ -128,13 +126,15 @@ const deleteUser = async (req, res) => {
     // Remove these recipes from all users' savedRecipes
     await User.updateMany(
       { savedRecipes: { $in: recipeIds } },
-      { $pull: { savedRecipes: { $in: recipeIds } } }
+      { $pull: { savedRecipes: { $in: recipeIds } } },
     );
 
     // Delete the user
     await User.deleteOne({ _id: userId });
 
-    res.status(200).json({ message: "User and their recipes deleted successfully" });
+    res
+      .status(200)
+      .json({ message: "User and their recipes deleted successfully" });
   } catch (error) {
     console.error("Delete user error:", error.message);
     res.status(500).json({ error: error.message });

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { API_URL } from '../config';
 
 const RecipeCard = ({ recipe }) => (
   <div key={recipe._id} className="recipe-card">

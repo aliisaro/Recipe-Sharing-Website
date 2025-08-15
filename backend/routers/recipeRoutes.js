@@ -12,7 +12,7 @@ const {
   saveRecipe,
   unsaveRecipe,
   getSavedRecipes,
-  rateRecipe
+  rateRecipe,
 } = require("../controllers/recipeController");
 
 const requireAuth = require("../requireAuth");
@@ -25,7 +25,7 @@ router.get("/saved", getSavedRecipes);
 router.post("/", addRecipe);
 
 router.get("/:id", getRecipeById);
-router.put("/:id",  updateRecipe);
+router.put("/:id", updateRecipe);
 router.delete("/:id", deleteRecipe);
 router.post("/save/:id", saveRecipe);
 router.delete("/unsave/:id", unsaveRecipe);

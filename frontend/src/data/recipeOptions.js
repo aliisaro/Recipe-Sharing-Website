@@ -37,9 +37,9 @@ export const Tags = [
 ];
 
 export const SortByOptions = [
-    { value: "trending", label: "trending" },
-    { value: "date", label: "date" },
-    { value: "best reviews", label: "best reviews" },
+  { value: "trending", label: "trending" },
+  { value: "date", label: "date" },
+  { value: "best reviews", label: "best reviews" },
 ];
 
 export const TimeOptions = [
