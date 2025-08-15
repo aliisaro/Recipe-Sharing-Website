@@ -23,3 +23,8 @@ You can try the live version of the app here:
 ## Preview
 <img src="PalatePreview.png" alt="Palate Picker Preview" width="1000"/>
 
+## Possible Planned features
+- Following system
+- Improved profile page (add bio, profile picture, number of following & followers)
+- Ability to create on own collections in the library page
+
