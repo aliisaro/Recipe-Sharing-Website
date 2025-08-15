@@ -17,7 +17,7 @@ Palate is a MERN-stack web application to share, search and rate recipes.
 - **Deployment:** Render
 
 ## Live Demo
-You can try the live version of the app here:  
+You can try the live version of the website here:  
 [https://recipe-sharing-website-frontend.onrender.com](https://recipe-sharing-website-frontend.onrender.com)
 
 ## Preview
