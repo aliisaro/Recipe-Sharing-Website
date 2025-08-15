@@ -26,5 +26,6 @@ You can try the live version of the app here:
 ## Possible Planned features
 - Following system
 - Improved profile page (add bio, profile picture, number of following & followers)
-- Ability to create on own collections in the library page
+- Ability to create own collections in the library page
+- Ability to share recipes
 
