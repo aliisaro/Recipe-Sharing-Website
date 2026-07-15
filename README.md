@@ -16,10 +16,6 @@ Palate is a MERN-stack web application to share, search and rate recipes.
 - **Backend:** Express, Node.js, MongoDB, Mongoose  
 - **Deployment:** Render
 
-## Live Demo
-You can try the live version of the website here:  
-[https://recipe-sharing-website-frontend.onrender.com](https://recipe-sharing-website-frontend.onrender.com)
-
 ## Preview
 <img src="PalatePreview.png" alt="Palate Picker Preview" width="1000"/>
 
@@ -28,4 +24,3 @@ You can try the live version of the website here:
 - Comment section
 - Improved profile page (add bio, profile picture, number of following & followers)
 - Ability to create own collections in the library page
-
