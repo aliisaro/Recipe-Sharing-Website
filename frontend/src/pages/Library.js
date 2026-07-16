@@ -3,12 +3,20 @@ import { API_URL } from "../config";
 import RecipeCard from "../components/RecipeCard";
 import Filters from "../components/Filters";
 import Searchbar from "../components/Searchbar";
+import Pagination from "../components/Pagination";
 import { Type, Cuisine, Tags, SortByOptions } from "../data/recipeOptions";
 import { showError } from "../utils/ShowMessages";
 
 const Library = () => {
+  const PAGE_SIZE = 12;
   const [createdRecipes, setCreatedRecipes] = useState([]);
   const [savedRecipes, setSavedRecipes] = useState([]);
+  const [createdPage, setCreatedPage] = useState(1);
+  const [savedPage, setSavedPage] = useState(1);
+  const [createdTotalPages, setCreatedTotalPages] = useState(1);
+  const [savedTotalPages, setSavedTotalPages] = useState(1);
+  const [createdTotal, setCreatedTotal] = useState(0);
+  const [savedTotal, setSavedTotal] = useState(0);
   const [activeTab, setActiveTab] = useState("created");
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
@@ -33,32 +41,42 @@ const Library = () => {
   };
 
   useEffect(() => {
+    setCreatedPage(1);
+    setSavedPage(1);
+  }, [filters, searchTerm]);
+
+  useEffect(() => {
     const fetchLibrary = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const token = localStorage.getItem("token");
-        const query = new URLSearchParams();
+        const baseQuery = new URLSearchParams();
 
         if (filters.type && filters.type !== "none")
-          query.append("type", filters.type);
+          baseQuery.append("type", filters.type);
         if (filters.cuisine && filters.cuisine !== "none")
-          query.append("cuisine", filters.cuisine);
+          baseQuery.append("cuisine", filters.cuisine);
         if (filters.tags && filters.tags.length > 0)
-          query.append("tags", filters.tags.join(","));
-        if (searchTerm) query.append("search", searchTerm);
+          baseQuery.append("tags", filters.tags.join(","));
+        if (searchTerm) baseQuery.append("search", searchTerm);
 
-        const savedRes = await fetch(
-          `${API_URL}/api/recipes/saved?${query.toString()}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
+        const createdQuery = new URLSearchParams(baseQuery);
+        createdQuery.append("page", String(createdPage));
+        createdQuery.append("limit", String(PAGE_SIZE));
 
-        const createdRes = await fetch(
-          `${API_URL}/api/recipes/user?${query.toString()}`,
-          {
+        const savedQuery = new URLSearchParams(baseQuery);
+        savedQuery.append("page", String(savedPage));
+        savedQuery.append("limit", String(PAGE_SIZE));
+
+        const [savedRes, createdRes] = await Promise.all([
+          fetch(`${API_URL}/api/recipes/saved?${savedQuery.toString()}`, {
             headers: { Authorization: `Bearer ${token}` },
-          },
-        );
+          }),
+          fetch(`${API_URL}/api/recipes/user?${createdQuery.toString()}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
         if (!savedRes.ok || !createdRes.ok) {
           const data = await savedRes.json();
@@ -72,19 +90,40 @@ const Library = () => {
         const saved = await savedRes.json();
         const created = await createdRes.json();
 
-        setCreatedRecipes(created);
-        setSavedRecipes(saved);
+        if (Array.isArray(created)) {
+          setCreatedRecipes(created);
+          setCreatedTotal(created.length);
+          setCreatedTotalPages(1);
+        } else {
+          setCreatedRecipes(created.recipes || []);
+          setCreatedTotal(created.pagination?.total || 0);
+          setCreatedTotalPages(created.pagination?.totalPages || 1);
+        }
+
+        if (Array.isArray(saved)) {
+          setSavedRecipes(saved);
+          setSavedTotal(saved.length);
+          setSavedTotalPages(1);
+        } else {
+          setSavedRecipes(saved.recipes || []);
+          setSavedTotal(saved.pagination?.total || 0);
+          setSavedTotalPages(saved.pagination?.totalPages || 1);
+        }
       } catch (error) {
         showError(setError, "Error fetching library");
         setCreatedRecipes([]);
         setSavedRecipes([]);
+        setCreatedTotal(0);
+        setSavedTotal(0);
+        setCreatedTotalPages(1);
+        setSavedTotalPages(1);
       } finally {
         setLoading(false);
       }
     };
 
     fetchLibrary();
-  }, [filters, searchTerm]);
+  }, [filters, searchTerm, createdPage, savedPage]);
 
   return (
     <div className="library-page-container">
@@ -133,11 +172,27 @@ const Library = () => {
                 {createdRecipes.length === 0 ? (
                   <p>No created recipes yet</p>
                 ) : (
-                  <div className="recipes">
-                    {createdRecipes.map((recipe) => (
-                      <RecipeCard key={recipe._id} recipe={recipe} />
-                    ))}
-                  </div>
+                  <>
+                    <div className="recipes">
+                      {createdRecipes.map((recipe) => (
+                        <RecipeCard key={recipe._id} recipe={recipe} />
+                      ))}
+                    </div>
+
+                    <Pagination
+                      page={createdPage}
+                      totalPages={createdTotalPages}
+                      totalItems={createdTotal}
+                      onPrevious={() =>
+                        setCreatedPage((prev) => Math.max(prev - 1, 1))
+                      }
+                      onNext={() =>
+                        setCreatedPage((prev) =>
+                          Math.min(prev + 1, createdTotalPages),
+                        )
+                      }
+                    />
+                  </>
                 )}
               </div>
             )}
@@ -147,11 +202,27 @@ const Library = () => {
                 {savedRecipes.length === 0 ? (
                   <p>No recipes saved..</p>
                 ) : (
-                  <div className="recipes">
-                    {savedRecipes.map((recipe) => (
-                      <RecipeCard key={recipe._id} recipe={recipe} />
-                    ))}
-                  </div>
+                  <>
+                    <div className="recipes">
+                      {savedRecipes.map((recipe) => (
+                        <RecipeCard key={recipe._id} recipe={recipe} />
+                      ))}
+                    </div>
+
+                    <Pagination
+                      page={savedPage}
+                      totalPages={savedTotalPages}
+                      totalItems={savedTotal}
+                      onPrevious={() =>
+                        setSavedPage((prev) => Math.max(prev - 1, 1))
+                      }
+                      onNext={() =>
+                        setSavedPage((prev) =>
+                          Math.min(prev + 1, savedTotalPages),
+                        )
+                      }
+                    />
+                  </>
                 )}
               </div>
             )}

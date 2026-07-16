@@ -4,10 +4,23 @@ const path = require("path");
 const Recipe = require("../models/Recipe");
 const User = require("../models/Users");
 
+const DEFAULT_PAGE_SIZE = 24;
+const MAX_PAGE_SIZE = 100;
+
+const getPaginationParams = (query) => {
+  const page = Math.max(parseInt(query.page, 10) || 1, 1);
+  const requestedLimit = parseInt(query.limit, 10) || DEFAULT_PAGE_SIZE;
+  const limit = Math.min(Math.max(requestedLimit, 1), MAX_PAGE_SIZE);
+  const skip = (page - 1) * limit;
+
+  return { page, limit, skip };
+};
+
 // Get all recipes by all users, with optional filters
 const getAllRecipes = async (req, res) => {
   try {
     const { type, cuisine, tags, search } = req.query;
+    const { page, limit, skip } = getPaginationParams(req.query);
 
     // Build the filter object dynamically based on query params
     const filter = {};
@@ -36,8 +49,21 @@ const getAllRecipes = async (req, res) => {
       ];
     }
 
-    const recipes = await Recipe.find(filter).sort({ createdAt: -1 });
-    res.status(200).json(recipes);
+    const total = await Recipe.countDocuments(filter);
+    const recipes = await Recipe.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({
+      recipes,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit) || 1,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server Error" });
@@ -49,6 +75,7 @@ const getRecipesByUser = async (req, res) => {
   try {
     const userId = req.user._id;
     const { type, cuisine, tags, search } = req.query;
+    const { page, limit, skip } = getPaginationParams(req.query);
 
     // Build the filter object dynamically based on query params
     const filter = {};
@@ -81,8 +108,21 @@ const getRecipesByUser = async (req, res) => {
     const user = await User.findById(userId);
     filter._id = { $in: user.createdRecipes };
 
-    const createdRecipes = await Recipe.find(filter).sort({ createdAt: -1 });
-    res.status(200).json(createdRecipes);
+    const total = await Recipe.countDocuments(filter);
+    const createdRecipes = await Recipe.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({
+      recipes: createdRecipes,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit) || 1,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to get user's recipes" });
@@ -94,6 +134,7 @@ const getSavedRecipes = async (req, res) => {
   try {
     const userId = req.user._id;
     const { type, cuisine, tags, search } = req.query;
+    const { page, limit, skip } = getPaginationParams(req.query);
 
     // Build the filter object dynamically based on query params
     const filter = {};
@@ -122,8 +163,21 @@ const getSavedRecipes = async (req, res) => {
     const user = await User.findById(userId);
     filter._id = { $in: user.savedRecipes };
 
-    const savedRecipes = await Recipe.find(filter).sort({ createdAt: -1 });
-    res.status(200).json(savedRecipes);
+    const total = await Recipe.countDocuments(filter);
+    const savedRecipes = await Recipe.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({
+      recipes: savedRecipes,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit) || 1,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to get saved recipes" });

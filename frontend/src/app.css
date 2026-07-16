@@ -356,7 +356,7 @@ button {
 .home-page-container {
   display: flex;
   flex-direction: column;
-  margin-top: 100px;
+  padding-top: 100px;
   min-height: 100vh;
   width: 100%;
 }
@@ -375,8 +375,8 @@ button {
   background-color: rgba(0, 0, 0, 0.3);
   width: 100%;
   justify-content: space-between;
-  position: fixed;
-  z-index: 1000;
+  position: sticky;
+  top: 100px;
 }
 
 .searchbar-filters-container .searchbar-wrapper {
@@ -421,7 +421,10 @@ button {
 /* Main content area */
 .home-content {
   width: 100%;
-  margin: 85px 10px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 /* Recipes  */
@@ -482,8 +485,8 @@ button {
 /*Responsive styles*/
 @media screen and (max-width: 800px) {
   .home-page-container {
-    margin-top: 80px;
-    padding: 0px;
+    padding: 80px 0 0;
+    min-height: 100vh;
   }
 
   .searchbar-filters-container {
@@ -491,7 +494,8 @@ button {
     align-items: center;
     gap: 15px;
     padding: 15px;
-    overflow-x: auto;
+    top: 80px;
+    overflow: visible;
   }
 
   .searchbar-filters-container .searchbar-wrapper input {
@@ -509,7 +513,8 @@ button {
   }
 
   .home-content {
-    margin: 120px 0px;
+    margin: 10px 0px;
+    flex: 1;
   }
 
   .recipe-card .image-container {
@@ -974,11 +979,12 @@ button {
 
 .library-content {
   width: 60%;
-  height: 1000px;
   margin: auto;
-  max-height: calc(100vh - 170px);
+  min-height: calc(100vh - 170px);
+  display: flex;
+  flex-direction: column;
   border-radius: 12px;
-  overflow-y: auto;
+  overflow-y: visible;
   background-color: rgba(0, 0, 0, 0.3);
 }
 
@@ -1069,10 +1075,15 @@ button {
 .SavedRecipes,
 .CreatedRecipes {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   justify-content: flex-start;
-  flex-wrap: wrap;
+  flex: 1;
+}
+
+.SavedRecipes .recipes,
+.CreatedRecipes .recipes {
+  width: 100%;
 }
 
 .SavedRecipes p,
@@ -1114,6 +1125,32 @@ button {
   margin: 0;
   color: #fff;
   background: rgba(0, 0, 0, 0.3);
+}
+
+.pagination-controls {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 10px 0 20px;
+  margin-top: auto;
+  color: #e3f6ec;
+}
+
+.pagination-controls button {
+  background-color: #37b36f;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /*Responsive styles*/

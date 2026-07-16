@@ -7,24 +7,35 @@ const Filters = ({
   TagOptions,
   onFilterChange,
 }) => {
+  const menuPortalTarget =
+    typeof document !== "undefined" ? document.body : null;
+  const selectProps = {
+    classNamePrefix: "filters-select",
+    menuPortalTarget,
+    menuPosition: "fixed",
+    styles: {
+      menuPortal: (base) => ({ ...base, zIndex: 3000 }),
+    },
+  };
+
   return (
     <div className="filters">
       <Select
-        classNamePrefix="filters-select"
+        {...selectProps}
         options={TypeOptions}
         placeholder="Type"
         onChange={(selected) => onFilterChange?.("type", selected)}
       />
 
       <Select
-        classNamePrefix="filters-select"
+        {...selectProps}
         options={CuisineOptions}
         placeholder="Cuisine"
         onChange={(selected) => onFilterChange?.("cuisine", selected)}
       />
 
       <Select
-        classNamePrefix="filters-select"
+        {...selectProps}
         options={TagOptions}
         placeholder="Tags"
         isMulti

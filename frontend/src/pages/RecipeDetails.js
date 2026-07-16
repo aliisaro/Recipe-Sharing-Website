@@ -41,7 +41,10 @@ const RecipeDetails = () => {
           throw new Error("Error fetching saved recipes");
         }
 
-        const savedRecipes = await savedResponse.json();
+        const savedPayload = await savedResponse.json();
+        const savedRecipes = Array.isArray(savedPayload)
+          ? savedPayload
+          : savedPayload.recipes || [];
         const saved = savedRecipes.some((r) => r._id === data._id);
         setIsSaved(saved);
       } catch (error) {
